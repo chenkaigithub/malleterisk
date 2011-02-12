@@ -1,66 +1,9 @@
 ﻿select * from email_collection;
 select * from email_user;
 select * from email_class;
-select * from email_message;
-
----------------------------------------------------------------------------------------------------
-
-/*
--- número de classes distintas
-select count(class_id) from email_class;
-*/
-
-/*
--- número de utilizadores distintos
-select count(user_id) from email_user;
-*/
-
-/*
--- número de classes por utilizador
-select user_id, count(class_id)
-from (select distinct user_id, class_id from email_message) AS t
-group by user_id
-order by user_id;
-*/
-
-/*
--- número de mensagens distintas
-select count(email_id)
-from email_message;
-*/
-
-
-
-/*
--- número de mensagens por classe
-select class_id, count(email_id) AS num_msgs
-from email_message
-group by class_id
-order by class_id;
-*/
-
-/*
--- número de mensagens por utilizador
-select user_id, count(user_id) AS num_msgs
-from email_message
-group by user_id
-order by user_id;
-*/
-
-/*
--- número de mensagens por data
-select email_id, class_id, date
-from email_message
-order by date;
-*/
-
-/*
--- diferentes classes atribuídas aos participantes pelos utilizadores 
-select distinct m.user_id, p.participant_id, m.class_id
-from email_message m, email_participants p
-where m.email_id = p.email_id
-order by participant_id, user_id;
-*/
+select * from email_message order by email_id;
+select * from email_participants;
+select * from email_participant;
 
 ---------------------------------------------------------------------------------------------------
 
@@ -78,11 +21,14 @@ CREATE TABLE email_collection (
 );
 
 CREATE TABLE email_user (
+	collection_id INTEGER,
 	user_id SERIAL,
 	user_name TEXT UNIQUE
 );
 
 CREATE TABLE email_class (
+	collection_id INTEGER,
+	user_id INTEGER,
 	class_id SERIAL,
 	class_name TEXT UNIQUE
 );
