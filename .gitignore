@@ -1,0 +1,6 @@
+## generic files
+*~
+*.lock
+*.DS_Store
+*.class
+
