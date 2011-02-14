@@ -1,7 +1,7 @@
 ﻿select * from email_collection;
 select * from email_user;
 select * from email_class;
-select * from email_message order by email_id;
+select * from email_message;
 select * from email_participants;
 select * from email_participant;
 
@@ -56,5 +56,6 @@ CREATE TABLE email_participants (
 	participant_id INTEGER,
 	participant_type TEXT
 );
-
 */
+
+

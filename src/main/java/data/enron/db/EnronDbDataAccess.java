@@ -54,7 +54,7 @@ public class EnronDbDataAccess {
 		return id;
 	}
 	
-	public int insertCollection(String collectionName) throws SQLException {
+	private int insertCollection(String collectionName) throws SQLException {
 		int id = -1;
 		
 		Connection c = db.getDbConnection();
@@ -98,7 +98,7 @@ public class EnronDbDataAccess {
 		return id;
 	}
 	
-	public int insertUser(int collectionId, String userName) throws SQLException {
+	private int insertUser(int collectionId, String userName) throws SQLException {
 		int id = -1;
 		
 		Connection c = db.getDbConnection();

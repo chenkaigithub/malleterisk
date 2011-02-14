@@ -1,10 +1,11 @@
 ﻿select * from email_collection;
 select * from email_user;
 select * from email_class;
-select * from email_message order by email_id;
+select * from email_message;
 select * from email_participants;
 select * from email_participant;
 
+select collection_id, count(email_id) from email_message group by collection_id;
 ---------------------------------------------------------------------------------------------------
 
 /*
@@ -56,5 +57,6 @@ CREATE TABLE email_participants (
 	participant_id INTEGER,
 	participant_type TEXT
 );
-
 */
+
+

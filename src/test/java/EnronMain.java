@@ -73,15 +73,16 @@ public class EnronMain {
 				InstanceList[] subjectSplit = ilSubject.split(new double[] {0.8, 0.2 });
 				ClassifierTrainer<?> nbSubjectTrainer = new NaiveBayesTrainer();
 				Classifier nbSubjectClassifier = nbSubjectTrainer.train(subjectSplit[0]);
-				System.out.println("The training accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[0]));
-				System.out.println("The testing accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[1]));
+				System.out.println("subject training accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[0]));
+				System.out.println("subject testing accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[1]));
 				
 				InstanceList[] bodySplit = ilBody.split(new double[] { 0.8, 0.2 });
 				ClassifierTrainer<?> nbBodyTrainer = new NaiveBayesTrainer();
 				Classifier nbBodyClassifier = nbBodyTrainer.train(bodySplit[0]);
-				System.out.println("The training accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[0]));
-				System.out.println("The testing accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[1]));
+				System.out.println("body training accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[0]));
+				System.out.println("body testing accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[1]));
 			}
+			break;
 		}
 		
 		// ------------------------------------------------------------------
@@ -98,4 +99,10 @@ public class EnronMain {
 //			println(v + "\t" + sums(idx))
 //		})
 	}
+	
+	public static final void classifyUser(int userId) {
+		
+	}
+	
+	
 }

@@ -16,11 +16,11 @@ public class Enron2Db {
 	// enron processing
 	
 	public void processEnron(String path) throws SQLException {
-		int collectionId = dal.insertCollection(path);
+		int collectionId = dal.storeCollection(path);
 		
 		for (File f : new File(path).listFiles()) {
 			if(f.isDirectory() || !f.getName().equalsIgnoreCase(".DS_Store")) {
-				int userId = dal.insertUser(collectionId, f.getAbsolutePath());
+				int userId = dal.storeUser(collectionId, f.getAbsolutePath());
 				processEntry(f, collectionId, userId);
 			}
 		}
