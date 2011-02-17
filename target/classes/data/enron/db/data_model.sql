@@ -5,6 +5,7 @@ select * from email_message;
 select * from email_participants;
 select * from email_participant;
 
+select collection_id, count(email_id) from email_message group by collection_id;
 ---------------------------------------------------------------------------------------------------
 
 /*

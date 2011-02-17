@@ -335,7 +335,7 @@ public class EnronDbDataAccess {
 		ps.setFetchSize(10);	// force database cursor usage
 		return ps.executeQuery();
 		
-		// TODO: e o PreparedStatement? e a Connection?
+		// TODO: best way to close the PreparedStatement and the Connection?
 	}
 	
 	public Map<ParticipantType, Collection<IEmailParticipant>> getEmailParticipants(int emailId) throws SQLException {

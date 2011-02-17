@@ -1,4 +1,4 @@
-package fs;
+package fs.methods;
 
 import java.util.Iterator;
 
@@ -6,8 +6,12 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import fs.IFeatureTransformer;
+import fs.methods.functions.Functions;
 
-public class TFIDF implements IFeatureSelector {
+public class TFIDF implements IFeatureTransformer {
+	// TODO: implement the several variants of TFIDF (ltc, etc)
+	
 	@Override
 	public InstanceList select(InstanceList instances) {
 		return tfidf(instances);
@@ -23,8 +27,8 @@ public class TFIDF implements IFeatureSelector {
 		Iterator<Object> it = alphabet.iterator();
 		while(it.hasNext()) {
 			Object feature = it.next();
-			int f_idx = alphabet.lookupIndex(feature);
-			int df = df(f_idx, instances);
+			int featureIdx = alphabet.lookupIndex(feature);
+			int df = Functions.df(featureIdx, instances);
 			double n_df = n/df;
 			
 			if(n_df > 0) {
@@ -33,7 +37,7 @@ public class TFIDF implements IFeatureSelector {
 				for (Instance instance : instances) {
 					FeatureVector fv = (FeatureVector) instance.getData();
 					double tf = 0;
-					int location = fv.location(f_idx);
+					int location = fv.location(featureIdx);
 					if(location>=0) {
 						tf = fv.valueAtLocation(location);
 						double tfidf = tf*idf;
@@ -44,18 +48,5 @@ public class TFIDF implements IFeatureSelector {
 		}
 		
 		return instances;
-	}
-
-	// Returns the document frequency of the specified feature,
-	// i.e. the number of documents the feature is present in.
-	public static int df(int f_idx, InstanceList instances) {
-		int df = 0;
-		
-		for(Instance instance : instances) {
-			FeatureVector fv = (FeatureVector) instance.getData();
-			if(fv.location(f_idx)>=0) df++; // fv.location works with Arrays.binarySearch
-		}
-		
-		return df;
 	}
 }

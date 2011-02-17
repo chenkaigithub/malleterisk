@@ -1,3 +1,4 @@
+package enron;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,10 +15,10 @@ import data.IDataSet;
 import data.enron.EnronDbDataSet;
 import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
-import fs.FeatureSelectionPipe;
-import fs.IFeatureSelector;
-import fs.Pruner;
-import fs.TFIDF;
+import fs.FeatureTransformationPipeline;
+import fs.IFeatureTransformer;
+import fs.methods.TFIDF;
+import fs.methods.TermFreqPruner;
 
 public class EnronMain {
 	public static void main(String[] args) throws SQLException {
@@ -51,10 +52,10 @@ public class EnronMain {
 				}
 				
 				// feature selection
-				LinkedList<IFeatureSelector> featureSelectors = new LinkedList<IFeatureSelector>();
-				featureSelectors.add(new Pruner(5, 1000));
+				LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
+				featureSelectors.add(new TermFreqPruner(5, 1000));
 				featureSelectors.add(new TFIDF());
-				FeatureSelectionPipe fsPipe = new FeatureSelectionPipe(featureSelectors);
+				FeatureTransformationPipeline fsPipe = new FeatureTransformationPipeline(featureSelectors);
 						
 //				ilSubject = fsPipe.runThruPipe(ilSubject);
 				ilBody = fsPipe.runThruPipe(ilBody);
