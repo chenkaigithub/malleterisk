@@ -18,7 +18,7 @@ import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
 import fs.methods.TFIDF;
-import fs.methods.TermFreqPruner;
+import fs.methods.PruneByTF;
 
 public class EnronMain {
 	public static void main(String[] args) throws SQLException {
@@ -53,12 +53,12 @@ public class EnronMain {
 				
 				// feature selection
 				LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-				featureSelectors.add(new TermFreqPruner(5, 1000));
+				featureSelectors.add(new PruneByTF(5, 1000));
 				featureSelectors.add(new TFIDF());
 				FeatureTransformationPipeline fsPipe = new FeatureTransformationPipeline(featureSelectors);
 						
 //				ilSubject = fsPipe.runThruPipe(ilSubject);
-				ilBody = fsPipe.runThruPipe(ilBody);
+				ilBody = fsPipe.runThruPipeline(ilBody);
 //				ilParticipants = 
 //				ilDate = 
 				

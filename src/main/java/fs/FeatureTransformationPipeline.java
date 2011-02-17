@@ -7,7 +7,11 @@ import cc.mallet.types.InstanceList;
 
 /*
  * Execution pipe for a collection of IFeatureTransformer operations.
- * Executes the given operations in order. // TODO: use a List for order constraint? 
+ * Executes the given operations in order. TODO: use a List for order constraint? 
+ * 
+ * TODO: it would be great if I could somehow aggregate into here
+ * all loop operations (i.e. avoid the heavy processing whenever possible)
+ * doubt it will be possible given the way things are built.. 
  */
 public class FeatureTransformationPipeline {
 	private final LinkedList<IFeatureTransformer> featureSelectors;
@@ -17,9 +21,9 @@ public class FeatureTransformationPipeline {
 		this.featureSelectors.addAll(featureSelectors);
 	}
 	
-	public InstanceList runThruPipe(InstanceList instances) {
+	public InstanceList runThruPipeline(InstanceList instances) {
 		for (IFeatureTransformer fs : featureSelectors) {
-			instances = fs.select(instances);
+			instances = fs.transform(instances);
 		}
 		
 		return instances;
