@@ -27,13 +27,12 @@ public class Functions {
 		// but applying the fs method to it; create a new instance and add it to the new list
 		int ii = 0;
 		for (Instance instance : instances) {
-			FeatureVector oldFV = (FeatureVector) instance.getData();
-			FeatureVector newFV = FeatureVector.newFeatureVector (oldFV, newAlphabet, fs);
-			instance.unLock();
-			instance.setData(null); // allow this to get gc-ed
+			FeatureVector newFV = FeatureVector.newFeatureVector((FeatureVector)instance.getData(), newAlphabet, fs);
 			
-			Instance newInstance = new Instance(newFV, instance.getTarget(), instance.getName(), instance.getSource());
-			newInstances.add(pipe.instanceFrom(newInstance), instances.getInstanceWeight(ii++));
+			newInstances.add(
+				pipe.instanceFrom(new Instance(newFV, instance.getTarget(), instance.getName(), instance.getSource())), 
+				instances.getInstanceWeight(ii++)
+			);
 		}
 		
 		return newInstances;
@@ -78,27 +77,57 @@ public class Functions {
 		return new RankedFeatureVector(dataAlphabet, tfs);
 	}	
 	
-	
 	// reference:
 	// A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
 	// Pattern Recognition in Information Systems, (2010), pp. 72-81.
 	public static final RankedFeatureVector l0norm(InstanceList instances) {
-		// TODO: TBI (to be implemented)
-		
-		// l0norm = df?
-		
-		return null;
+		return df(instances); // TODO: l0norm = df?
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// reference:
 	// A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
 	// Pattern Recognition in Information Systems, (2010), pp. 72-81.
-	public static final void l0rank(InstanceList instances) {
-		// TODO: TBI
+	public static final RankedFeatureVector l0rank(InstanceList instances) {
+		// rank(t) = | l0(t, c1) - l0(t, c2) |
 		
-		// supervised (wrapper) feature selection method
+		// array with the same size of the alphabet
+		Alphabet dataAlphabet = instances.getDataAlphabet();
+		double[] ranks = new double[dataAlphabet.size()];
 		
-		// rank(t) = |l0(t, c1) - l0(t, c2) |
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector)instance.getData();
+			for(int idx : fv.getIndices()) ranks[idx] += fv.value(idx);
+		}
+		
+		return new RankedFeatureVector(dataAlphabet, ranks);
+	}
+
+	
+	
+	
+	
+	
+	// TODO:
+	// CTD (categorical descriptor term)
+	// SCIW (strong class information word)
+	// TS (term strength)
+	// CHI
+	// TC (term contribution)
+	// variance
+	
+	public static final void x() {
 		
 	}
 }

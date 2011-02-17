@@ -6,10 +6,16 @@ import cc.mallet.types.RankedFeatureVector;
 import fs.IFeatureTransformer;
 import fs.methods.functions.Functions;
 
-// TODO:
-// normalize TF: term-frequency, count of a term; freq(tj,d)/max(freq(t,d))
-//w(t,d) = 1 + log10 tf(t,d), if tf(t,d) > 0
-//         0, otherwise
+/*
+ * TODO:
+ * normalize TF: term-frequency, count of a term;
+ * freq(tj,d) / max(freq(t,d))
+ * 
+ * alternative tf weight: (maybe for some other IFeatureTransformer?)
+ * w(t,d) = 1 + log10 tf(t,d), if tf(t,d) > 0
+ *          0, otherwise
+ * 
+ */
 public class PruneByTF implements IFeatureTransformer {
 	private final double minOccurs;
 	private final double maxOccurs;
