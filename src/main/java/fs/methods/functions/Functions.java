@@ -6,6 +6,7 @@ import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import cc.mallet.types.Label;
 import cc.mallet.types.RankedFeatureVector;
 
 public class Functions {
@@ -77,47 +78,55 @@ public class Functions {
 		return new RankedFeatureVector(dataAlphabet, tfs);
 	}	
 	
-	// reference:
-	// A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
-	// Pattern Recognition in Information Systems, (2010), pp. 72-81.
 	public static final RankedFeatureVector l0norm(InstanceList instances) {
 		return df(instances); // TODO: l0norm = df?
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// reference:
-	// A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
-	// Pattern Recognition in Information Systems, (2010), pp. 72-81.
+		
+	// TODO: inefficient implementation
+	// create a matrix of features x classes where each cell = l0(feature, class) ?
 	public static final RankedFeatureVector l0rank(InstanceList instances) {
-		// rank(t) = | l0(t, c1) - l0(t, c2) |
+		Alphabet featuresAlphabet = instances.getDataAlphabet();
+		Alphabet classesAlphabet = instances.getTargetAlphabet();
 		
-		// array with the same size of the alphabet
-		Alphabet dataAlphabet = instances.getDataAlphabet();
-		double[] ranks = new double[dataAlphabet.size()];
+		double[] r = new double[featuresAlphabet.size()];
 		
-		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector)instance.getData();
-			for(int idx : fv.getIndices()) ranks[idx] += fv.value(idx);
+		Object[] features = featuresAlphabet.toArray();
+		Object[] classes = classesAlphabet.toArray();
+
+		for (Object feature : features) {
+			int featureIdx = featuresAlphabet.lookupIndex(feature);
+			for (Object classL : classes) {
+				int classLIdx = classesAlphabet.lookupIndex(classL);
+				for (Object classK : classes) {
+					int classKIdx = classesAlphabet.lookupIndex(classK);
+					r[featureIdx] += Math.abs(l0norm(featureIdx, classLIdx, instances) - l0norm(featureIdx, classKIdx, instances));
+				}
+			}
 		}
 		
-		return new RankedFeatureVector(dataAlphabet, ranks);
+		return new RankedFeatureVector(featuresAlphabet, r);
 	}
-
 	
-	
-	
-	
+	/**
+	 * Calculates the L0 norm value of a feature, constrained by a class.
+	 * I.e. the number of documents of the given class where the feature occurs.
+	 * 
+	 * @param featureIdx
+	 * @param classIdx
+	 * @param instances
+	 * @return
+	 */
+	public static int l0norm(int featureIdx, int classIdx, InstanceList instances) {
+		int l0norm = 0;
+		
+		for (Instance instance : instances)
+			if(((Label)instance.getTarget()).getBestIndex() == classIdx) {
+				FeatureVector fv = (FeatureVector)instance.getData();
+				if(fv.value(featureIdx) > 0) l0norm += 1;
+			}
+		
+		return l0norm;
+	}
 	
 	// TODO:
 	// CTD (categorical descriptor term)
@@ -126,8 +135,4 @@ public class Functions {
 	// CHI
 	// TC (term contribution)
 	// variance
-	
-	public static final void x() {
-		
-	}
 }

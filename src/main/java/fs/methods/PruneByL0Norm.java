@@ -7,6 +7,9 @@ import cc.mallet.types.RankedFeatureVector;
 import fs.IFeatureTransformer;
 import fs.methods.functions.Functions;
 
+// reference:
+// A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
+// Pattern Recognition in Information Systems, (2010), pp. 72-81.
 /*
  * TODO: 
  * This is pretty much the same as DF. 
@@ -65,6 +68,4 @@ public class PruneByL0Norm implements IFeatureTransformer {
 	public RankedFeatureVector getRankedFeatureVector() {
 		return rankedFeatureVector;
 	}
-	
-	
 }
