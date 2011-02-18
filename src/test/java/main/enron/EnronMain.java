@@ -1,11 +1,11 @@
-package enron;
+package main.enron;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import pp.BodyPreProcessor;
 import pp.IPreProcessor;
-import pp.SubjectPreProcessor;
+import pp.pipeline.BodyPreProcessor;
+import pp.pipeline.SubjectPreProcessor;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;

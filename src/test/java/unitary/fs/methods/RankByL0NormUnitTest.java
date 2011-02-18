@@ -1,4 +1,4 @@
-package unitary;
+package unitary.fs.methods;
 
 import java.io.File;
 
@@ -9,7 +9,7 @@ import org.junit.Test;
 import cc.mallet.types.InstanceList;
 import fs.methods.RankByL0Norm;
 
-public class RankByL0UnitTest {
+public class RankByL0NormUnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 	
 	private int numFeaturesToKeep;

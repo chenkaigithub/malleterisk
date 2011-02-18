@@ -1,8 +1,9 @@
-package pp;
+package pp.pipeline;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import pp.IPreProcessor;
 import pp.mallet.pipes.PorterStemmerSequence;
 import types.mallet.EmailSubject2Input;
 import cc.mallet.pipe.CharSequence2TokenSequence;

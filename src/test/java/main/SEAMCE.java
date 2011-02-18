@@ -1,4 +1,4 @@
-package misc;
+package main;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ import fs.methods.TFIDF;
  * - test everything in detail
  * - must make sure everything is correctly implemented
  * 
- * + must automatize all the testing
+ * + must automatize all the experiments
  * - try out different users (use enron-flat, it's big enough)
  * - create classes that for each setup, write out results 
  * to somewhere so I can plot some graphs in matlab/etc 
@@ -36,6 +36,7 @@ import fs.methods.TFIDF;
  * + integrate SVM into mallet
  * 
  * + test, test, test
+ * + experiment, experiment, experiment
  */
 public class SEAMCE {
 	public static void main(String[] args) throws SQLException {

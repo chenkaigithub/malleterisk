@@ -1,6 +1,8 @@
-package pp;
+package pp.pipeline;
 
 import java.util.ArrayList;
+
+import pp.IPreProcessor;
 
 import types.mallet.EmailDate2Input;
 import cc.mallet.pipe.Pipe;

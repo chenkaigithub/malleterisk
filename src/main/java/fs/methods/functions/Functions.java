@@ -40,7 +40,7 @@ public class Functions {
 	}
 
 	// used by tfidf 
-	public static int df(int featureIdx, InstanceList instances) {
+	public static final int df(int featureIdx, InstanceList instances) {
 		int df = 0;
 		
 		for(Instance instance : instances) {
@@ -52,7 +52,7 @@ public class Functions {
 	}
 	
 	// Returns the document frequency of all features in the alphabet
-	public static RankedFeatureVector df(InstanceList instances) {
+	public static final RankedFeatureVector df(InstanceList instances) {
 		
 		double[] dfs = new double[instances.getDataAlphabet().size()];
 		
@@ -116,7 +116,7 @@ public class Functions {
 	 * @param instances
 	 * @return
 	 */
-	public static int l0norm(int featureIdx, int classIdx, InstanceList instances) {
+	public static final int l0norm(int featureIdx, int classIdx, InstanceList instances) {
 		int l0norm = 0;
 		
 		for (Instance instance : instances)
@@ -135,4 +135,9 @@ public class Functions {
 	// CHI
 	// TC (term contribution)
 	// variance
+	// fisher
+	public static final double fisher() {
+		return 0;
+	}
+	
 }

@@ -1,4 +1,4 @@
-package unitary;
+package unitary.fs.methods;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -15,7 +15,7 @@ import fs.IFeatureTransformer;
 import fs.methods.PruneByL0Norm;
 import fs.methods.functions.Functions;
 
-public class PruneByL0UnitTest {
+public class PruneByL0NormUnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 	
 	private int numFeaturesToKeep;

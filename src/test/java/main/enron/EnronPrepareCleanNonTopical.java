@@ -1,4 +1,4 @@
-package enron;
+package main.enron;
 import java.util.LinkedList;
 
 import data.enron.file.EnronFileCleaning;
