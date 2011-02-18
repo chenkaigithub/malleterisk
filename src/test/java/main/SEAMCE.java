@@ -9,7 +9,6 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.Trial;
-import cc.mallet.types.Alphabet;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 import fs.FeatureTransformationPipeline;
@@ -54,40 +53,32 @@ public class SEAMCE {
 //		System.out.println("-preprocess-");
 //		for (Instance msgInstance : ds) ilBody.addThruPipe(msgInstance);
 		
-		
-		
 		System.out.println("-loading documents-");
 		InstanceList ilBody = InstanceList.load(new File("ilBodyShuffled.txt"));
 		
-		
-		// TODO:
-		Alphabet alphabet = ilBody.getAlphabet();
-		
-		System.out.println("-feature selection-");
 		// normalize the feature iteration (0% ... 100%)
-		final double step = alphabet.size() / 100.0;
-		for(int i = 0; i <= 100; i += 5) {
-			System.out.println(Math.ceil(i*step));
+		final double step = ilBody.getAlphabet().size() / 100.0;
+		for(int i = 100; i > 0; i -= 5) {
+  			int nf = (int)Math.ceil(i*step);
 			
-//			System.out.println(ilBody.getAlphabet().size());
-//			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-////			featureSelectors.add(new TFIDF());
-////			featureSelectors.add(new PruneByTF(5, 100));
-////			featureSelectors.add(new PruneByDF(2500));
-//			featureSelectors.add(new RankByIG(i));
-////			featureSelectors.add(new PruneByL0Norm(2500));
-////			featureSelectors.add(new RankByL0Norm(2500));
-//			ilBody = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
-//			System.out.println(ilBody.getAlphabet().size());
-//			
-//			System.out.println("-classification-");
-//			int numFolds = 10;
-//			double v = 0;
-//			Collection<Trial> trials = crossValidate(ilBody, numFolds, new NaiveBayesTrainer());
-//			for (Trial trial : trials) v += trial.getAccuracy();
-//			System.out.println("average accuracy: " + (v/numFolds));
-////			System.out.println(new ConfusionMatrix(trial));
-//			break;
+  			System.out.println("-feature selection-");
+			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
+			featureSelectors.add(new TFIDF());
+			featureSelectors.add(new PruneByTF(5, 100));
+			featureSelectors.add(new PruneByDF(nf));
+			featureSelectors.add(new RankByIG(nf));
+			featureSelectors.add(new PruneByL0Norm(nf));
+			featureSelectors.add(new RankByL0Norm(nf));
+			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
+			System.out.print(i + "|" + newInstances.getAlphabet().size() + "|");
+			
+			System.out.println("-classification-");
+			int numFolds = 10;
+			double v = 0;
+			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
+			for (Trial trial : trials) v += trial.getAccuracy();
+			System.out.println(v/numFolds);
+//			System.out.println(new ConfusionMatrix(trial));
 		}
 	}
 	
