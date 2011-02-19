@@ -19,6 +19,9 @@ import data.IDataSet;
 public class SubjectPreProcessor1 extends PreProcessor {
 	private static final long serialVersionUID = -3365120647901882307L;
 
+	public SubjectPreProcessor1() {
+	}
+	
 	public SubjectPreProcessor1(IDataSet ds) {
 		super(ds);
 	}

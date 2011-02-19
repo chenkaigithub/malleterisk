@@ -14,10 +14,14 @@ public abstract class PreProcessor extends InstanceList {
 	private static final long serialVersionUID = 8606199204474189155L;
 
 	@SuppressWarnings("deprecation")
-	public PreProcessor(IDataSet ds) {
+	public PreProcessor() {
 		this.setPipe(new SerialPipes(getPipes()));
-		this.addThruPipe(ds);
 	}
 
+	public PreProcessor(IDataSet ds) {
+		this();
+		this.addThruPipe(ds);
+	}
+	
 	protected abstract ArrayList<Pipe> getPipes();
 }

@@ -1,75 +1,58 @@
 package main.enron;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.LinkedList;
-
-import pp.email.body.BodyPreProcessor1;
-import pp.email.subject.SubjectPreProcessor1;
-import cc.mallet.classify.Classifier;
-import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.types.InstanceList;
-import data.IDataSet;
-import data.enron.EnronDbDataSet;
-import data.enron.db.EnronDbConnector;
-import data.enron.db.EnronDbDataAccess;
-import fs.FeatureTransformationPipeline;
-import fs.IFeatureTransformer;
-import fs.methods.PruneByTF;
-import fs.methods.TFIDF;
 
 public class EnronMain {
 	public static void main(String[] args) throws SQLException {
-		// data set
-		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
-		
-		Collection<Integer> collections = dal.getCollections();
-		
-		for (Integer collectionId : collections) {
-			Collection<Integer> users = dal.getUsers(collectionId);
-			for (Integer userId : users) {
-				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
-				
-				// pre processing
-				InstanceList ilSubject = new SubjectPreProcessor1(ds);
-				InstanceList ilBody = new BodyPreProcessor1(ds);
-//				InstanceList ilDate = new DatePreProcessor1(ds);
-//				InstanceList ilParticipants = new ParticipantsPreProcessor1(ds);		
-				
-				// feature selection
-				LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-				featureSelectors.add(new PruneByTF(5, 1000));
-				featureSelectors.add(new TFIDF());
-				FeatureTransformationPipeline fsPipe = new FeatureTransformationPipeline(featureSelectors);
-						
-//				ilSubject = fsPipe.runThruPipe(ilSubject);
-				ilBody = fsPipe.runThruPipeline(ilBody);
-//				ilParticipants = 
-//				ilDate = 
-				
-				// magia! é necessário classificar e colar os resultados entre
-				// as várias partes das mensagens - cada mensagem é composta por
-				// uma instância de cada instance list. as instâncias possuem
-				// um campo que indica a que documento pertencem
-				
-				// como ter a certeza que o split sobre o subject
-				// é idêntico ao split no body, etc? i.e. garantir que os "pedaços" das
-				// mensagens são separados de forma idêntica pelas instance list
-				
-				InstanceList[] subjectSplit = ilSubject.split(new double[] {0.8, 0.2 });
-				ClassifierTrainer<?> nbSubjectTrainer = new NaiveBayesTrainer();
-				Classifier nbSubjectClassifier = nbSubjectTrainer.train(subjectSplit[0]);
-				System.out.println("subject training accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[0]));
-				System.out.println("subject testing accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[1]));
-				
-				InstanceList[] bodySplit = ilBody.split(new double[] { 0.8, 0.2 });
-				ClassifierTrainer<?> nbBodyTrainer = new NaiveBayesTrainer();
-				Classifier nbBodyClassifier = nbBodyTrainer.train(bodySplit[0]);
-				System.out.println("body training accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[0]));
-				System.out.println("body testing accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[1]));
-			}
-			break;
-		}
+//		// data set
+//		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+//		
+//		Collection<Integer> collections = dal.getCollections();
+//		
+//		for (Integer collectionId : collections) {
+//			Collection<Integer> users = dal.getUsers(collectionId);
+//			for (Integer userId : users) {
+//				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+//				
+//				// pre processing
+//				InstanceList ilSubject = new SubjectPreProcessor1(ds);
+//				InstanceList ilBody = new BodyPreProcessor1(ds);
+////				InstanceList ilDate = new DatePreProcessor1(ds);
+////				InstanceList ilParticipants = new ParticipantsPreProcessor1(ds);		
+//				
+//				// feature selection
+//				LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
+//				featureSelectors.add(new PruneByTF(5, 1000));
+//				featureSelectors.add(new TFIDF());
+//				FeatureTransformationPipeline fsPipe = new FeatureTransformationPipeline(featureSelectors);
+//						
+////				ilSubject = fsPipe.runThruPipe(ilSubject);
+//				ilBody = fsPipe.runThruPipeline(ilBody);
+////				ilParticipants = 
+////				ilDate = 
+//				
+//				// magia! é necessário classificar e colar os resultados entre
+//				// as várias partes das mensagens - cada mensagem é composta por
+//				// uma instância de cada instance list. as instâncias possuem
+//				// um campo que indica a que documento pertencem
+//				
+//				// como ter a certeza que o split sobre o subject
+//				// é idêntico ao split no body, etc? i.e. garantir que os "pedaços" das
+//				// mensagens são separados de forma idêntica pelas instance list
+//				
+//				InstanceList[] subjectSplit = ilSubject.split(new double[] {0.8, 0.2 });
+//				ClassifierTrainer<?> nbSubjectTrainer = new NaiveBayesTrainer();
+//				Classifier nbSubjectClassifier = nbSubjectTrainer.train(subjectSplit[0]);
+//				System.out.println("subject training accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[0]));
+//				System.out.println("subject testing accuracy is " + nbSubjectClassifier.getAccuracy(subjectSplit[1]));
+//				
+//				InstanceList[] bodySplit = ilBody.split(new double[] { 0.8, 0.2 });
+//				ClassifierTrainer<?> nbBodyTrainer = new NaiveBayesTrainer();
+//				Classifier nbBodyClassifier = nbBodyTrainer.train(bodySplit[0]);
+//				System.out.println("body training accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[0]));
+//				System.out.println("body testing accuracy is " + nbBodyClassifier.getAccuracy(bodySplit[1]));
+//			}
+//			break;
+//		}
 		
 		// ------------------------------------------------------------------
 		// ------------------------------------------------------------------
@@ -85,10 +68,4 @@ public class EnronMain {
 //			println(v + "\t" + sums(idx))
 //		})
 	}
-	
-	public static final void classifyUser(int userId) {
-		
-	}
-	
-	
 }

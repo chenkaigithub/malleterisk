@@ -1,11 +1,13 @@
 package main;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import pp.PreProcessor;
 import pp.email.body.BodyPreProcessor1;
+import pp.email.date.DatePreProcessor1;
+import pp.email.subject.SubjectPreProcessor1;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -52,33 +54,56 @@ import fs.methods.TFIDF;
  */
 public class SEAMCE {
 	public static void main(String[] args) throws SQLException {
-		System.out.println("-loading documents-");
-		InstanceList ilBody = InstanceList.load(new File("ilBodyShuffled.txt"));
+		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+		int collectionId = 1;
+		int userId = 6;
 		
-		// normalize the feature iteration (0% ... 100%)
-		final double step = ilBody.getAlphabet().size() / 100.0;
-		for(int i = 100; i > 0; i -= 5) {
-  			int nf = (int)Math.ceil(i*step);
-			
-  			System.out.println("-feature selection-");
-			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-			featureSelectors.add(new TFIDF());
-			featureSelectors.add(new PruneByTF(5, 100));
-			featureSelectors.add(new PruneByDF(nf));
-			featureSelectors.add(new RankByIG(nf));
-			featureSelectors.add(new PruneByL0Norm(nf));
-			featureSelectors.add(new RankByL0Norm(nf));
-			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
-			System.out.print(i + "|" + newInstances.getAlphabet().size() + "|");
-			
-			System.out.println("-classification-");
-			int numFolds = 10;
-			double v = 0;
-			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
-			for (Trial trial : trials) v += trial.getAccuracy();
-			System.out.println(v/numFolds);
-//			System.out.println(new ConfusionMatrix(trial));
-		}
+		// preprocessing options - what kind of preprocessing to apply?
+		// TODO: create new classes for different setups 
+		System.out.println("-preprocessing-");
+		InstanceList ilSubject = new SubjectPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+		InstanceList ilBody = new BodyPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+		
+		System.out.println(ilSubject.size());
+		System.out.println(ilBody.size());
+				
+//		System.out.println("-loading documents-");
+//		InstanceList ilBody = InstanceList.load(new File("ilBodyShuffled.txt"));
+//		
+//		// normalize the feature iteration (0% ... 100%)
+//		final double step = ilBody.getAlphabet().size() / 100.0;
+//		for(int i = 100; i > 0; i -= 5) {
+//  			int nf = (int)Math.ceil(i*step);
+//			
+//  			System.out.println("-feature selection-");
+//			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
+//			featureSelectors.add(new TFIDF());
+//			featureSelectors.add(new PruneByTF(5, 100));
+//			featureSelectors.add(new PruneByDF(nf));
+//			featureSelectors.add(new RankByIG(nf));
+//			featureSelectors.add(new PruneByL0Norm(nf));
+//			featureSelectors.add(new RankByL0Norm(nf));
+//			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
+//			System.out.print(i + "|" + newInstances.getAlphabet().size() + "|");
+//			
+//			System.out.println("-classification-");
+//			int numFolds = 10;
+//			double v = 0;
+//			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
+//			for (Trial trial : trials) v += trial.getAccuracy();
+//			System.out.println(v/numFolds);
+////			System.out.println(new ConfusionMatrix(trial));
+//		}
+	}
+	
+	public void y(
+		IDataSet ds, 
+		PreProcessor subjectpp, PreProcessor bodypp, PreProcessor datepp, PreProcessor participantspp,
+		Collection<IFeatureTransformer> subjectfs, Collection<IFeatureTransformer> bodyfs,
+		Collection<IFeatureTransformer> datefs, Collection<IFeatureTransformer> participantsfs,
+		ClassifierTrainer<?> subjectct, ClassifierTrainer<?> bodyct, ClassifierTrainer<?> datect, ClassifierTrainer<?> participantsct
+	) throws Exception {
+		
 	}
 	
 	public void x() throws SQLException {
@@ -90,15 +115,14 @@ public class SEAMCE {
 		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		int collectionId = 1;
 		int userId = 6;
-		IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
 		
 		// preprocessing options - what kind of preprocessing to apply?
 		// TODO: create new classes for different setups 
 		System.out.println("-preprocessing-");
-//		InstanceList ilSubject = new SubjectPreProcessor1(ds);
-		InstanceList ilBody = new BodyPreProcessor1(ds);
-//		InstanceList ilDate = new DatePreProcessor1(ds);
-//		InstanceList ilParticipants = new ParticipantsPreProcessor1(ds);		
+//		InstanceList ilSubject = new SubjectPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+		InstanceList ilBody = new BodyPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+//		InstanceList ilDate = new DatePreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+//		InstanceList ilParticipants = new ParticipantsPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));		
 		
 		// TODO: save/load instancelist from file
 //		InstanceList ilSubject = InstanceList.load(new File("ilSubjectShuffled.txt"));
