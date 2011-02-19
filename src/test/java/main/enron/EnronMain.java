@@ -3,13 +3,11 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import pp.IPreProcessor;
-import pp.pipeline.BodyPreProcessor;
-import pp.pipeline.SubjectPreProcessor;
+import pp.email.body.BodyPreProcessor1;
+import pp.email.subject.SubjectPreProcessor1;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import data.IDataSet;
 import data.enron.EnronDbDataSet;
@@ -17,8 +15,8 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.TFIDF;
 import fs.methods.PruneByTF;
+import fs.methods.TFIDF;
 
 public class EnronMain {
 	public static void main(String[] args) throws SQLException {
@@ -33,23 +31,10 @@ public class EnronMain {
 				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
 				
 				// pre processing
-				IPreProcessor subjectPreProcessor = new SubjectPreProcessor();
-				IPreProcessor bodyPreProcessor = new BodyPreProcessor();
-//				IPreProcessor datePreProcessor = new DatePreProcessor();
-//				IPreProcessor participantsPreProcessor = new ParticipantsPreProcessor();		
-				
-				InstanceList ilSubject = subjectPreProcessor.getInstanceList();  
-				InstanceList ilBody = bodyPreProcessor.getInstanceList();
-//				InstanceList ilDate = datePreProcessor.getInstanceList();
-//				InstanceList ilParticipants = participantsPreProcessor.getInstanceList();
-				
-				for (Instance msgInstance : ds) {
-					System.out.println(msgInstance.getName());
-					ilSubject.addThruPipe(msgInstance);
-					ilBody.addThruPipe(msgInstance);
-//					ilDate.addThruPipe(msgInstance);
-//					ilParticipants.addThruPipe(msgInstance);
-				}
+				InstanceList ilSubject = new SubjectPreProcessor1(ds);
+				InstanceList ilBody = new BodyPreProcessor1(ds);
+//				InstanceList ilDate = new DatePreProcessor1(ds);
+//				InstanceList ilParticipants = new ParticipantsPreProcessor1(ds);		
 				
 				// feature selection
 				LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();

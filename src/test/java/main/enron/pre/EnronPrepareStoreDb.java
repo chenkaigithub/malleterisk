@@ -1,4 +1,4 @@
-package main.enron;
+package main.enron.pre;
 import java.sql.SQLException;
 
 import data.enron.db.Enron2Db;
