@@ -1,60 +1,50 @@
 package analysis;
 
+import java.util.Map;
+
+import cc.mallet.types.FeatureVector;
+import cc.mallet.types.Instance;
+import cc.mallet.types.InstanceList;
+
 public class CollectionAnalysis {
-	/*
-	 * getNumUsers()
-	 * 
-	 * getNumDocuments()
-	 * getNumClasses()
-	 * 
-	 * getNumDocumentsPerUser()
-	 * getNumClassesPerUser()
-	 * 
-	 * getNumDocumentsPerClass()
-	 * 
-	 * 
-	 */
+	private InstanceList instances;
 	
-	/*
-	-- nœmero de classes distintas
-	select count(class_id) from email_class;
-	*/
-
-	/*
-	-- nœmero de utilizadores distintos
-	select count(user_id) from email_user;
-	*/
-
-	/*
-	-- nœmero de classes por utilizador
-	select user_id, count(class_id)
-	from (select distinct user_id, class_id from email_message) AS t
-	group by user_id
-	order by user_id;
-	*/
-
-	/*
-	-- nœmero de mensagens distintas
-	select count(email_id)
-	from email_message;
-	*/
+	public CollectionAnalysis(InstanceList instances) {
+		this.instances = instances;
+	}
 	
-	/*
-	-- nœmero de mensagens por classe
-	select class_id, count(email_id) AS num_msgs
-	from email_message
-	group by class_id
-	order by class_id;
-	*/
+	public int getNumTerms() {
+		return instances.getDataAlphabet().size();
+	}
 	
-	/*
-	-- nœmero de mensagens por utilizador
-	select user_id, count(user_id) AS num_msgs
-	from email_message
-	group by user_id
-	order by user_id;
-	*/
-
+	public int getNumDocuments() {
+		return instances.size();
+	}
+	
+	public int getNumClasses() {
+		return instances.getTargetAlphabet().size();
+	}
+	
+	public Map<String, Integer> getTermOccurrences() {
+		// term | #occurrs
+		return null;
+	}
+	
+	public double getAverageTermsDocuments() {
+		double i = 0;
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector)instance.getData();
+			i += fv.getIndices().length;
+		}
+		
+		return i/instances.size();
+	}
+	
+	public double getAverageDocumentsClass() {
+		return instances.size()/instances.getTargetAlphabet().size();
+	}
+	
 	/*
 	-- nœmero de mensagens por data
 	select email_id, class_id, date
@@ -68,5 +58,5 @@ public class CollectionAnalysis {
 	from email_message m, email_participants p
 	where m.email_id = p.email_id
 	order by participant_id, user_id;
-	*/
+	*/	
 }

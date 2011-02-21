@@ -9,12 +9,13 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	
 	public IteratedExecution(int alphabetSize, int percentageStep) {
 		this.percentageStep = percentageStep;
-		stepSize = (double)alphabetSize / 100.0;
+		this.stepSize = (double)alphabetSize / 100.0;
+		this.currentStep = 100;
 	}
 	
 	@Override
 	public boolean hasNext() {
-		return (currentStep > 0);
+		return ((currentStep - percentageStep) > 0);
 	}
 
 	@Override

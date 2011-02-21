@@ -1,17 +1,22 @@
 package main;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
-import pp.PreProcessor;
 import pp.email.body.BodyPreProcessor1;
-import pp.email.date.DatePreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
+import utils.IteratedExecution;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.Trial;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 import data.IDataSet;
@@ -20,11 +25,7 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.PruneByDF;
-import fs.methods.PruneByL0Norm;
-import fs.methods.PruneByTF;
 import fs.methods.RankByIG;
-import fs.methods.RankByL0Norm;
 import fs.methods.TFIDF;
 
 /*
@@ -49,117 +50,113 @@ import fs.methods.TFIDF;
  * - classifiers
  * - integrate SVM into mallet (libsvm)
  * 
+ * TODO: use a log-based approach! e.g.
+ * LinkedList<String> operations = new LinkedList<String>();
+ * operations.add("preprocessing: tokenization");
+ * operations.add("preprocessing: part of speech tagging");
+ * operations.add("..");
+ * operations.add("feature transformation: tf idf");
+ * operations.add("feature selection: ig, keeping xxx features");
+ * operations.add("classification: naive bayes");
+ * in the end, dump this with the results
+ * must do this in some generic way, maybe with reflection?
+ * must intercept values at constructor time, etc
+ * AOP looks nice for this?
+ * 
  * + test, test, test
  * + experiment, experiment, experiment
  */
 public class SEAMCE {
-	public static void main(String[] args) throws SQLException {
+	private static final String SRC_FILENAME_FORMAT = "instances_%d-%d_%s";
+	private static final String DST_FILENAME_FORMAT = "results_%d-%d_%s_%s";
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+	
+	public static void main(String[] args) throws SQLException, FileNotFoundException {
+//		preprocessToFile();
+		
+		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 1, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 1, "bodies"));
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 2, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 2, "bodies"));
+
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 3, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 3, "bodies"));
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 4, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 4, "bodies"));
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 5, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies"));
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies"));
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 7, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 7, "bodies"));
+	}
+	
+	public static final void preprocessToFile() throws SQLException {
 		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		int collectionId = 1;
-		int userId = 6;
 		
-		// preprocessing options - what kind of preprocessing to apply?
-		// TODO: create new classes for different setups 
-		System.out.println("-preprocessing-");
-		InstanceList ilSubject = new SubjectPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
-		InstanceList ilBody = new BodyPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
+		for (int userId : dal.getUsers(collectionId)) {
+			IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+			
+			InstanceList subjects = new SubjectPreProcessor1();
+			InstanceList bodies = new BodyPreProcessor1();
+//			InstanceList dates = new DatePreProcessor1();
+//			InstanceList participants = new ParticipantsPreProcessor1();		
+			
+			for (Instance instance : ds) {
+				subjects.addThruPipe(instance);
+				bodies.addThruPipe(instance);
+//				dates.addThruPipe(instance);
+//				participants.addThruPipe(instance);
+			}
+			
+			subjects.save(new File(String.format(DST_FILENAME_FORMAT, collectionId, userId, "subjects")));
+			bodies.save(new File(String.format(DST_FILENAME_FORMAT, collectionId, userId, "bodies")));
+//			dates.save(new File(String.format(s, collectionId, userId, "dates")));
+//			participants.save(new File(String.format(s, collectionId, userId, "participants")));
+		}
+	}
+	
+	public static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(new File(dstFilename));
 		
-		System.out.println(ilSubject.size());
-		System.out.println(ilBody.size());
-				
-//		System.out.println("-loading documents-");
-//		InstanceList ilBody = InstanceList.load(new File("ilBodyShuffled.txt"));
-//		
-//		// normalize the feature iteration (0% ... 100%)
-//		final double step = ilBody.getAlphabet().size() / 100.0;
-//		for(int i = 100; i > 0; i -= 5) {
-//  			int nf = (int)Math.ceil(i*step);
-//			
-//  			System.out.println("-feature selection-");
-//			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-//			featureSelectors.add(new TFIDF());
+		InstanceList instances = InstanceList.load(new File(srcFilename));
+		
+		int numFolds = 10;
+		
+		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
+			LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
+			featureSelectors.add(new TFIDF());
 //			featureSelectors.add(new PruneByTF(5, 100));
 //			featureSelectors.add(new PruneByDF(nf));
-//			featureSelectors.add(new RankByIG(nf));
+			featureSelectors.add(new RankByIG(nf));
 //			featureSelectors.add(new PruneByL0Norm(nf));
 //			featureSelectors.add(new RankByL0Norm(nf));
-//			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
-//			System.out.print(i + "|" + newInstances.getAlphabet().size() + "|");
-//			
-//			System.out.println("-classification-");
-//			int numFolds = 10;
-//			double v = 0;
-//			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
-//			for (Trial trial : trials) v += trial.getAccuracy();
-//			System.out.println(v/numFolds);
-////			System.out.println(new ConfusionMatrix(trial));
-//		}
-	}
-	
-	public void y(
-		IDataSet ds, 
-		PreProcessor subjectpp, PreProcessor bodypp, PreProcessor datepp, PreProcessor participantspp,
-		Collection<IFeatureTransformer> subjectfs, Collection<IFeatureTransformer> bodyfs,
-		Collection<IFeatureTransformer> datefs, Collection<IFeatureTransformer> participantsfs,
-		ClassifierTrainer<?> subjectct, ClassifierTrainer<?> bodyct, ClassifierTrainer<?> datect, ClassifierTrainer<?> participantsct
-	) throws Exception {
-		
-	}
-	
-	public void x() throws SQLException {
-		// TODO: how do I decouple this? 
-		// what kind of dependency injection can i add here?
-		
-		// which collection and user to process?
-		System.out.println("-document loading-");
-		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
-		int collectionId = 1;
-		int userId = 6;
-		
-		// preprocessing options - what kind of preprocessing to apply?
-		// TODO: create new classes for different setups 
-		System.out.println("-preprocessing-");
-//		InstanceList ilSubject = new SubjectPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
-		InstanceList ilBody = new BodyPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
-//		InstanceList ilDate = new DatePreProcessor1(new EnronDbDataSet(dal, collectionId, userId));
-//		InstanceList ilParticipants = new ParticipantsPreProcessor1(new EnronDbDataSet(dal, collectionId, userId));		
-		
-		// TODO: save/load instancelist from file
-//		InstanceList ilSubject = InstanceList.load(new File("ilSubjectShuffled.txt"));
-//		InstanceList ilBody = InstanceList.load(new File("ilBodyShuffled.txt"));
-//		InstanceList ilDate = InstanceList.load(new File("ilDateShuffled.txt"));
-//		InstanceList ilParticipants = InstanceList.load(new File("ilParticipantsShuffled.txt"));
-		
-		// TODO: repeat this for each instance list
-		// this highly coupled with the feature selection
-//		for (int nf : new IteratedExecution(ilBody.getAlphabet().size(), 5)) {
-//			// do the feature selection here
-//			// do the classification here
-//			// print out results to somewhere
-//		}
-		
-		// TODO: do this for subject, body, date, participants
-		// feature selection
-		System.out.println("-feature selection-");
-		int nf = 2500; // TODO: parametrize the number of features for fs
-		LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
-		// TODO: parametrize the feature selection operations
-		featureSelectors.add(new TFIDF());
-		featureSelectors.add(new PruneByTF(5, 100));
-		featureSelectors.add(new PruneByDF(nf));
-		featureSelectors.add(new RankByIG(nf));
-		featureSelectors.add(new PruneByL0Norm(nf));
-		featureSelectors.add(new RankByL0Norm(nf));
-		InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(ilBody);
+			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(instances);
 
-		System.out.println("-classification-");
-		int numFolds = 10;
-		double v = 0;
-		Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
-		for (Trial trial : trials) v += trial.getAccuracy();
-		System.out.println(v/numFolds);
+			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
+			
+			writeToFile("rankbyig"+nf, trials, pw);
+		}
+		
+		pw.flush();
+		pw.close();
 	}
-	
+
+	private static void writeToFile(String title, Collection<Trial> trials, PrintWriter pw) {
+		pw.write(title);
+		pw.write("\n");
+		for (Trial trial : trials) {
+			pw.write(String.valueOf(trial.getAccuracy()));
+			pw.write("\n");
+		}
+	}
+
 	// ------------------------------------------------------------------------
 	
 	/**
