@@ -28,13 +28,4 @@ public class TDI implements IFeatureTransformer {
 		
 		return newInstances;
 	}
-	
-//	public void toBoolean(InstanceList instances) {
-//		for (Instance instance : instances) {
-//			FeatureVector fv = (FeatureVector)instance.getData();
-//			for (int index : fv.getIndices()) {
-//				if(fv.value(index) > 0) fv.setValue(index, 1);
-//			}
-//		}
-//	}
 }

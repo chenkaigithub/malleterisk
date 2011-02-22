@@ -16,8 +16,6 @@ import fs.IFeatureTransformer;
 import fs.methods.TDI;
 
 public class TDIUnitTest {
-	
-	
 	private InstanceList instances;
 	
 	@Before
