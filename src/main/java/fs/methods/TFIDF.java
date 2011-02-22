@@ -38,7 +38,7 @@ public class TFIDF implements IFeatureTransformer {
 			Object feature = it.next();
 			int featureIdx = alphabet.lookupIndex(feature);
 			int df = Functions.df(featureIdx, instances);
-			double n_df = n/df;
+			double n_df = n/(1+df);
 			
 			if(n_df > 0) {
 				double idf = Math.log(n_df);

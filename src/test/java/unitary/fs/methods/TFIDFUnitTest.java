@@ -17,20 +17,6 @@ import fs.IFeatureTransformer;
 import fs.methods.TFIDF;
 
 public class TFIDFUnitTest {
-	public static void main(String[] args) {
-		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
-		Alphabet alphabet = instances.getDataAlphabet();
-		for (Instance instance : instances) {
-			System.out.println(instance.getName());
-			FeatureVector fv = (FeatureVector) instance.getData();
-			for(int idx : fv.getIndices()) {
-				System.out.println(alphabet.lookupObject(idx));
-				System.out.println(fv.value(idx));
-			}
-			System.out.println();
-		}
-	}
-	
 	private InstanceList instances;
 	
 	@Before
@@ -63,18 +49,46 @@ public class TFIDFUnitTest {
 		instances = InstanceList.load(new File("instances_0-0_tests"));
 	}
 	
+	private double tfidf(double v) {
+		return (v) * Math.log(5/2);
+	}
+	
 	@Test
 	public void test1() {
 		LinkedList<IFeatureTransformer> featureSelectors = new LinkedList<IFeatureTransformer>();
 		featureSelectors.add(new TFIDF());
 		InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(instances);
+		Alphabet alphabet = newInstances.getDataAlphabet();
 		
 		for (Instance instance : newInstances) {
 			FeatureVector fv = (FeatureVector)instance.getData();
 			
 			for (int idx : fv.getIndices()) {
-				Assert.assertEquals(1.0, fv.value(idx));
+				String t = alphabet.lookupObject(idx).toString();
+				if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/10.")) {
+					if(t.equals("duke")) Assert.assertEquals(tfidf(8), fv.value(idx));
+					else if(t.equals("citru")) Assert.assertEquals(tfidf(6), fv.value(idx));
+				}
+				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/18.")) {
+					if(t.equals("glatzer")) Assert.assertEquals(tfidf(1), fv.value(idx));
+				}
+				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/34.")) {
+					if(t.equals("schedul")) Assert.assertEquals(tfidf(6), fv.value(idx));
+				}
+				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/ecogas/10.")) {
+					if(t.equals("montauk")) Assert.assertEquals(tfidf(9), fv.value(idx));
+					else if(t.equals("settlement")) Assert.assertEquals(tfidf(7), fv.value(idx));
+				}
+				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/ecogas/18.")) {
+					if(t.equals("ecoga")) Assert.assertEquals(tfidf(4), fv.value(idx));
+					else if(t.equals("legal")) Assert.assertEquals(tfidf(5), fv.value(idx));
+					else if(t.equals("expens")) Assert.assertEquals(tfidf(3), fv.value(idx));
+					else if(t.equals("8")) Assert.assertEquals(tfidf(4), fv.value(idx));
+					else if(t.equals("17")) Assert.assertEquals(tfidf(3), fv.value(idx));
+					else if(t.equals("00")) Assert.assertEquals(tfidf(3), fv.value(idx));
+				}
 			}
+			
 		}
 	}
 }

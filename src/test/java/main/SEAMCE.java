@@ -35,6 +35,33 @@ import fs.methods.TFIDF;
 
 /*
  * TODO:
+ * 
+ * 0. 
+ * minimum number of docs / class
+ * maximum number of docs / class
+ * 
+ * 1.
+ * TDI
+ * 
+ * 2.
+ * supervised feature selection
+ * unsupervised feature selection
+ * [fisher, variance]
+ * 
+ * 3.
+ * varying number of classes
+ * 
+ * 4.
+ * pearson correlation
+ * mRMR (Minimum Redundancy Maximum Relevance)
+ * feature clustering
+ * 	find the most similar features (cosine similarity)
+ * 	remove least relevant features from each cluster
+ * 
+ * 5.
+ * participants: treat as a feature selection problem
+ * documents x participants
+ * 
  * + tests
  * - unit test for every implementation
  * - test everything in detail
