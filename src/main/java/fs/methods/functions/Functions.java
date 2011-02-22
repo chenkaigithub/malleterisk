@@ -134,8 +134,11 @@ public class Functions {
 	// TS (term strength)
 	// CHI
 	// TC (term contribution)
-	// variance
-	// fisher
+	
+	public static final double variance() {
+		return 0;
+	}
+	
 	public static final double fisher() {
 		return 0;
 	}

@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import pp.email.body.BodyPreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
+import analysis.TextCollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -25,7 +26,11 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
+import fs.methods.PruneByDF;
+import fs.methods.PruneByL0Norm;
+import fs.methods.PruneByTF;
 import fs.methods.RankByIG;
+import fs.methods.RankByL0Norm;
 import fs.methods.TFIDF;
 
 /*
@@ -74,26 +79,28 @@ public class SEAMCE {
 	public static void main(String[] args) throws SQLException, FileNotFoundException {
 //		preprocessToFile();
 		
-		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 1, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 1, "bodies"));
+//		analyzeCollection();
+		
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 1, "subjects", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 1, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 2, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 2, "bodies"));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 2, "bodies", DATE_FORMAT.format(new Date())));
 
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 3, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 3, "bodies"));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 3, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 4, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 4, "bodies"));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 4, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 5, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies"));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies"));
+		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 7, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 7, "bodies"));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 7, "bodies", DATE_FORMAT.format(new Date())));
 	}
 	
 	public static final void preprocessToFile() throws SQLException {
@@ -122,6 +129,38 @@ public class SEAMCE {
 		}
 	}
 	
+	public static final void analyzeCollection() {
+		System.out.println("1-1");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies")))).toString());
+		
+		System.out.println("1-2");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 2, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies")))).toString());
+		
+		System.out.println("1-3");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 3, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies")))).toString());
+		
+		System.out.println("1-4");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 4, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies")))).toString());
+		
+		System.out.println("1-5");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies")))).toString());
+		
+		System.out.println("1-6");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies")))).toString());
+		
+		System.out.println("1-7");
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects")))).toString());
+		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies")))).toString());	
+	}
+	
+	
+	
 	public static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(new File(dstFilename));
 		
@@ -134,14 +173,14 @@ public class SEAMCE {
 			featureSelectors.add(new TFIDF());
 //			featureSelectors.add(new PruneByTF(5, 100));
 //			featureSelectors.add(new PruneByDF(nf));
-			featureSelectors.add(new RankByIG(nf));
+//			featureSelectors.add(new RankByIG(nf));
 //			featureSelectors.add(new PruneByL0Norm(nf));
-//			featureSelectors.add(new RankByL0Norm(nf));
+			featureSelectors.add(new RankByL0Norm(nf));
 			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(instances);
 
 			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
 			
-			writeToFile("rankbyig"+nf, trials, pw);
+			writeToFile("rankbyl0norm"+nf, trials, pw);
 		}
 		
 		pw.flush();
