@@ -4,7 +4,7 @@ import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import fs.IFeatureTransformer;
-import fs.methods.functions.Functions;
+import fs.functions.Functions;
 
 /**
  * Implementation of Method 2 from [1]. A L0 norm, rank based method for 

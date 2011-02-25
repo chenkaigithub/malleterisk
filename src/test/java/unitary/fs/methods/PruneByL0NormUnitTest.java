@@ -12,8 +12,8 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
+import fs.functions.Functions;
 import fs.methods.FilterByRankedL0Norm1;
-import fs.methods.functions.Functions;
 
 public class PruneByL0NormUnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));

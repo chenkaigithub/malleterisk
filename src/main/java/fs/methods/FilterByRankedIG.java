@@ -4,7 +4,7 @@ import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InfoGain;
 import cc.mallet.types.InstanceList;
 import fs.IFeatureTransformer;
-import fs.methods.functions.Functions;
+import fs.functions.Functions;
 
 public class FilterByRankedIG implements IFeatureTransformer {
 	private int numFeatures;

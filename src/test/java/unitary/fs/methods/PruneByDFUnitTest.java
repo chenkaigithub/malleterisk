@@ -11,8 +11,8 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
+import fs.functions.Functions;
 import fs.methods.FilterByRankedDF;
-import fs.methods.functions.Functions;
 
 public class PruneByDFUnitTest {
 	private InstanceList instances;

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import pp.PreProcessor;
 import pp.mallet.pipes.PorterStemmerSequence;
-import types.mallet.EmailBody2Input;
+import types.mallet.pipe.EmailBody2Input;
 import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Input2CharSequence;

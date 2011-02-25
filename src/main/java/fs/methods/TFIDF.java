@@ -7,7 +7,7 @@ import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import fs.IFeatureTransformer;
-import fs.methods.functions.Functions;
+import fs.functions.Functions;
 
 public class TFIDF implements IFeatureTransformer {
 	// TODO: kinda inefficient - think abut a new solution

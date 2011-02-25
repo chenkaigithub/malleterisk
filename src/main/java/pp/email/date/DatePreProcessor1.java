@@ -3,7 +3,7 @@ package pp.email.date;
 import java.util.ArrayList;
 
 import pp.PreProcessor;
-import types.mallet.EmailDate2Input;
+import types.mallet.pipe.EmailDate2Input;
 import cc.mallet.pipe.Pipe;
 import data.IDataSet;
 

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import fs.methods.functions.Functions;
+import fs.functions.Functions;
 
 public class VarianceUnitTest {
 	public static final void main(String[] args) {

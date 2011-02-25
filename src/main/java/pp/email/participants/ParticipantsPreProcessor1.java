@@ -3,7 +3,7 @@ package pp.email.participants;
 import java.util.ArrayList;
 
 import pp.PreProcessor;
-import types.mallet.EmailParticipants2Input;
+import types.mallet.pipe.EmailParticipants2Input;
 import cc.mallet.pipe.Pipe;
 import data.IDataSet;
 

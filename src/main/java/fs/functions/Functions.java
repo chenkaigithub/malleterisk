@@ -1,5 +1,9 @@
-package fs.methods.functions;
+package fs.functions;
 
+import java.util.Collection;
+import java.util.Iterator;
+
+import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureSelection;
@@ -9,6 +13,7 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
 import cc.mallet.types.RankedFeatureVector;
 import cc.mallet.types.SparseVector;
+import cc.mallet.util.VectorStats;
 
 public class Functions {
 	/**
@@ -76,13 +81,12 @@ public class Functions {
 	// Returns the term frequency sum for all features in the alphabet.
 	public static RankedFeatureVector ttf(InstanceList instances) {
 		Alphabet dataAlphabet = instances.getDataAlphabet();
-		RankedFeatureVector ttf = new RankedFeatureVector(dataAlphabet, new double[instances.getAlphabet().size()]);
+		SparseVector sv = new SparseVector(new double[instances.getAlphabet().size()], false);
 		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector) instance.getData();
-			ttf.vectorAdd(fv, 1);
+			sv = sv.vectorAdd((FeatureVector) instance.getData(), 1);
 		}
 		
-		return ttf;
+		return new RankedFeatureVector(dataAlphabet, sv.getValues());
 	}	
 	
 	//
@@ -177,6 +181,9 @@ public class Functions {
 	}
 	
 	public static final double p(int featureIdx, InstanceList instances) {
+		// similar to ttf, but it's optimized to the variance calculation
+		// the tf is calculated with the ttf
+		
 		double tf = 0;
 		SparseVector ttf = new SparseVector(new double[instances.getAlphabet().size()], false);
 		
@@ -196,13 +203,76 @@ public class Functions {
 	// Fisher's Criterion
 	//
 	
-	public static final double fisher() {
+	public static final RankedFeatureVector fisher(InstanceList instances, int class1idx, int class2idx) {
+		LabeledInstancesList lil = new LabeledInstancesList(instances);
+		InstanceList cls1instances = lil.getInstances(class1idx);
+		InstanceList cls2instances = lil.getInstances(class2idx);
+		final double n1 = cls1instances.size();
+		final double n2 = cls2instances.size();
 		
+		// n1 * n2 * ((n2 * sum(cls1instances, tf, tdtf)) - (n1 * sum(cls2instances, tf, tdtf)))^2
+		final SparseVector evClass1 = conditionalExpectedValue(cls1instances);
+		final SparseVector evClass2 = conditionalExpectedValue(cls2instances);
 		
-		return 0;
+		final SparseVector varClass1 = conditionalVariance(cls1instances, evClass1);
+		final SparseVector varClass2 = conditionalVariance(cls2instances, evClass2);
+		
+		evClass1.timesEquals(n2);
+		evClass2.timesEquals(n1);
+		
+		SparseVector numerator = evClass1.vectorAdd(evClass2, -1.0);
+		numerator.timesEqualsSparse(numerator);
+		numerator.timesEquals(n1*n2);
+		
+		varClass1.timesEquals(n2*n2);
+		varClass2.timesEquals(n1*n1);
+		SparseVector denominator = varClass1.vectorAdd(varClass2, 1);
+		
+		Alphabet alphabet = instances.getDataAlphabet();
+		double[] values = new double[alphabet.size()];
+		
+		for (int i : numerator.getIndices()) {
+			values[i] = numerator.value(i) / denominator.value(i); 
+		}
+		
+		return new RankedFeatureVector(alphabet, values);
 	}
-
 	
+	public static final SparseVector conditionalExpectedValue(InstanceList clsInstances) {
+		SparseVector sv = new SparseVector(new double[clsInstances.getAlphabet().size()], false);
+		
+		for (Instance instance : clsInstances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			final double itdtf = 1.0 / tdtf(fv);
+			sv = sv.vectorAdd(fv, itdtf);
+		}
+		
+		return sv;
+	}
+	
+	public static final SparseVector conditionalVariance(InstanceList clsInstances, SparseVector ev) {
+		SparseVector sv = new SparseVector(new double[clsInstances.getAlphabet().size()], false);
+		final double n = clsInstances.size();
+		
+		for (Instance instance : clsInstances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			
+			SparseVector vv = (SparseVector) fv.cloneMatrix();
+			vv.timesEquals(n/tdtf(fv));
+			vv.timesEqualsSparse(vv.vectorAdd(ev, -1));
+			
+			sv = sv.vectorAdd(vv, 1);
+		}
+		
+		return sv;
+	}
+	
+	// total document term frequency
+	public static final double tdtf(FeatureVector fv) {
+		double s = 0;
+		for(int idx : fv.getIndices()) s+= fv.value(idx);
+		return s;
+	}
 	
 	// TODO:
 	// CTD (categorical descriptor term)
