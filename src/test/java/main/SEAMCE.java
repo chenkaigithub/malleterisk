@@ -40,9 +40,6 @@ import fs.methods.TFIDF;
  * minimum number of docs / class
  * maximum number of docs / class
  * 
- * 1.
- * TDI
- * 
  * 2.
  * supervised feature selection
  * unsupervised feature selection
@@ -59,9 +56,14 @@ import fs.methods.TFIDF;
  * 	remove least relevant features from each cluster
  * 
  * 5.
- * participants: treat as a feature selection problem
- * documents x participants
+ * participants: 
+ * 	treat as a feature selection problem
+ * 	documents x participants incidence matrix
+ * 	apply feature selection methods
  * 
+ * 
+ * 
+ * X.
  * + tests
  * - unit test for every implementation
  * - test everything in detail
@@ -124,7 +126,7 @@ public class SEAMCE {
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
-		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies", DATE_FORMAT.format(new Date())));
+//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 7, "subjects", DATE_FORMAT.format(new Date())));
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 7, "bodies", DATE_FORMAT.format(new Date())));

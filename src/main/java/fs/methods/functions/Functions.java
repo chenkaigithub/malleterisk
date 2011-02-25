@@ -8,6 +8,7 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
 import cc.mallet.types.RankedFeatureVector;
+import cc.mallet.types.SparseVector;
 
 public class Functions {
 	/**
@@ -40,8 +41,8 @@ public class Functions {
 	}
 
 	// used by tfidf 
-	public static final int df(int featureIdx, InstanceList instances) {
-		int df = 0;
+	public static final double df(int featureIdx, InstanceList instances) {
+		double df = 0.0;
 		
 		for(Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
@@ -135,12 +136,80 @@ public class Functions {
 	// CHI
 	// TC (term contribution)
 	
-	public static final double variance() {
-		return 0;
+	public static final double variance(int featureIdx, InstanceList instances) {
+		
+		
+		
+		double v = 0;
+		
+		/*
+		 * Var(termo) = Sum{i=1 ... N} [ (tf(termo, doc_i) - avg(termo))^2 . p(termo) ]  , onde
+		 * avg(termo) = Sum(ocorrncias do termo em todos os documentos) / N (ou apenas nœmero de documentos onde o termo ocorre?)
+		 *            i.e. (tf(termo, d1) + tf(termo, d2) + .. + tf(termo, dN)) / N
+		 */
+		
+//		final double n = instances.size();
+		final double m = instances.getDataAlphabet().size();
+		final double p_fx = 1.0 / m;
+		final double mean = sum(featureIdx, instances) / m;
+		
+		for (Instance instance : instances) {
+			double tf = ((FeatureVector)instance.getData()).value(featureIdx);
+			
+			v += Math.pow((tf - mean), 2);
+		}
+		
+		v *= p_fx;
+		
+		return v;
+	}
+
+	public static final double p(int featureIdx, InstanceList instances) {
+		double tf = 0;
+		SparseVector ttf = new SparseVector(new double[instances.getAlphabet().size()], false);
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			tf += fv.value(featureIdx);
+			ttf = ttf.vectorAdd(fv, 1);
+		}
+		
+		double sums = 0;
+		for(int idx : ttf.getIndices()) sums += ttf.value(idx);
+		
+		return tf/sums;
+	}
+	
+	public static final double sum(int featureIdx, InstanceList instances) {
+		double s = 0;
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector)instance.getData();
+			s += fv.value(featureIdx);
+		}
+		
+		return s;
 	}
 	
 	public static final double fisher() {
+		
+		
 		return 0;
 	}
-	
+
+	/*
+		f(ti, dj) = tf(ti,dj) * log(N / df(ti, dj))
+		sim(di, dj) = sum[i ... m] ( f(t, di) * f(t, dj) )
+		
+		TC(tk) = sum[i, j] ( f(tk, di) * f(tk, dj) )
+		
+		TVQ:
+		q(ti) = (sum[j=1 .. n] fij^2) - (1/n)(sum[j=1 .. n] fij)^2
+		n = number of documents in which t occurs at least once
+		fij >= 1
+		j=1 ... n
+		
+		TV:
+		v(ti) = sum[j=1 .. N] (fij - avg_fi)^2
+	 */
 }

@@ -1,6 +1,6 @@
 package fs.methods;
 
-import java.util.Iterator;
+import java.util.TreeMap;
 
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
@@ -28,34 +28,40 @@ public class TFIDF implements IFeatureTransformer {
 	}
 
 	public static InstanceList tfidf(InstanceList instances) {
-		int n = instances.size();
-		
-		// iterate features
 		Alphabet alphabet = instances.getDataAlphabet();
-		@SuppressWarnings("unchecked")
-		Iterator<Object> it = alphabet.iterator();
-		while(it.hasNext()) {
-			Object feature = it.next();
-			int featureIdx = alphabet.lookupIndex(feature);
-			int df = Functions.df(featureIdx, instances);
-			double n_df = n/(1+df);
-			
-			if(n_df > 0) {
-				double idf = Math.log(n_df);
-				// for every document, compute the tfidf of each feature
-				for (Instance instance : instances) {
-					FeatureVector fv = (FeatureVector) instance.getData();
-					double tf = 0;
-					int location = fv.location(featureIdx);
-					if(location>=0) {
-						tf = fv.valueAtLocation(location);
-						double tfidf = tf*idf;
-						fv.setValueAtLocation(location, tfidf);
+		InstanceList newInstances = new InstanceList(alphabet, instances.getTargetAlphabet());
+		
+		// cache the idfs
+		TreeMap<Integer, Double> idfs = new TreeMap<Integer, Double>();
+		
+		double n = instances.size();
+		if(n>0) {
+			for (Instance instance : instances) {
+				FeatureVector fv = (FeatureVector) instance.getData();
+				int[] indices = fv.getIndices();
+				double[] values = new double[indices.length];
+				int i = 0;
+				for(int idx : indices) {
+					final double tf = fv.value(idx);
+					Double idf; // check the cache for the value
+					if((idf=idfs.get(idx))==null) {
+						idf = Math.log10(n / (1.0+Functions.df(idx, instances)));
+						idfs.put(idx, idf);
 					}
+					
+					values[i++] = tf*idf;
 				}
+				
+				newInstances.add(new Instance(
+					new FeatureVector(instance.getDataAlphabet(), indices, values), 
+					instance.getTarget(), 
+					instance.getName(), 
+					instance.getSource()
+				));
 			}
+
 		}
 		
-		return instances;
+		return newInstances;
 	}
 }

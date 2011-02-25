@@ -50,7 +50,7 @@ public class TFIDFUnitTest {
 	}
 	
 	private double tfidf(double v) {
-		return (v) * Math.log(5/2);
+		return (v) * Math.log10(5.0/2.0);
 	}
 	
 	@Test
@@ -66,26 +66,26 @@ public class TFIDFUnitTest {
 			for (int idx : fv.getIndices()) {
 				String t = alphabet.lookupObject(idx).toString();
 				if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/10.")) {
-					if(t.equals("duke")) Assert.assertEquals(tfidf(8), fv.value(idx));
-					else if(t.equals("citru")) Assert.assertEquals(tfidf(6), fv.value(idx));
+					if(t.equals("duke")) Assert.assertEquals(tfidf(8.0), fv.value(idx));
+					else if(t.equals("citru")) Assert.assertEquals(tfidf(6.0), fv.value(idx));
 				}
 				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/18.")) {
-					if(t.equals("glatzer")) Assert.assertEquals(tfidf(1), fv.value(idx));
+					if(t.equals("glatzer")) Assert.assertEquals(tfidf(1.0), fv.value(idx));
 				}
 				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/34.")) {
-					if(t.equals("schedul")) Assert.assertEquals(tfidf(6), fv.value(idx));
+					if(t.equals("schedul")) Assert.assertEquals(tfidf(6.0), fv.value(idx));
 				}
 				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/ecogas/10.")) {
-					if(t.equals("montauk")) Assert.assertEquals(tfidf(9), fv.value(idx));
-					else if(t.equals("settlement")) Assert.assertEquals(tfidf(7), fv.value(idx));
+					if(t.equals("montauk")) Assert.assertEquals(tfidf(9.0), fv.value(idx));
+					else if(t.equals("settlement")) Assert.assertEquals(tfidf(7.0), fv.value(idx));
 				}
 				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/ecogas/18.")) {
-					if(t.equals("ecoga")) Assert.assertEquals(tfidf(4), fv.value(idx));
-					else if(t.equals("legal")) Assert.assertEquals(tfidf(5), fv.value(idx));
-					else if(t.equals("expens")) Assert.assertEquals(tfidf(3), fv.value(idx));
-					else if(t.equals("8")) Assert.assertEquals(tfidf(4), fv.value(idx));
-					else if(t.equals("17")) Assert.assertEquals(tfidf(3), fv.value(idx));
-					else if(t.equals("00")) Assert.assertEquals(tfidf(3), fv.value(idx));
+					if(t.equals("ecoga")) Assert.assertEquals(tfidf(4.0), fv.value(idx));
+					else if(t.equals("legal")) Assert.assertEquals(tfidf(5.0), fv.value(idx));
+					else if(t.equals("expens")) Assert.assertEquals(tfidf(3.0), fv.value(idx));
+					else if(t.equals("8")) Assert.assertEquals(tfidf(4.0), fv.value(idx));
+					else if(t.equals("17")) Assert.assertEquals(tfidf(3.0), fv.value(idx));
+					else if(t.equals("00")) Assert.assertEquals(tfidf(3.0), fv.value(idx));
 				}
 			}
 			
