@@ -11,7 +11,7 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.PruneByDF;
+import fs.methods.FilterByRankedDF;
 import fs.methods.functions.Functions;
 
 public class PruneByDFUnitTest {
@@ -37,7 +37,7 @@ public class PruneByDFUnitTest {
 	@Test
 	public void testPruneByDF() {
 		LinkedList<IFeatureTransformer> fts = new LinkedList<IFeatureTransformer>();
-		fts.add(new PruneByDF(threshold));
+		fts.add(new FilterByRankedDF(threshold));
 		InstanceList newInstances = new FeatureTransformationPipeline(fts).runThruPipeline(instances);
 		
 		Assert.assertEquals(newInstances.getAlphabet().size(), 0);

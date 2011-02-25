@@ -14,17 +14,17 @@ import fs.methods.functions.Functions;
  * [1] A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
  * Pattern Recognition in Information Systems, (2010), pp. 72-81.
  */
-public class RankByL0Norm implements IFeatureTransformer {
+public class FilterByRankedL0Norm2 implements IFeatureTransformer {
 	private final int numFeatures;
 	
-	public RankByL0Norm(int numFeatures) {
+	public FilterByRankedL0Norm2(int numFeatures) {
 		this.numFeatures = numFeatures;
 	}
 
 	@Override
 	public InstanceList transform(InstanceList instances) {
 		// step 1. compute l0 norm of each feature and remove non informative features
-		PruneByL0Norm pl0n = new PruneByL0Norm(numFeatures);
+		FilterByRankedL0Norm1 pl0n = new FilterByRankedL0Norm1(numFeatures);
 		instances = pl0n.transform(instances);
 		
 		// step 2. compute the rank ri of each feature

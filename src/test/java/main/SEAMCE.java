@@ -26,11 +26,11 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.PruneByDF;
-import fs.methods.PruneByL0Norm;
-import fs.methods.PruneByTF;
-import fs.methods.RankByIG;
-import fs.methods.RankByL0Norm;
+import fs.methods.FilterByRankedDF;
+import fs.methods.FilterByRankedL0Norm1;
+import fs.methods.FilterByTF;
+import fs.methods.FilterByRankedIG;
+import fs.methods.FilterByRankedL0Norm2;
 import fs.methods.TFIDF;
 
 /*
@@ -204,7 +204,7 @@ public class SEAMCE {
 //			featureSelectors.add(new PruneByDF(nf));
 //			featureSelectors.add(new RankByIG(nf));
 //			featureSelectors.add(new PruneByL0Norm(nf));
-			featureSelectors.add(new RankByL0Norm(nf));
+			featureSelectors.add(new FilterByRankedL0Norm2(nf));
 			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(instances);
 
 			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());

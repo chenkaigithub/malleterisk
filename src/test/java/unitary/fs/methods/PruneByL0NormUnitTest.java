@@ -12,7 +12,7 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.PruneByL0Norm;
+import fs.methods.FilterByRankedL0Norm1;
 import fs.methods.functions.Functions;
 
 public class PruneByL0NormUnitTest {
@@ -33,7 +33,7 @@ public class PruneByL0NormUnitTest {
 	@Test
 	public void testL0Pruning() {
 		LinkedList<IFeatureTransformer> fts = new LinkedList<IFeatureTransformer>();
-		fts.add(new PruneByL0Norm(numFeaturesToKeep));
+		fts.add(new FilterByRankedL0Norm1(numFeaturesToKeep));
 		InstanceList newInstances = new FeatureTransformationPipeline(fts).runThruPipeline(originalInstances);
 		
 		Assert.assertEquals(newInstances.getDataAlphabet().size(), numFeaturesToKeep);
@@ -45,7 +45,7 @@ public class PruneByL0NormUnitTest {
 	public void testL0Values() {
 		// applies the l0 prunning to 
 		LinkedList<IFeatureTransformer> fts = new LinkedList<IFeatureTransformer>();
-		PruneByL0Norm l0 = new PruneByL0Norm(numFeaturesToKeep);
+		FilterByRankedL0Norm1 l0 = new FilterByRankedL0Norm1(numFeaturesToKeep);
 		fts.add(l0);
 		/*InstanceList newInstances = */new FeatureTransformationPipeline(fts).runThruPipeline(originalInstances);
 		

@@ -40,6 +40,10 @@ public class Functions {
 		return newInstances;
 	}
 
+	//
+	// Document Frequency (DF)
+	//
+	
 	// used by tfidf 
 	public static final double df(int featureIdx, InstanceList instances) {
 		double df = 0.0;
@@ -65,26 +69,38 @@ public class Functions {
 		return new RankedFeatureVector(instances.getDataAlphabet(), dfs);
 	}
 
-	// Returns the term frequency sum of all features in the alphabet
-	public static RankedFeatureVector tfSum(InstanceList instances) {
+	//
+	// Total Term Frequency
+	//
+	
+	// Returns the term frequency sum for all features in the alphabet.
+	public static RankedFeatureVector ttf(InstanceList instances) {
 		Alphabet dataAlphabet = instances.getDataAlphabet();
-		// array with the same size of the alphabet
-		double[] tfs = new double[dataAlphabet.size()];
-		
+		RankedFeatureVector ttf = new RankedFeatureVector(dataAlphabet, new double[instances.getAlphabet().size()]);
 		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector)instance.getData();
-			for(int idx : fv.getIndices()) tfs[idx] += fv.value(idx);
+			FeatureVector fv = (FeatureVector) instance.getData();
+			ttf.vectorAdd(fv, 1);
 		}
 		
-		return new RankedFeatureVector(dataAlphabet, tfs);
+		return ttf;
 	}	
 	
+	//
+	// L0-Norm
+	//
+	
 	public static final RankedFeatureVector l0norm(InstanceList instances) {
-		return df(instances); // TODO: l0norm = df?
+		return df(instances); // l0-norm = document frequency
 	}
-		
-	// TODO: inefficient implementation
-	// create a matrix of features x classes where each cell = l0(feature, class) ?
+	
+	//
+	// L0-Rank
+	//
+	
+	// TODO: 
+	// this is an inefficient implementation
+	// maybe I should create a matrix of features x classes
+	// where each cell = l0(feature, class)
 	public static final RankedFeatureVector l0rank(InstanceList instances) {
 		Alphabet featuresAlphabet = instances.getDataAlphabet();
 		Alphabet classesAlphabet = instances.getTargetAlphabet();
@@ -100,24 +116,21 @@ public class Functions {
 				int classLIdx = classesAlphabet.lookupIndex(classL);
 				for (Object classK : classes) {
 					int classKIdx = classesAlphabet.lookupIndex(classK);
-					r[featureIdx] += Math.abs(l0norm(featureIdx, classLIdx, instances) - l0norm(featureIdx, classKIdx, instances));
+					r[featureIdx] += Math.abs(
+						constrainedl0norm(featureIdx, classLIdx, instances) 
+						- 
+						constrainedl0norm(featureIdx, classKIdx, instances)
+					);
 				}
 			}
 		}
 		
 		return new RankedFeatureVector(featuresAlphabet, r);
 	}
-	
-	/**
-	 * Calculates the L0 norm value of a feature, constrained by a class.
-	 * I.e. the number of documents of the given class where the feature occurs.
-	 * 
-	 * @param featureIdx
-	 * @param classIdx
-	 * @param instances
-	 * @return
-	 */
-	public static final int l0norm(int featureIdx, int classIdx, InstanceList instances) {
+
+	// Calculates the L0 norm value of a feature, constrained by a class.
+	// I.e. the number of documents of the given class where the feature occurs.
+	public static final int constrainedl0norm(int featureIdx, int classIdx, InstanceList instances) {
 		int l0norm = 0;
 		
 		for (Instance instance : instances)
@@ -129,41 +142,40 @@ public class Functions {
 		return l0norm;
 	}
 	
-	// TODO:
-	// CTD (categorical descriptor term)
-	// SCIW (strong class information word)
-	// TS (term strength)
-	// CHI
-	// TC (term contribution)
+	//
+	// Feature Variance
+	//
 	
-	public static final double variance(int featureIdx, InstanceList instances) {
+	public static final RankedFeatureVector variance(InstanceList instances) {
+		Alphabet featuresAlphabet = instances.getDataAlphabet();
+		final double[] r = new double[featuresAlphabet.size()];
 		
-		
-		
-		double v = 0;
-		
-		/*
-		 * Var(termo) = Sum{i=1 ... N} [ (tf(termo, doc_i) - avg(termo))^2 . p(termo) ]  , onde
-		 * avg(termo) = Sum(ocorrências do termo em todos os documentos) / N (ou apenas número de documentos onde o termo ocorre?)
-		 *            i.e. (tf(termo, d1) + tf(termo, d2) + .. + tf(termo, dN)) / N
-		 */
-		
-//		final double n = instances.size();
-		final double m = instances.getDataAlphabet().size();
-		final double p_fx = 1.0 / m;
-		final double mean = sum(featureIdx, instances) / m;
-		
-		for (Instance instance : instances) {
-			double tf = ((FeatureVector)instance.getData()).value(featureIdx);
-			
-			v += Math.pow((tf - mean), 2);
+		for (Object feature : featuresAlphabet.toArray()) {
+			int featureIdx = featuresAlphabet.lookupIndex(feature);
+			r[featureIdx] = variance(featureIdx, instances);
 		}
 		
-		v *= p_fx;
-		
-		return v;
+		return new RankedFeatureVector(featuresAlphabet, r);
 	}
-
+	
+	public static final double variance(int featureIdx, InstanceList instances) {
+		final double p = p(featureIdx, instances);
+		
+		double e = 0;
+		double m = 0;
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			
+			e += Math.pow(fv.value(featureIdx), 2);
+			m += fv.value(featureIdx);
+		}
+		
+		e *= p;
+		m *= p;
+		
+		return e-m;
+	}
+	
 	public static final double p(int featureIdx, InstanceList instances) {
 		double tf = 0;
 		SparseVector ttf = new SparseVector(new double[instances.getAlphabet().size()], false);
@@ -180,16 +192,9 @@ public class Functions {
 		return tf/sums;
 	}
 	
-	public static final double sum(int featureIdx, InstanceList instances) {
-		double s = 0;
-		
-		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector)instance.getData();
-			s += fv.value(featureIdx);
-		}
-		
-		return s;
-	}
+	//
+	// Fisher's Criterion
+	//
 	
 	public static final double fisher() {
 		
@@ -197,6 +202,15 @@ public class Functions {
 		return 0;
 	}
 
+	
+	
+	// TODO:
+	// CTD (categorical descriptor term)
+	// SCIW (strong class information word)
+	// TS (term strength)
+	// CHI
+	// TC (term contribution)
+	
 	/*
 		f(ti, dj) = tf(ti,dj) * log(N / df(ti, dj))
 		sim(di, dj) = sum[i ... m] ( f(t, di) * f(t, dj) )

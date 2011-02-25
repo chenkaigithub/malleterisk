@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cc.mallet.types.InstanceList;
-import fs.methods.RankByL0Norm;
+import fs.methods.FilterByRankedL0Norm2;
 
 public class RankByL0NormUnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
@@ -21,7 +21,7 @@ public class RankByL0NormUnitTest {
 	
 	@Test
 	public void testL0Rank() {
-		RankByL0Norm rl0n = new RankByL0Norm(numFeaturesToKeep);
+		FilterByRankedL0Norm2 rl0n = new FilterByRankedL0Norm2(numFeaturesToKeep);
 		InstanceList newInstances = rl0n.transform(originalInstances);
 		
 		Assert.assertEquals(100, newInstances.getAlphabet().size());

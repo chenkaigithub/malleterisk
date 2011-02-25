@@ -19,10 +19,10 @@ import fs.methods.functions.Functions;
  * l0 == 0 or l0 == instances.size().
  * 
  */
-public class PruneByL0Norm implements IFeatureTransformer {
+public class FilterByRankedL0Norm1 implements IFeatureTransformer {
 	private final int numFeatures;
 	
-	public PruneByL0Norm(int numFeatures) {
+	public FilterByRankedL0Norm1(int numFeatures) {
 		this.numFeatures = numFeatures;
 	}
 	
