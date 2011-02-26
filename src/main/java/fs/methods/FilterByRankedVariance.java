@@ -14,6 +14,7 @@ public class FilterByRankedVariance implements IFeatureTransformer {
 	
 	@Override
 	public InstanceList transform(InstanceList instances) {
-		return Functions.fs(instances, new FeatureSelection(Functions.variance(instances), numFeatures));
+		FeatureSelection fs = new FeatureSelection(Functions.variance(instances), numFeatures);
+		return Functions.fs(instances, fs);
 	}
 }

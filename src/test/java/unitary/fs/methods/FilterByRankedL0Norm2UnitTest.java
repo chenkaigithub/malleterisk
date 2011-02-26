@@ -9,7 +9,7 @@ import org.junit.Test;
 import cc.mallet.types.InstanceList;
 import fs.methods.FilterByRankedL0Norm2;
 
-public class RankByL0NormUnitTest {
+public class FilterByRankedL0Norm2UnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 	
 	private int numFeaturesToKeep;

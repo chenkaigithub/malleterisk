@@ -15,7 +15,7 @@ import fs.IFeatureTransformer;
 import fs.functions.Functions;
 import fs.methods.FilterByRankedL0Norm1;
 
-public class PruneByL0NormUnitTest {
+public class FilterByRankedL0Norm1UnitTest {
 	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 	
 	private int numFeaturesToKeep;

@@ -14,7 +14,7 @@ import fs.IFeatureTransformer;
 import fs.functions.Functions;
 import fs.methods.FilterByRankedDF;
 
-public class PruneByDFUnitTest {
+public class FilterByRankedDFUnitTest {
 	private InstanceList instances;
 	private int threshold;
 	

@@ -1,8 +1,5 @@
 package fs.functions;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;
 import cc.mallet.types.Alphabet;
@@ -13,7 +10,6 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
 import cc.mallet.types.RankedFeatureVector;
 import cc.mallet.types.SparseVector;
-import cc.mallet.util.VectorStats;
 
 public class Functions {
 	/**
@@ -162,6 +158,7 @@ public class Functions {
 		return new RankedFeatureVector(featuresAlphabet, r);
 	}
 	
+	// TODO: redo this using sparsevectors
 	public static final double variance(int featureIdx, InstanceList instances) {
 		final double p = p(featureIdx, instances);
 		
@@ -203,7 +200,7 @@ public class Functions {
 	// Fisher's Criterion
 	//
 	
-	public static final RankedFeatureVector fisher(InstanceList instances, int class1idx, int class2idx) {
+	public static final FeatureVector fisher(InstanceList instances, int class1idx, int class2idx) {
 		LabeledInstancesList lil = new LabeledInstancesList(instances);
 		InstanceList cls1instances = lil.getInstances(class1idx);
 		InstanceList cls2instances = lil.getInstances(class2idx);
@@ -230,12 +227,11 @@ public class Functions {
 		
 		Alphabet alphabet = instances.getDataAlphabet();
 		double[] values = new double[alphabet.size()];
+		int[] indices = numerator.getIndices();
 		
-		for (int i : numerator.getIndices()) {
-			values[i] = numerator.value(i) / denominator.value(i); 
-		}
+		for (int i : indices) values[i] = numerator.value(i) / denominator.value(i); 
 		
-		return new RankedFeatureVector(alphabet, values);
+		return new FeatureVector(alphabet, indices, values);
 	}
 	
 	public static final SparseVector conditionalExpectedValue(InstanceList clsInstances) {

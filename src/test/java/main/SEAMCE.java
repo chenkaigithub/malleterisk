@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 
 import pp.email.body.BodyPreProcessor1;
@@ -26,21 +24,13 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.FilterByRankedDF;
-import fs.methods.FilterByRankedL0Norm1;
-import fs.methods.FilterByTF;
-import fs.methods.FilterByRankedIG;
 import fs.methods.FilterByRankedL0Norm2;
 import fs.methods.TFIDF;
 
 /*
  * TODO:
  * 
- * 0. 
- * minimum number of docs / class
- * maximum number of docs / class
- * 
- * 2.
+ * 2. [NEEDS CONFIRMATION]
  * supervised feature selection
  * unsupervised feature selection
  * [fisher, variance]
@@ -102,8 +92,8 @@ import fs.methods.TFIDF;
  */
 public class SEAMCE {
 	private static final String SRC_FILENAME_FORMAT = "instances_%d-%d_%s";
-	private static final String DST_FILENAME_FORMAT = "results_%d-%d_%s_%s";
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+//	private static final String DST_FILENAME_FORMAT = "results_%d-%d_%s_%s";
+//	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
 	
 	public static void main(String[] args) throws SQLException, FileNotFoundException {
 //		preprocessToFile();
@@ -143,18 +133,19 @@ public class SEAMCE {
 			InstanceList bodies = new BodyPreProcessor1();
 //			InstanceList dates = new DatePreProcessor1();
 //			InstanceList participants = new ParticipantsPreProcessor1();		
-			
+			int c = 0;
 			for (Instance instance : ds) {
 				subjects.addThruPipe(instance);
 				bodies.addThruPipe(instance);
 //				dates.addThruPipe(instance);
 //				participants.addThruPipe(instance);
+				if(c++ == 5) break;
 			}
 			
-			subjects.save(new File(String.format(DST_FILENAME_FORMAT, collectionId, userId, "subjects")));
-			bodies.save(new File(String.format(DST_FILENAME_FORMAT, collectionId, userId, "bodies")));
-//			dates.save(new File(String.format(s, collectionId, userId, "dates")));
-//			participants.save(new File(String.format(s, collectionId, userId, "participants")));
+			subjects.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "subjects")));
+			bodies.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "bodies")));
+//			dates.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "dates")));
+//			participants.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "participants")));
 		}
 	}
 	

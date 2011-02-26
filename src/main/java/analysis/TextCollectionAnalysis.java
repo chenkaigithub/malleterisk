@@ -3,48 +3,53 @@ package analysis;
 import java.util.HashMap;
 import java.util.Map;
 
+import types.mallet.LabeledInstancesList;
+
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import cc.mallet.types.SparseVector;
 
 public class TextCollectionAnalysis {
-	private InstanceList instances;
+	private final InstanceList instances;
+	private final LabeledInstancesList labeledInstances;
+	private final Alphabet dataAlphabet;
+	private final Alphabet targetAlphabet;
 	
 	public TextCollectionAnalysis(InstanceList instances) {
 		this.instances = instances;
+		this.dataAlphabet = instances.getDataAlphabet();
+		this.targetAlphabet = instances.getTargetAlphabet();
+		this.labeledInstances = new LabeledInstancesList(instances);
 	}
 	
+	// terms, classes, documents
+	
 	public int getNumTerms() {
-		return instances.getDataAlphabet().size();
+		return dataAlphabet.size();
+	}
+	
+	public int getNumClasses() {
+		return targetAlphabet.size();
 	}
 	
 	public int getNumDocuments() {
 		return instances.size();
 	}
 	
-	public int getNumClasses() {
-		return instances.getTargetAlphabet().size();
-	}
-	
-	public Map<String, Double> getTermOccurrences() {
-		Map<String, Double> tos = new HashMap<String, Double>();
-		Alphabet terms = instances.getDataAlphabet();
-//		double[] occurrences = new double[terms.size()];
-//		occurrences[i] += fv.value(i);
-
+	public SparseVector getTermOccurrences() {
+		SparseVector sv = new SparseVector(new double[dataAlphabet.size()]);
+		
 		for (Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
-			for (int i : fv.getIndices()) {
-				String s = terms.lookupObject(i).toString();
-				double d = fv.value(i);
-				if(tos.get(s) == null) tos.put(s, d);
-				else tos.put(s, tos.get(s)+d);
-			}
+			sv.plusEqualsSparse(fv);
 		}
 		
-		return tos;
-	}
+		return sv;
+	}	
+	
+	// terms / document
 	
 	public double getAverageTermsPerDocument() {
 		double i = 0;
@@ -57,39 +62,59 @@ public class TextCollectionAnalysis {
 		return i/instances.size();
 	}
 	
+	public int getMinNumTermsPerDocument() {
+		int m = -1;
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			int i = fv.getIndices().length;
+			if(m == -1 || m > i) m = i;
+		}
+		
+		return m;
+	}
+	
+	public int getMaxNumTermsInDocument() {
+		int m = 0;
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			int i = fv.getIndices().length;
+			if(i > m) m = i;
+		}
+		
+		return m;
+	}
+	
+	// documents / classes
+	
 	public double getAverageDocumentsPerClass() {
 		return (double)instances.size()/(double)instances.getTargetAlphabet().size();
 	}
 	
-	public int getNumTermsPerDocument() {
-		// TODO: 
-		return 0;
+	public int getMinNumDocumentsInClass() {
+		int c = -1;
+
+		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
+			int i = instances.size();
+			if(c==-1 || c > i) c = i;
+		}
+
+		return c;
 	}
 	
-	public int getMinNumTermsPerDocument() {
-		// TODO: 
-		return 0;
+	public int getMaxNumDocumentsInClass() {
+		int c = 0;
+
+		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
+			int i = instances.size();
+			if(i > c) c = i;
+		}
+
+		return c;
 	}
 	
-	public int getMaxNumTermsPerDocument() {
-		// TODO: 
-		return 0;
-	}
-	
-	public int getNumDocumentsPerClass() {
-		// TODO: 
-		return 0;
-	}
-	
-	public int getMinNumDocumentsPerClass() {
-		// TODO: 
-		return 0;
-	}
-	
-	public int getMaxNumDocumentsPerClass() {
-		// TODO: 
-		return 0;
-	}
+	// print
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
@@ -114,13 +139,13 @@ public class TextCollectionAnalysis {
 		sb.append(getAverageDocumentsPerClass());
 		sb.append("\n");
 		
-		Map<String, Double> tos = getTermOccurrences();
-		for (String s : tos.keySet()) {
-			sb.append(s);
-			sb.append(": ");
-			sb.append(tos.get(s));
-			sb.append("\n");
-		}
+//		Map<String, Double> tos = getTermOccurrences();
+//		for (String s : tos.keySet()) {
+//			sb.append(s);
+//			sb.append(": ");
+//			sb.append(tos.get(s));
+//			sb.append("\n");
+//		}
 		
 		return sb.toString();
 	}
