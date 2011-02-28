@@ -28,6 +28,8 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 	public InstanceList transform(InstanceList instances) {
 		RankedFeatureVector rfv = null;
 		
+		// apply the fisher criterion to all features for all pairs of classes
+		// by using one of the methods for scoring the features
 		switch(scoringType) {
 			case MINIMUM_SCORE: rfv = minScore(instances); break;
 			case SUM_SCORE: rfv = sumScore(instances); break;
@@ -35,9 +37,11 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 			default: return null;
 		}
 		
+		// return the _HIGHEST_ ranked _numFeatures_ features
 		return Functions.fs(instances, new FeatureSelection(rfv, numFeatures));
 	}
 	
+	// conservative method, keeping the lowest Fisher score as the feature's score
 	private RankedFeatureVector minScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();
@@ -59,6 +63,7 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 		return new RankedFeatureVector(features, values);
 	}
 	
+	// naive method, suming all values of the class pairs
 	private RankedFeatureVector sumScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();
@@ -74,7 +79,8 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 		
 		return new RankedFeatureVector(features, sv);
 	}
-
+	
+	// similar to sumScore, but adding the squared values of the Fisher score
 	private RankedFeatureVector sumSquaredScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();

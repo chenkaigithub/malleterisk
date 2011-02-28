@@ -1,10 +1,6 @@
 package analysis;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import types.mallet.LabeledInstancesList;
-
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
@@ -138,14 +134,9 @@ public class TextCollectionAnalysis {
 		sb.append("average number of documents per class: ");
 		sb.append(getAverageDocumentsPerClass());
 		sb.append("\n");
-		
-//		Map<String, Double> tos = getTermOccurrences();
-//		for (String s : tos.keySet()) {
-//			sb.append(s);
-//			sb.append(": ");
-//			sb.append(tos.get(s));
-//			sb.append("\n");
-//		}
+
+		SparseVector to = getTermOccurrences();
+		to.print();
 		
 		return sb.toString();
 	}

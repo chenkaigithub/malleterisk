@@ -270,6 +270,10 @@ public class Functions {
 		return s;
 	}
 	
+	//
+	// 
+	//
+	
 	// TODO:
 	// CTD (categorical descriptor term)
 	// SCIW (strong class information word)
