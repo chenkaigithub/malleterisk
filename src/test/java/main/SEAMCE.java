@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 
 import pp.email.body.BodyPreProcessor1;
@@ -24,7 +25,7 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.FeatureTransformationPipeline;
 import fs.IFeatureTransformer;
-import fs.methods.FilterByRankedL0Norm2;
+import fs.methods.FilterByRankedFisher;
 import fs.methods.TFIDF;
 
 /* 
@@ -157,7 +158,7 @@ public class SEAMCE {
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 5, "subjects", DATE_FORMAT.format(new Date())));
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies", DATE_FORMAT.format(new Date())));
 		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
+		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies", DATE_FORMAT.format(new Date())));
 		
 //		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 7, "subjects", DATE_FORMAT.format(new Date())));
@@ -205,15 +206,16 @@ public class SEAMCE {
 //			featureSelectors.add(new PruneByDF(nf));
 //			featureSelectors.add(new RankByIG(nf));
 //			featureSelectors.add(new PruneByL0Norm(nf));
-			featureSelectors.add(new FilterByRankedL0Norm2(nf));
+//			featureSelectors.add(new FilterByRankedL0Norm2(nf));
+			featureSelectors.add(new FilterByRankedFisher(nf, FilterByRankedFisher.MINIMUM_SCORE));
 			InstanceList newInstances = new FeatureTransformationPipeline(featureSelectors).runThruPipeline(instances);
 
 			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
 			
 			writeToFile("rankbyl0norm"+nf, trials, pw);
+			pw.flush();
 		}
 		
-		pw.flush();
 		pw.close();
 	}
 

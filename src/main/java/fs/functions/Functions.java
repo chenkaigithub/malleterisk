@@ -231,7 +231,7 @@ public class Functions {
 		
 		for (int i : indices) values[i] = numerator.value(i) / denominator.value(i); 
 		
-		return new FeatureVector(alphabet, indices, values);
+		return new FeatureVector(alphabet, values);
 	}
 	
 	public static final SparseVector conditionalExpectedValue(InstanceList clsInstances) {

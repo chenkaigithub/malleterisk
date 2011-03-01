@@ -7,6 +7,9 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	private final double stepSize;
 	private int currentStep;
 	
+	// TODO: another option would be to receive an array of percentages and iterate them
+	// e.g. [100, 97, 95, 90, 80, 70, 60, 50] and create a generator method
+	// that returns an array of that type with given params
 	public IteratedExecution(int alphabetSize, int percentageStep) {
 		this.percentageStep = percentageStep;
 		this.stepSize = (double)alphabetSize / 100.0;

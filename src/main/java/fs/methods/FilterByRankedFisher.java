@@ -11,6 +11,7 @@ import cc.mallet.types.SparseVector;
 import fs.IFeatureTransformer;
 import fs.functions.Functions;
 
+// TODO: holly molly, this is really SLOW!
 public class FilterByRankedFisher implements IFeatureTransformer {
 	public static final int MINIMUM_SCORE = 0;
 	public static final int SUM_SCORE = 1;

@@ -135,6 +135,22 @@ public class TextCollectionAnalysis {
 		sb.append(getAverageDocumentsPerClass());
 		sb.append("\n");
 
+		sb.append("max number of documents in class: ");
+		sb.append(getMaxNumDocumentsInClass());
+		sb.append("\n");
+		
+		sb.append("min number of documents in class: ");
+		sb.append(getMinNumDocumentsInClass());
+		sb.append("\n");
+		
+		sb.append("max number of terms in documents: ");
+		sb.append(getMaxNumTermsInDocument());
+		sb.append("\n");
+		
+		sb.append("min number of terms in documents: ");
+		sb.append(getMinNumTermsPerDocument());
+		sb.append("\n");
+		
 		SparseVector to = getTermOccurrences();
 		to.print();
 		
