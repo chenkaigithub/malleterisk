@@ -1,19 +1,5 @@
 package unitary.fs.methods;
 
-import java.io.File;
-import java.util.LinkedList;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import cc.mallet.types.InstanceList;
-import cc.mallet.types.RankedFeatureVector;
-import fs.FeatureTransformationPipeline;
-import fs.IFeatureTransformer;
-import fs.functions.Functions;
-import fs.methods.FilterByRankedL0Norm1;
 
 public class FilterByRankedL0Norm1UnitTest {
 //	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));

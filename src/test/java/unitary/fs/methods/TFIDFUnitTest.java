@@ -1,20 +1,5 @@
 package unitary.fs.methods;
 
-import java.io.File;
-import java.util.LinkedList;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.FeatureVector;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import fs.FeatureTransformationPipeline;
-import fs.IFeatureTransformer;
-import fs.methods.TFIDF;
 
 public class TFIDFUnitTest {
 //	private InstanceList instances;
