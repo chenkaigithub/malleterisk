@@ -1,19 +1,17 @@
 package fs.methods;
 
-import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InstanceList;
-import fs.IFeatureTransformer;
+import cc.mallet.types.RankedFeatureVector;
+import fs.Filter;
 import fs.functions.Functions;
 
-public class FilterByRankedVariance implements IFeatureTransformer {
-	private final int numFeatures;
-	
-	public FilterByRankedVariance(int n) {
-		this.numFeatures = n;
+public class FilterByRankedVariance extends Filter {
+	public FilterByRankedVariance(InstanceList instances) {
+		super(instances);
 	}
-	
+
 	@Override
-	public InstanceList transform(InstanceList instances) {
-		return Functions.fs(instances, new FeatureSelection(Functions.variance(instances), numFeatures));
+	protected RankedFeatureVector calculate() {
+		return Functions.variance(instances);
 	}
 }

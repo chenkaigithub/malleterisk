@@ -1,20 +1,18 @@
 package fs.methods;
 
-import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InstanceList;
-import fs.IFeatureTransformer;
+import cc.mallet.types.RankedFeatureVector;
+import fs.Filter;
 import fs.functions.Functions;
 
 // TODO: look at FeatureCounts
-public class FilterByRankedDF implements IFeatureTransformer {
-	private int numFeatures;
-	
-	public FilterByRankedDF(int numFeatures) {
-		this.numFeatures = numFeatures;
+public class FilterByRankedDF extends Filter {
+	public FilterByRankedDF(InstanceList instances) {
+		super(instances);
 	}
-	
+
 	@Override
-	public InstanceList transform(InstanceList instances) {
-		return Functions.fs(instances, new FeatureSelection(Functions.df(instances), numFeatures));
+	protected RankedFeatureVector calculate() {
+		return Functions.df(instances);
 	}
 }

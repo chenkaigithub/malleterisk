@@ -3,47 +3,48 @@ package fs.methods;
 import java.util.Arrays;
 
 import cc.mallet.types.Alphabet;
-import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import cc.mallet.types.SparseVector;
-import fs.IFeatureTransformer;
+import fs.Filter;
 import fs.functions.Functions;
 
 // TODO: holly molly, this is really SLOW!
-public class FilterByRankedFisher implements IFeatureTransformer {
+public class FilterByRankedFisher extends Filter {
 	public static final int MINIMUM_SCORE = 0;
 	public static final int SUM_SCORE = 1;
 	public static final int SUM_SQUARED_SCORE = 2;
 	
-	private final int numFeatures;
 	private final int scoringType;
 	
-	public FilterByRankedFisher(int n, int scoringType) {
-		this.numFeatures = n;
+	public FilterByRankedFisher(InstanceList instances, int scoringType) {
+		super(instances);
+		
 		this.scoringType = scoringType;
 	}
-	
-	@Override
-	public InstanceList transform(InstanceList instances) {
-		RankedFeatureVector rfv = null;
 		
-		// apply the fisher criterion to all features for all pairs of classes
-		// by using one of the methods for scoring the features
+	// apply the Fisher criterion to all features for all pairs of classes
+	// by using the selected method for scoring the features
+	@Override
+	protected RankedFeatureVector calculate() {
+		RankedFeatureVector r = null;
+		
 		switch(scoringType) {
-			case MINIMUM_SCORE: rfv = minScore(instances); break;
-			case SUM_SCORE: rfv = sumScore(instances); break;
-			case SUM_SQUARED_SCORE: rfv = sumSquaredScore(instances); break;
-			default: return null;
+			case MINIMUM_SCORE: r = minScore(this.instances); break;
+			case SUM_SCORE: r = sumScore(this.instances); break;
+			case SUM_SQUARED_SCORE: r = sumSquaredScore(this.instances); break;
 		}
 		
-		// return the _HIGHEST_ ranked _numFeatures_ features
-		return Functions.fs(instances, new FeatureSelection(rfv, numFeatures));
+		return r;
 	}
 	
+	//
+	// Scoring Methods
+	//
+	
 	// conservative method, keeping the lowest Fisher score as the feature's score
-	private RankedFeatureVector minScore(InstanceList instances) {
+	private static final RankedFeatureVector minScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();
 		int K = labels.size();
@@ -65,7 +66,7 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 	}
 	
 	// naive method, suming all values of the class pairs
-	private RankedFeatureVector sumScore(InstanceList instances) {
+	private static final RankedFeatureVector sumScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();
 		int K = labels.size();
@@ -82,7 +83,7 @@ public class FilterByRankedFisher implements IFeatureTransformer {
 	}
 	
 	// similar to sumScore, but adding the squared values of the Fisher score
-	private RankedFeatureVector sumSquaredScore(InstanceList instances) {
+	private static final RankedFeatureVector sumSquaredScore(InstanceList instances) {
 		Alphabet features = instances.getDataAlphabet();
 		Alphabet labels = instances.getTargetAlphabet();
 		int K = labels.size();

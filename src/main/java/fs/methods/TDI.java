@@ -3,12 +3,13 @@ package fs.methods;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import fs.IFeatureTransformer;
 
-public class TDI implements IFeatureTransformer {
-
-	@Override
-	public InstanceList transform(InstanceList instances) {
+public class TDI {
+	public InstanceList calculate(InstanceList instances) {
+		return tdi(instances);
+	}
+	
+	public static final InstanceList tdi(InstanceList instances) {
 		InstanceList newInstances = new InstanceList(instances.getDataAlphabet(), instances.getTargetAlphabet());
 		
 		for (Instance instance : instances) {

@@ -1,10 +1,11 @@
 package fs.methods;
 
-import cc.mallet.types.FeatureSelection;
-import cc.mallet.types.InstanceList;
-import cc.mallet.types.RankedFeatureVector;
-import fs.IFeatureTransformer;
-import fs.functions.Functions;
+// TODO: how should this be used?
+// - rank and keep N highest features?
+// - remove top N highest and M lowest features?
+// - remove all features with less than N occurrences?
+
+
 
 /*
  * TODO:
@@ -23,7 +24,8 @@ import fs.functions.Functions;
  * maybe it should be by percentage?
  * 
  */
-public class FilterByTF implements IFeatureTransformer {
+public class FilterByTF {
+	/*
 	private final double minOccurs;
 	private final double maxOccurs;
 	
@@ -32,7 +34,6 @@ public class FilterByTF implements IFeatureTransformer {
 		this.maxOccurs = maxOccurs;
 	}
 	
-	@Override
 	public InstanceList transform(InstanceList instances) {
 		return prune(instances, minOccurs, maxOccurs);
 	}
@@ -49,4 +50,5 @@ public class FilterByTF implements IFeatureTransformer {
 				
 		return Functions.fs(instances, fs);
 	}
+	*/
 }
