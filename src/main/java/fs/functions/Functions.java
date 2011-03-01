@@ -78,9 +78,8 @@ public class Functions {
 	public static RankedFeatureVector ttf(InstanceList instances) {
 		Alphabet dataAlphabet = instances.getDataAlphabet();
 		SparseVector sv = new SparseVector(new double[instances.getAlphabet().size()], false);
-		for (Instance instance : instances) {
-			sv = sv.vectorAdd((FeatureVector) instance.getData(), 1);
-		}
+		for (Instance instance : instances)
+			sv.plusEqualsSparse((FeatureVector) instance.getData());
 		
 		return new RankedFeatureVector(dataAlphabet, sv.getValues());
 	}	
@@ -187,11 +186,11 @@ public class Functions {
 		for (Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
 			tf += fv.value(featureIdx);
-			ttf = ttf.vectorAdd(fv, 1);
+			ttf.plusEqualsSparse(fv, 1);
 		}
 		
 		double sums = 0;
-		for(int idx : ttf.getIndices()) sums += ttf.value(idx);
+		for(double v : ttf.getValues()) sums += v;
 		
 		return tf/sums;
 	}
@@ -240,7 +239,7 @@ public class Functions {
 		for (Instance instance : clsInstances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
 			final double itdtf = 1.0 / tdtf(fv);
-			sv = sv.vectorAdd(fv, itdtf);
+			sv.plusEqualsSparse(fv, itdtf);
 		}
 		
 		return sv;
@@ -255,9 +254,10 @@ public class Functions {
 			
 			SparseVector vv = (SparseVector) fv.cloneMatrix();
 			vv.timesEquals(n/tdtf(fv));
-			vv.timesEqualsSparse(vv.vectorAdd(ev, -1));
+			vv.plusEqualsSparse(ev, -1);
+			vv.timesEqualsSparse(vv);
 			
-			sv = sv.vectorAdd(vv, 1);
+			sv.plusEqualsSparse(vv);
 		}
 		
 		return sv;

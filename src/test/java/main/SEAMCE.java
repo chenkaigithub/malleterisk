@@ -22,7 +22,9 @@ import data.IDataSet;
 import data.enron.EnronDbDataSet;
 import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
+import fs.Filter;
 import fs.methods.FilterByRankedFisher;
+import fs.methods.FilterByRankedVariance;
 import fs.methods.TFIDF;
 
 /* 
@@ -196,9 +198,10 @@ public class SEAMCE {
 		
 		int numFolds = 10;
 		
-		FilterByRankedFisher fisherrfs = new FilterByRankedFisher(TFIDF.tfidf(instances), FilterByRankedFisher.MINIMUM_SCORE);
+//		Filter fs = new FilterByRankedFisher(TFIDF.tfidf(instances), FilterByRankedFisher.MINIMUM_SCORE);
+		Filter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
 		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
-			InstanceList newInstances = fisherrfs.filter(nf);
+			InstanceList newInstances = fs.filter(nf);
 
 			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
 			
