@@ -151,8 +151,8 @@ public class TextCollectionAnalysis {
 		sb.append(getMinNumTermsPerDocument());
 		sb.append("\n");
 		
-		SparseVector to = getTermOccurrences();
-		to.print();
+//		SparseVector to = getTermOccurrences();
+//		to.print();
 		
 		return sb.toString();
 	}

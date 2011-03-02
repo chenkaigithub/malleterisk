@@ -1,5 +1,7 @@
 package fs.functions;
 
+import java.util.Arrays;
+
 import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;
 import cc.mallet.types.Alphabet;
@@ -95,52 +97,49 @@ public class Functions {
 	//
 	// L0-Rank
 	//
-	
-	// TODO: 
-	// this is an inefficient implementation
-	// maybe I should create a matrix of features x classes
-	// where each cell = l0(feature, class)
-	public static final RankedFeatureVector l0rank(InstanceList instances) {
-		Alphabet featuresAlphabet = instances.getDataAlphabet();
-		Alphabet classesAlphabet = instances.getTargetAlphabet();
-		
-		double[] r = new double[featuresAlphabet.size()];
-		
-		Object[] features = featuresAlphabet.toArray();
-		Object[] classes = classesAlphabet.toArray();
 
-		for (Object feature : features) {
-			int featureIdx = featuresAlphabet.lookupIndex(feature);
-			for (Object classL : classes) {
-				int classLIdx = classesAlphabet.lookupIndex(classL);
-				for (Object classK : classes) {
-					int classKIdx = classesAlphabet.lookupIndex(classK);
-					r[featureIdx] += Math.abs(
-						constrainedl0norm(featureIdx, classLIdx, instances) 
-						- 
-						constrainedl0norm(featureIdx, classKIdx, instances)
-					);
-				}
+	public static final RankedFeatureVector l0rank(InstanceList instances) {
+		LabeledInstancesList lil = new LabeledInstancesList(instances);
+		
+		Alphabet features = instances.getDataAlphabet();
+		Alphabet labels = instances.getTargetAlphabet();
+		int K = labels.size();
+		
+		SparseVector sv = new SparseVector(new double[features.size()], false);
+		for (int i = 0; i < K; i++) {
+			for (int j = 0; j < K; j++) {
+				sv.plusEqualsSparse(rank(lil, i, j));
 			}
 		}
 		
-		return new RankedFeatureVector(featuresAlphabet, r);
-	}
-
-	// Calculates the L0 norm value of a feature, constrained by a class.
-	// I.e. the number of documents of the given class where the feature occurs.
-	public static final int constrainedl0norm(int featureIdx, int classIdx, InstanceList instances) {
-		int l0norm = 0;
-		
-		for (Instance instance : instances)
-			if(((Label)instance.getTarget()).getBestIndex() == classIdx) {
-				FeatureVector fv = (FeatureVector)instance.getData();
-				if(fv.value(featureIdx) > 0) l0norm += 1;
-			}
-		
-		return l0norm;
+		return new RankedFeatureVector(features, sv);
 	}
 	
+	private static final SparseVector rank(LabeledInstancesList lil, int class1idx, int class2idx) {
+		InstanceList cls1instances = lil.getInstances(class1idx);
+		InstanceList cls2instances = lil.getInstances(class2idx);
+		
+		// Calculate the L0 norm value of a feature, constrained by a class.
+		// I.e. the number of documents of the given class where the feature occurs.
+		// there's no real constraint since we're passing the instances of class X 
+		SparseVector sv = l0(cls1instances);
+		sv.plusEqualsSparse(l0(cls2instances));
+		
+		return sv;
+	}
+
+	// need an unraked vector
+	private static final SparseVector l0(InstanceList instances) {
+		double[] dfs = new double[instances.getDataAlphabet().size()];
+
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector)instance.getData();
+			for(int idx : fv.getIndices()) dfs[idx] += 1;
+		}
+
+		return new SparseVector(dfs, false);
+	}
+
 	//
 	// Feature Variance
 	//
