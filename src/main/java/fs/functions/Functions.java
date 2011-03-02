@@ -146,6 +146,7 @@ public class Functions {
 	//
 	
 	public static final RankedFeatureVector variance(InstanceList instances) {
+		// TODO: redo this
 		Alphabet featuresAlphabet = instances.getDataAlphabet();
 		final double[] r = new double[featuresAlphabet.size()];
 		
@@ -173,7 +174,7 @@ public class Functions {
 		e *= p;
 		m *= p;
 		
-		return e-m;
+		return e - Math.pow(m, 2);
 	}
 	
 	public static final double p(int featureIdx, InstanceList instances) {
@@ -195,6 +196,42 @@ public class Functions {
 		return tf/sums;
 	}
 	
+	// ---------------------------------
+	
+	// Var(x) = E[(x-m)^2] = E[x^2] - m^2 = E[x^2] - E[x]^2
+	// E[x] = Sum[x . p(x)]
+	public static final RankedFeatureVector variance2(InstanceList instances) {
+		Alphabet alphabet = instances.getAlphabet();
+		
+		int s = alphabet.size();
+		SparseVector x2 = new SparseVector(new double[s], false);
+		SparseVector m = new SparseVector(new double[s], false);
+		
+		for (Instance instance : instances) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			
+			SparseVector xi2 = (SparseVector)fv.cloneMatrix();
+			xi2.timesEqualsSparse(xi2);
+			
+			x2.plusEqualsSparse(xi2); 
+			m.plusEqualsSparse(fv);
+		}
+		
+		SparseVector p = p2(m, tdtf(m));
+		x2.timesEqualsSparse(p);
+		m.timesEqualsSparse(p);
+		m.timesEqualsSparse(m);
+		x2.plusEqualsSparse(m, -1); // x2 == variance
+		
+		return new RankedFeatureVector(alphabet, x2);
+	}
+	
+	public static final SparseVector p2(SparseVector tf, double tdtf) {
+		SparseVector p = (SparseVector)tf.cloneMatrix();
+		p.timesEquals(1.0/tdtf);
+		return p;
+	}
+		
 	//
 	// Fisher's Criterion
 	//
@@ -264,9 +301,9 @@ public class Functions {
 	}
 	
 	// total document term frequency
-	public static final double tdtf(FeatureVector fv) {
+	public static final double tdtf(SparseVector m) {
 		double s = 0;
-		for(int idx : fv.getIndices()) s+= fv.value(idx);
+		for(double d : m.getValues()) s+= d;
 		return s;
 	}
 	

@@ -23,7 +23,6 @@ import data.enron.EnronDbDataSet;
 import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import fs.Filter;
-import fs.methods.FilterByRankedFisher;
 import fs.methods.FilterByRankedVariance;
 import fs.methods.TFIDF;
 
@@ -33,11 +32,6 @@ import fs.methods.TFIDF;
  * 0.
  * streamline everything into big pipelines
  * of processing
- * 
- * 2. [NEEDS TESTING]
- * supervised feature selection
- * unsupervised feature selection
- * [fisher, variance]
  * 
  * 3.
  * varying number of classes
