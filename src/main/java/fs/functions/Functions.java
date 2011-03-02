@@ -146,63 +146,13 @@ public class Functions {
 	//
 	
 	public static final RankedFeatureVector variance(InstanceList instances) {
-		// TODO: redo this
-		Alphabet featuresAlphabet = instances.getDataAlphabet();
-		final double[] r = new double[featuresAlphabet.size()];
-		
-		for (Object feature : featuresAlphabet.toArray()) {
-			int featureIdx = featuresAlphabet.lookupIndex(feature);
-			r[featureIdx] = variance(featureIdx, instances);
-		}
-		
-		return new RankedFeatureVector(featuresAlphabet, r);
-	}
-	
-	// TODO: redo this using sparsevectors
-	public static final double variance(int featureIdx, InstanceList instances) {
-		final double p = p(featureIdx, instances);
-		
-		double e = 0;
-		double m = 0;
-		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector) instance.getData();
-			
-			e += Math.pow(fv.value(featureIdx), 2);
-			m += fv.value(featureIdx);
-		}
-		
-		e *= p;
-		m *= p;
-		
-		return e - Math.pow(m, 2);
-	}
-	
-	public static final double p(int featureIdx, InstanceList instances) {
-		// similar to ttf, but it's optimized to the variance calculation
-		// the tf is calculated with the ttf
-		
-		double tf = 0;
-		SparseVector ttf = new SparseVector(new double[instances.getAlphabet().size()], false);
-		
-		for (Instance instance : instances) {
-			FeatureVector fv = (FeatureVector) instance.getData();
-			tf += fv.value(featureIdx);
-			ttf.plusEqualsSparse(fv, 1);
-		}
-		
-		double sums = 0;
-		for(double v : ttf.getValues()) sums += v;
-		
-		return tf/sums;
-	}
-	
-	// ---------------------------------
-	
-	// Var(x) = E[(x-m)^2] = E[x^2] - m^2 = E[x^2] - E[x]^2
-	// E[x] = Sum[x . p(x)]
-	public static final RankedFeatureVector variance2(InstanceList instances) {
 		Alphabet alphabet = instances.getAlphabet();
+		// Var(x) = E[(x-m)^2] = E[x^2] - m^2 = E[x^2] - E[x]^2
+		// E[x] = Sum[x * p(x)] = Sum(x) * p(x)
 		
+		// calculate:
+		// Sum(x^2) for E[x^2]
+		// Sum(x) for E[x] and p(x) 
 		int s = alphabet.size();
 		SparseVector x2 = new SparseVector(new double[s], false);
 		SparseVector m = new SparseVector(new double[s], false);
@@ -210,23 +160,25 @@ public class Functions {
 		for (Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
 			
+			// Sum(x^2)
 			SparseVector xi2 = (SparseVector)fv.cloneMatrix();
 			xi2.timesEqualsSparse(xi2);
+			x2.plusEqualsSparse(xi2);
 			
-			x2.plusEqualsSparse(xi2); 
+			// Sum(x)
 			m.plusEqualsSparse(fv);
 		}
 		
-		SparseVector p = p2(m, tdtf(m));
-		x2.timesEqualsSparse(p);
-		m.timesEqualsSparse(p);
-		m.timesEqualsSparse(m);
-		x2.plusEqualsSparse(m, -1); // x2 == variance
+		SparseVector p = p(m, tdtf(m));	// p(x) = Sum(x) / Sum(total_x)
+		x2.timesEqualsSparse(p);		// E[x^2] = Sum(x^2) * p(x)
+		m.timesEqualsSparse(p);			// E[x] = Sum(x) * p(x)
+		m.timesEqualsSparse(m);			// E[x]^2 = E[x] * E[x]
+		x2.plusEqualsSparse(m, -1); 	// Var(x) = E[x^2] - E[x]^2
 		
 		return new RankedFeatureVector(alphabet, x2);
 	}
 	
-	public static final SparseVector p2(SparseVector tf, double tdtf) {
+	public static final SparseVector p(SparseVector tf, double tdtf) {
 		SparseVector p = (SparseVector)tf.cloneMatrix();
 		p.timesEquals(1.0/tdtf);
 		return p;
