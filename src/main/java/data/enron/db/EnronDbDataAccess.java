@@ -224,7 +224,7 @@ public class EnronDbDataAccess {
 		c.close();
 	}
 	
-	private int storeEmailParticipant(String participantAddress, String participantType) throws SQLException {
+	private int storeEmailParticipant(String participantAddress) throws SQLException {
 		int participantId = getEmailParticipant(participantAddress);
 		if(participantId==-1) participantId = insertEmailParticipant(participantAddress);
 		
