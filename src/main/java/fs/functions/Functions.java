@@ -1,7 +1,5 @@
 package fs.functions;
 
-import java.util.Arrays;
-
 import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;
 import cc.mallet.types.Alphabet;
@@ -9,7 +7,6 @@ import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import cc.mallet.types.Label;
 import cc.mallet.types.RankedFeatureVector;
 import cc.mallet.types.SparseVector;
 

@@ -1,13 +1,5 @@
 package unitary.fs.methods;
 
-import java.io.File;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import cc.mallet.types.InstanceList;
-import fs.methods.FilterByRankedL0Norm2;
 
 public class FilterByRankedL0Norm2UnitTest {
 //	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));

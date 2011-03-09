@@ -24,8 +24,8 @@ public class EmailMessage implements IEmailMessage {
 		this.userId = userId;
 		this.classId = classId;
 		this.date = date;
-		this.subject = subject;
-		this.body = body;
+		this.subject = subject == null ? "" : subject;
+		this.body = body == null ? "" : body;
 		this.participants = participants;
 	}
 

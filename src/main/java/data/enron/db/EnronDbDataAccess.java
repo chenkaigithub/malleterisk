@@ -209,7 +209,7 @@ public class EnronDbDataAccess {
 	}
 	
 	private void storeEmailParticipant(int emailId, String participant, String participantType) throws SQLException {
-		int participantId = storeEmailParticipant(participant, participantType);
+		int participantId = storeEmailParticipant(participant);
 		
 		Connection c = db.getDbConnection();
 		

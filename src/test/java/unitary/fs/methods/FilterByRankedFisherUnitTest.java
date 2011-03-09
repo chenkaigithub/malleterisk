@@ -1,12 +1,5 @@
 package unitary.fs.methods;
 
-import java.io.File;
-
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.FeatureVector;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import fs.methods.FilterByRankedFisher;
 
 
 public class FilterByRankedFisherUnitTest {

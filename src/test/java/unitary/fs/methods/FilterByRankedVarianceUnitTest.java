@@ -1,14 +1,5 @@
 package unitary.fs.methods;
 
-import java.io.File;
-import java.util.Iterator;
-
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.FeatureVector;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import fs.functions.Functions;
-import fs.methods.FilterByRankedVariance;
 
 public class FilterByRankedVarianceUnitTest {
 //	public static final void main(String[] args) {

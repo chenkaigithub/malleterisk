@@ -58,12 +58,15 @@ public class TextCollectionAnalysis {
 		return i/instances.size();
 	}
 	
-	public int getMinNumTermsPerDocument() {
+	public int getMinNumTermsInDocuments() {
 		int m = -1;
 		
 		for (Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
 			int i = fv.getIndices().length;
+			if(i==0) {
+				System.out.println(instance.getName());
+			}
 			if(m == -1 || m > i) m = i;
 		}
 		
@@ -148,8 +151,15 @@ public class TextCollectionAnalysis {
 		sb.append("\n");
 		
 		sb.append("min number of terms in documents: ");
-		sb.append(getMinNumTermsPerDocument());
+		sb.append(getMinNumTermsInDocuments());
 		sb.append("\n");
+		
+		sb.append("num docs in classes: ");
+		sb.append("\n");
+		for (InstanceList is : labeledInstances.getLabeledInstances()) {
+			sb.append(is.size());
+			sb.append("\n");
+		}
 		
 //		SparseVector to = getTermOccurrences();
 //		to.print();
