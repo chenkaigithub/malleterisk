@@ -2,8 +2,10 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,16 +14,20 @@ import java.util.Map;
 import pp.email.body.BodyPreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
+import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.Trial;
+import cc.mallet.types.FeatureConjunction.List;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
+import cc.mallet.types.Labeling;
 import data.IDataSet;
 import fs.Filter;
 import fs.IFilter;
+import fs.methods.FilterByRankedDF;
 import fs.methods.FilterByRankedVariance;
 import fs.methods.TFIDF;
 
@@ -31,6 +37,11 @@ import fs.methods.TFIDF;
  * 0.
  * streamline everything into big pipelines
  * of processing
+ * 
+ * 1.
+ * no feature selection? não é possível recriar mesmo comportamento
+ * convém saber a percentagem das features
+ * penso que não está a classificar para 100% (sem fs)
  * 
  * 2.
  * matriz de confusão e gráficos
@@ -98,20 +109,47 @@ import fs.methods.TFIDF;
  */
 public class SEAMCE {
 //	private static final String SRC_FILENAME_FORMAT = "instances_%d-%d_%s";
-//	private static final String DST_FILENAME_FORMAT = "results_%d-%d_%s_%s";
+//	private static final String DST_FILENAME_FORMAT = "collection%d+user%d+%s+%s+%s+%s+%s";
 //	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
+		int m = instances.getDataAlphabet().size();
+		IFilter fs = new FilterByRankedDF(TFIDF.tfidf(instances));
+		InstanceList newInstances = fs.filter(m);
+		
+		for (Instance instance : newInstances) {
+			System.out.println(instance.getName() + "|" + instance.getTarget());
+		}
+		
+//		InstanceList[] instancesSplit = newInstances.split(new double[] {0.5, 0.5});
+//		ClassifierTrainer<?> ct = new NaiveBayesTrainer();
+//		Classifier c = ct.train(instancesSplit[0]);
+//		ArrayList<Classification> classifications = c.classify(instancesSplit[1]);
+//		for (Classification classification : classifications) {
+//			System.out.println(classification.getInstance().getName());
+//			Labeling labeling = classification.getLabeling();
+//			for(int i=0; i < labeling.numLocations(); ++i) {
+//				System.out.println(labeling.labelAtLocation(i) + ", " + labeling.valueAtLocation(i));
+//			}
+//		}
+//		
+		
+		Collection<Trial> trials = crossValidate(newInstances, 3, new NaiveBayesTrainer());
+		
+		for (Trial trial : trials) {
+			trial2file(trial, System.out);
+		}
+	}
+	
+	
+	
+	/*
 		//
 		// COLLECTION PREPROCESSING
 		//
 		
 //		preprocessToFile();
-		
-		
-	}
-	
-	/*
 		//
 		// COLLECTION ANALYSIS
 		//
@@ -228,7 +266,6 @@ public class SEAMCE {
 	
 	// ------------------------------------------------------------------------
 	
-	
 	public static final Map<Integer, Collection<Trial>> classificationRun(InstanceList instances, IFilter fs, ClassifierTrainer<Classifier> trainer, int numFolds) {
 		Map<Integer, Collection<Trial>> trials = new HashMap<Integer, Collection<Trial>>();
 		
@@ -266,4 +303,41 @@ public class SEAMCE {
 		
 		return trials;
 	}
+	
+	public static final void trial2file(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(out);
+		
+		Instance instance;
+		Labeling labeling;
+		for (Classification classification : trial) {
+			// write out results in the form of:
+			// instance, real_class_idx, real_class, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
+			// class_nN = class classified at position N
+			// val_nN = value of class at position N
+			
+			// instance
+			instance = classification.getInstance();
+			pw.write(instance.getName() + ", ");
+			
+			// real class
+			pw.write(instance.getLabeling().getBestIndex() + ", ");
+			pw.write(instance.getLabeling().getBestLabel() + ", ");
+			
+			// pairs of class_nN, val_nN
+			labeling = classification.getLabeling();
+			int n = labeling.numLocations();
+			for(int i=0; i < n; ++i) {
+				pw.write(labeling.indexAtLocation(i) + ", ");
+				pw.write(labeling.labelAtLocation(i) + ", ");
+				pw.write(String.valueOf(labeling.valueAtLocation(i)));
+				
+				if(i+1 < n) pw.write(", ");
+			}
+			pw.write('\n');
+		}
+		
+		pw.flush();
+//		pw.close();
+	}
+	
 }

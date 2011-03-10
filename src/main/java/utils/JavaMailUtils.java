@@ -32,7 +32,7 @@ public class JavaMailUtils {
 		return addresses.toArray(new String[0]);
 	}
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss z");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	public static final String parseDateTime(Date dt) {
 		if(dt!=null) return sdf.format(dt);
 		else return "";
