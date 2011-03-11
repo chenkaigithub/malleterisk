@@ -35,16 +35,6 @@ import fs.methods.TFIDF;
  * streamline everything into big pipelines
  * of processing
  * 
- * 1.
- * no feature selection? não é possível recriar mesmo comportamento
- * convém saber a percentagem das features
- * penso que não está a classificar para 100% (sem fs)
- * 
- * 2.
- * matriz de confusão e gráficos
- * matriz de confusão com número de documentos / classe
- * gráficos da performance do naive bayes com diferentes métodos de fs
- * 
  * 3.
  * combater o desiquilibro das classes
  * 	variar o número de classes

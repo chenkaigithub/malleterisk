@@ -2,14 +2,18 @@ package utils;
 
 import java.util.Iterator;
 
+/**
+ * Helper class for iterating a numeric array. Calculates the percentage internally
+ * through the given step.
+ * 
+ * @author tt
+ *
+ */
 public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	private final int percentageStep;
 	private final double stepSize;
 	private int currentStep;
 	
-	// TODO: another option would be to receive an array of percentages and iterate them
-	// e.g. [100, 97, 95, 90, 80, 70, 60, 50] and create a generator method
-	// that returns an array of that type with given params
 	public IteratedExecution(int alphabetSize, int percentageStep) {
 		this.percentageStep = percentageStep;
 		this.stepSize = (double)alphabetSize / 100.0;
@@ -23,8 +27,13 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 
 	@Override
 	public Integer next() {
+		// get current value
+		int i = (int)Math.ceil(currentStep*stepSize);
+		
+		// advance
 		currentStep -= percentageStep;
-		 return (int) Math.ceil(currentStep*stepSize);
+		
+		return i;
 	}
 
 	@Override
@@ -35,5 +44,5 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	@Override
 	public Iterator<Integer> iterator() {
 		return this;
-	}
+	}	
 }
