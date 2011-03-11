@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,7 +18,6 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.Trial;
-import cc.mallet.types.FeatureConjunction.List;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
@@ -27,7 +25,6 @@ import cc.mallet.types.Labeling;
 import data.IDataSet;
 import fs.Filter;
 import fs.IFilter;
-import fs.methods.FilterByRankedDF;
 import fs.methods.FilterByRankedVariance;
 import fs.methods.TFIDF;
 
@@ -115,30 +112,16 @@ public class SEAMCE {
 	public static void main(String[] args) throws Exception {
 		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
 		int m = instances.getDataAlphabet().size();
-		IFilter fs = new FilterByRankedDF(TFIDF.tfidf(instances));
+//		IFilter fs = new FilterByRankedDF(TFIDF.tfidf(instances));
+//		IFilter fs = new FilterByRankedL0Norm1(TFIDF.tfidf(instances));
+//		IFilter fs = new FilterByRankedL0Norm2(TFIDF.tfidf(instances));
+		IFilter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
 		InstanceList newInstances = fs.filter(m);
-		
-		for (Instance instance : newInstances) {
-			System.out.println(instance.getName() + "|" + instance.getTarget());
-		}
-		
-//		InstanceList[] instancesSplit = newInstances.split(new double[] {0.5, 0.5});
-//		ClassifierTrainer<?> ct = new NaiveBayesTrainer();
-//		Classifier c = ct.train(instancesSplit[0]);
-//		ArrayList<Classification> classifications = c.classify(instancesSplit[1]);
-//		for (Classification classification : classifications) {
-//			System.out.println(classification.getInstance().getName());
-//			Labeling labeling = classification.getLabeling();
-//			for(int i=0; i < labeling.numLocations(); ++i) {
-//				System.out.println(labeling.labelAtLocation(i) + ", " + labeling.valueAtLocation(i));
-//			}
-//		}
-//		
 		
 		Collection<Trial> trials = crossValidate(newInstances, 3, new NaiveBayesTrainer());
 		
 		for (Trial trial : trials) {
-			trial2file(trial, System.out);
+			trial2out(trial, System.out);
 		}
 	}
 	
@@ -278,6 +261,11 @@ public class SEAMCE {
 		return trials;
 	}
 
+	
+	
+	
+	
+	
 	// ------------------------------------------------------------------------
 	
 	/**
@@ -304,7 +292,15 @@ public class SEAMCE {
 		return trials;
 	}
 	
-	public static final void trial2file(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
+	/**
+	 * Writes the results of the classification into the output stream in a formatted manner.
+	 * (instance, real_class_idx, real_class, class_n1_idx, class_n1, class_n1_val, ..., class_nK_idx, class_nK, class_nK_val)
+	 * 
+	 * @param trial
+	 * @param out
+	 * @throws FileNotFoundException
+	 */
+	public static final void trial2out(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(out);
 		
 		Instance instance;

@@ -58,7 +58,6 @@ public class Functions {
 	
 	// Returns the document frequency of all features in the alphabet
 	public static final RankedFeatureVector df(InstanceList instances) {
-		
 		double[] dfs = new double[instances.getDataAlphabet().size()];
 		
 		for (Instance instance : instances) {
@@ -120,7 +119,10 @@ public class Functions {
 		// I.e. the number of documents of the given class where the feature occurs.
 		// there's no real constraint since we're passing the instances of class X 
 		SparseVector sv = l0(cls1instances);
-		sv.plusEqualsSparse(l0(cls2instances));
+		sv.plusEqualsSparse(l0(cls2instances), -1);
+		
+		for (int i=0; i < sv.numLocations(); ++i)
+			sv.setValueAtLocation(i, Math.abs(sv.valueAtLocation(i)));
 		
 		return sv;
 	}

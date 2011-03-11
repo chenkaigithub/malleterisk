@@ -16,7 +16,7 @@ public abstract class Filter implements IFilter {
 	public InstanceList filter(int numFeatures) {
 		// the calculation needs to be done only once (for the given instancelist)
 		if(this.rfv==null) this.rfv = calculate();
-		
+
 		// the filtering can be done infinite times over the cached calculations
 		// return the _HIGHEST_ ranked _numFeatures_ features
 		return Functions.fs(instances, new FeatureSelection(this.rfv, numFeatures));

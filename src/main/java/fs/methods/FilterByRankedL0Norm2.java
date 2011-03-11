@@ -24,8 +24,6 @@ public class FilterByRankedL0Norm2 extends Filter {
 		RankedFeatureVector rfv = Functions.l0norm(instances);
 		instances = FilterByRankedL0Norm1.removeNonInformativeFeatures(instances, rfv);
 		
-		// TODO: this is bugged.. results are equal to l0norm1
-		
 		// step 2. compute the rank ri of each feature
 		// step 3. keep only the m features with largest ranks ri
 		return Functions.l0rank(instances);
