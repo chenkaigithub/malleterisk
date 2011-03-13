@@ -37,6 +37,7 @@ import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
+import ft.transformation.methods.NoTransformation;
 import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
@@ -108,8 +109,10 @@ public class SEAMCE {
 	public static void main(String[] args) throws Exception {
 		// (automatically) load instance lists from file
 		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
-		instanceLists.add(InstanceList.load(new File("instances+0+0+tests")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+1+bodies")));
+//		String instanceList0 = "instances+0+0+tests";
+//		instanceLists.add(InstanceList.load(new File(instanceList0)));
+		String instanceList1 = "instances+0+0+tests";
+		instanceLists.add(InstanceList.load(new File("instances+1+1+bodies")));
 //		instanceLists.add(InstanceList.load(new File("instances+1+2+bodies")));
 //		instanceLists.add(InstanceList.load(new File("instances+1+3+bodies")));
 //		instanceLists.add(InstanceList.load(new File("instances+1+4+bodies")));
@@ -122,11 +125,12 @@ public class SEAMCE {
 		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
 		transformers.add(new TFIDF());
 		transformers.add(new TDI());
+		transformers.add(new NoTransformation());
 		Map<ITransformer, InstanceList> ftil = transform(transformers, instanceLists);
 		
 		for (ITransformer transformer : ftil.keySet()) {
 			InstanceList instances = ftil.get(transformer);
-			
+
 			// apply feature selection
 			ArrayList<IFilter> fss = new ArrayList<IFilter>();
 			fss.add(new FilterByRankedDF(instances));
@@ -150,10 +154,11 @@ public class SEAMCE {
 					for (ClassifierTrainer<? extends Classifier> classifier : cs) {
 						Collection<Trial> trials = crossValidate(instances, 10, classifier);
 						for (Trial trial : trials) {
-							FileOutputStream fos = new FileOutputStream(new File(generateOutName(transformer, filter, classifier)));
+							FileOutputStream fos = new FileOutputStream(new File(generateTrialOutName(instanceList1, transformer, filter, classifier)));
 							trial2out(trial, fos);
 							fos.close();
 						}
+						trialsAccuracies2out(n, trials, new FileOutputStream(new File(generateTrialAccuraciesOutName(instanceList1, transformer, filter, classifier))));
 					}
 				}
 			}
@@ -162,7 +167,7 @@ public class SEAMCE {
 	
 	
 	
-	public static final void db2file() {
+	private static final void db2file() {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 //		for (int collectionId : dal.getCollections()) {
 //			for (int userId : dal.getUsers(collectionId)) {
@@ -184,8 +189,27 @@ public class SEAMCE {
 //		}
 	}
 	
-	public static final String generateOutName(ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
+	private static final String generateTrialOutName(String s, ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
 		StringBuffer sb = new StringBuffer();
+		sb.append("trial");
+		sb.append("+");
+		sb.append(s);
+		sb.append("+");
+		sb.append(transformer.getDescription());
+		sb.append("+");
+		sb.append(filter.getDescription());
+		sb.append("+");
+		sb.append(getClassifierDescription(classifier));
+		sb.append("+");
+		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
+		
+		return sb.toString();
+	}
+	
+	private static final String generateTrialAccuraciesOutName(String s, ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("accuracies");
+		sb.append("+");
 		sb.append(transformer.getDescription());
 		sb.append("+");
 		sb.append(filter.getDescription());
@@ -199,7 +223,9 @@ public class SEAMCE {
 	
 	
 	
-	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
+	
+	
+	private static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
 		while(ds.hasNext()) {
 			instance = ds.next();
@@ -211,7 +237,7 @@ public class SEAMCE {
 		return preprocessors;
 	}
 	
-	public static final Map<ITransformer, InstanceList> transform(Collection<ITransformer> transformers, Collection<InstanceList> instanceLists) {
+	private static final Map<ITransformer, InstanceList> transform(Collection<ITransformer> transformers, Collection<InstanceList> instanceLists) {
 		Map<ITransformer, InstanceList> m = new HashMap<ITransformer, InstanceList>();
 		
 		for (ITransformer transformer : transformers)
@@ -221,7 +247,8 @@ public class SEAMCE {
 		return m;
 	}
 	
-	public static final Map<Integer, Collection<Trial>> classificationRun(InstanceList instances, IFilter fs, ClassifierTrainer<Classifier> trainer, int numFolds) {
+	/*
+	private static final Map<Integer, Collection<Trial>> classificationRun(InstanceList instances, IFilter fs, ClassifierTrainer<Classifier> trainer, int numFolds) {
 		Map<Integer, Collection<Trial>> trials = new HashMap<Integer, Collection<Trial>>();
 		
 		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
@@ -232,6 +259,7 @@ public class SEAMCE {
 		
 		return trials;
 	}
+	*/
 		
 	/**
 	 * Performs cross validation to an instance list.
@@ -242,7 +270,7 @@ public class SEAMCE {
 	 * @param trainer
 	 * @return
 	 */
-	public static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
+	private static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
 		LinkedList<Trial> trials = new LinkedList<Trial>();
 		
 		CrossValidationIterator cvi = instances.crossValidationIterator(numFolds);
@@ -265,7 +293,7 @@ public class SEAMCE {
 	 * @param out
 	 * @throws FileNotFoundException
 	 */
-	public static final void trial2out(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
+	private static final void trial2out(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(out);
 		
 		Instance instance;
@@ -301,7 +329,7 @@ public class SEAMCE {
 //		pw.close();
 	}
 	
-	public static final void trialsAccuracies2out(int numFeatures, Collection<Trial> trials, OutputStream out) {
+	private static final void trialsAccuracies2out(int numFeatures, Collection<Trial> trials, OutputStream out) {
 		PrintWriter pw = new PrintWriter(out);
 		
 		pw.write(numFeatures);
@@ -313,9 +341,7 @@ public class SEAMCE {
 		}
 	}
 	
-	
-	
-	public static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
+	private static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
 		return classifier.getClass().getSimpleName();
 	}
 	
@@ -371,7 +397,7 @@ public class SEAMCE {
 	
 	// transition methods. deprecated.
 	
-	public static final void preprocessToFile(IDataSet ds) throws SQLException {
+	private static final void preprocessToFile(IDataSet ds) throws SQLException {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 //		int collectionId = 1;
 		
@@ -396,7 +422,7 @@ public class SEAMCE {
 //		}
 	}
 	
-	public static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
+	private static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(new File(dstFilename));
 		
 		InstanceList instances = InstanceList.load(new File(srcFilename));
