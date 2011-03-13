@@ -88,7 +88,7 @@ public 	class Result {
 		PrintWriter pw = new PrintWriter(out);
 		
 		for (Integer n : this.trials.keySet()) {
-			pw.write(n.intValue());
+			pw.write(n.toString());
 			pw.write(", ");
 			int i = 0;
 			for (Trial trial : this.trials.get(n)) {

@@ -125,8 +125,7 @@ public class SEAMCE {
 			for (ITransformer transformer : transformers) {
 				for (IFilter filter : filters) {
 					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						trainer = trainer.getClass().newInstance();
-						sequentialRun(file, transformer, filter, trainer, step, folds);						
+						sequentialRun(file, transformer, filter, trainer.getClass().newInstance(), step, folds);						
 					}
 				}
 			}
@@ -144,7 +143,8 @@ public class SEAMCE {
 		for (int n : new IteratedExecution(transformedInstances.getDataAlphabet().size(), step)) {
 			InstanceList filteredInstances = filter.filter(n, transformedInstances);
 			
-			r.trials.put(n, ProcessorRun.crossValidate(filteredInstances, folds, trainer));
+			// classifier trainer must be a new instance since it might accumulate the previous alphabet 
+			r.trials.put(n, ProcessorRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
 		}
 		
 		r.trial2out();
