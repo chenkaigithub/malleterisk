@@ -81,14 +81,17 @@ public class ProcessorRun {
 	
 	@SuppressWarnings("unchecked")
 	public void classify(int numFolds) throws InstantiationException, IllegalAccessException {
-		for (FilteredInstances fi : this.filteredInstances)
-			for (Integer n : fi.instances.keySet())
-				for (ClassifierTrainer<? extends Classifier> trainer : this.classifiers) {
+		for (ClassifierTrainer<? extends Classifier> trainer : this.classifiers) {
+			for (FilteredInstances fi : this.filteredInstances) {
+				Result r = new Result(fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
+				for (Integer n : fi.instances.keySet()) {
 					trainer = trainer.getClass().newInstance();
-					Result r = new Result(fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
+					
 					r.trials.put(n, crossValidate(fi.instances.get(n), numFolds, trainer));
-					this.results.add(r);
 				}
+				this.results.add(r);
+			}
+		}
 	}
 	
 	public void results() throws FileNotFoundException {

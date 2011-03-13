@@ -86,7 +86,7 @@ public class SEAMCE {
 		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
 //		ProcessorRun pr0 = new ProcessorRun(new File("instances+0+0+tests"));
 //		instanceLists.add(pr0.instances);
-		ProcessorRun pr1 = new ProcessorRun(new File("instances+1+1+bodies"));
+		ProcessorRun pr1 = new ProcessorRun(new File("instances+2+1+subjects"/*"instances+1+1+bodies"*/));
 		instanceLists.add(pr1.instances);
 //		ProcessorRun pr2 = new ProcessorRun(new File("instances+1+2+bodies"));
 //		instanceLists.add(pr2.instances);
@@ -104,16 +104,16 @@ public class SEAMCE {
 //		instanceLists.add(pr8.instances);
 
 		// setup feature transformation
-		pr1.transformers.add(new TFIDF());
+//		pr1.transformers.add(new TFIDF());
 //		pr1.transformers.add(new TDI());
-//		pr1.transformers.add(new NoTransformation());
+		pr1.transformers.add(new NoTransformation());
 		
 		// setup filter selection
 		pr1.filters.add(new FilterByRankedDF());
-		pr1.filters.add(new FilterByRankedIG());
-		pr1.filters.add(new FilterByRankedVariance());
-		pr1.filters.add(new FilterByRankedL0Norm1());
-		pr1.filters.add(new FilterByRankedL0Norm2());
+//		pr1.filters.add(new FilterByRankedIG());
+//		pr1.filters.add(new FilterByRankedVariance());
+//		pr1.filters.add(new FilterByRankedL0Norm1());
+//		pr1.filters.add(new FilterByRankedL0Norm2());
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
