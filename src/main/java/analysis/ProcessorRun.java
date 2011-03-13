@@ -2,28 +2,22 @@ package analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 import utils.IteratedExecution;
-import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.Trial;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
-import cc.mallet.types.Labeling;
 import ft.selection.IFilter;
 import ft.transformation.ITransformer;
 
+// ATTN: this will waste your memory
 public class ProcessorRun {
 	public final String name;
 	public final InstanceList instances;
@@ -49,7 +43,7 @@ public class ProcessorRun {
 		this.transformedInstances = new ArrayList<ProcessorRun.TransformedInstances>();
 		this.filteredInstances = new ArrayList<ProcessorRun.FilteredInstances>();
 		
-		this.results = new ArrayList<ProcessorRun.Result>();
+		this.results = new ArrayList<Result>();
 	}
 	
 	public void run(int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -83,7 +77,7 @@ public class ProcessorRun {
 	public void classify(int numFolds) throws InstantiationException, IllegalAccessException {
 		for (ClassifierTrainer<? extends Classifier> trainer : this.classifiers) {
 			for (FilteredInstances fi : this.filteredInstances) {
-				Result r = new Result(fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
+				Result r = new Result(this.name, fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
 				for (Integer n : fi.instances.keySet()) {
 					trainer = trainer.getClass().newInstance();
 					
@@ -110,7 +104,7 @@ public class ProcessorRun {
 	 * @param trainer
 	 * @return
 	 */
-	private static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
+	public static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
 		LinkedList<Trial> trials = new LinkedList<Trial>();
 		
 		CrossValidationIterator cvi = instances.crossValidationIterator(numFolds);
@@ -125,7 +119,7 @@ public class ProcessorRun {
 		return trials;
 	}
 	
-	private static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
+	public static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
 		return classifier.getClass().getSimpleName();
 	}
 	
@@ -152,127 +146,6 @@ public class ProcessorRun {
 			this.filter = f;
 			this.transformer = t;
 			this.instances = new HashMap<Integer, InstanceList>();
-		}
-	}
-	
-	class Result {
-		public String transformer;
-		public String filter;
-		public String classifier;
-		
-		public Map<Integer, Collection<Trial>> trials;
-		
-		public Result(String t, String f, String c) {
-			this.transformer = t;
-			this.filter = f;
-			this.classifier = c;
-			this.trials = new HashMap<Integer, Collection<Trial>>();
-		}
-		
-		/**
-		 * Writes the results of the classification into the output stream in a formatted manner.
-		 * (instance, real_class_idx, real_class, class_n1_idx, class_n1, class_n1_val, ..., class_nK_idx, class_nK, class_nK_val)
-		 */
-		public void trial2out() throws FileNotFoundException {
-			Instance instance;
-			Labeling labeling;
-			
-			for (Integer n : this.trials.keySet()) {
-				for (Trial trial : this.trials.get(n)) {
-					FileOutputStream out = new FileOutputStream(getTrialOutName());
-					PrintWriter pw = new PrintWriter(out);
-					
-					for (Classification classification : trial) {
-						// write out results in the form of:
-						// instance, real_class_idx, real_class, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
-						// class_nN = class classified at position N
-						// val_nN = value of class at position N
-						
-						// instance
-						instance = classification.getInstance();
-						pw.write(instance.getName() + ", ");
-						
-						// real class
-						pw.write(instance.getLabeling().getBestIndex() + ", ");
-						pw.write(instance.getLabeling().getBestLabel() + ", ");
-						
-						// pairs of class_nN, val_nN
-						labeling = classification.getLabeling();
-						int nl = labeling.numLocations();
-						for(int i=0; i < nl; ++i) {
-							pw.write(labeling.indexAtLocation(i) + ", ");
-							pw.write(labeling.labelAtLocation(i) + ", ");
-							pw.write(String.valueOf(labeling.valueAtLocation(i)));
-							
-							if(i+1 < nl) pw.write(", ");
-						}
-						pw.write('\n');
-					}
-					
-					pw.flush();
-					pw.close();
-				}
-			}
-		}
-		
-		/**
-		 * Writes the accuracies of the trials into a file, in a formatted manner.
-		 * (number_of_features, trial1_accuracy, trial2_accuracy, ..., trialN_accuracy)
-		 * 
-		 * Used to plot feature selection/classification accuracy graph.
-		 * 
-		 */
-		public void accuracies2out() throws FileNotFoundException {
-			FileOutputStream out = new FileOutputStream(getAccuraciesOutName());
-			PrintWriter pw = new PrintWriter(out);
-			
-			for (Integer n : this.trials.keySet()) {
-				pw.write(n.intValue());
-				pw.write(", ");
-				int i = 0;
-				for (Trial trial : this.trials.get(n)) {
-					pw.write(String.valueOf(trial.getAccuracy()));
-					if(i++ < trials.size()) pw.write(", ");
-				}
-				pw.write('\n');
-			}
-			
-			pw.flush();
-			pw.close();
-		}
-		
-		private String getTrialOutName() {
-			StringBuffer sb = new StringBuffer();
-			sb.append("trial");
-			sb.append("+");
-			sb.append(ProcessorRun.this.name);
-			sb.append("+");
-			sb.append(transformer);
-			sb.append("+");
-			sb.append(filter);
-			sb.append("+");
-			sb.append(classifier);
-			sb.append("+");
-			sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
-			
-			return sb.toString();
-		}
-		
-		private String getAccuraciesOutName() {
-			StringBuffer sb = new StringBuffer();
-			sb.append("accuracies");
-			sb.append("+");
-			sb.append(ProcessorRun.this.name);
-			sb.append("+");
-			sb.append(transformer);
-			sb.append("+");
-			sb.append(filter);
-			sb.append("+");
-			sb.append(classifier);
-			sb.append("+");
-			sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
-			
-			return sb.toString();
 		}
 	}
 }

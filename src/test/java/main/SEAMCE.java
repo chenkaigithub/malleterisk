@@ -1,20 +1,28 @@
 package main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import pp.PreProcessor;
+import utils.IteratedExecution;
 import analysis.ProcessorRun;
+import analysis.Result;
+import cc.mallet.classify.Classifier;
+import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.Instance;
+import cc.mallet.types.InstanceList;
 import data.IDataSet;
+import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedVariance;
+import ft.transformation.ITransformer;
 import ft.transformation.methods.NoTransformation;
 import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
@@ -79,70 +87,69 @@ import ft.transformation.methods.TFIDF;
  * + experiment, experiment, experiment
  */
 public class SEAMCE {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
-		ArrayList<ProcessorRun> runs = new ArrayList<ProcessorRun>();
-		runs.add(new ProcessorRun(new File("instances+0+0+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+1+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+2+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+3+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+4+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+5+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+6+bodies")));
-		runs.add(new ProcessorRun(new File("instances+1+7+bodies")));
-		runs.add(new ProcessorRun(new File("instances+2+1+bodies")));
-
-		for (ProcessorRun run : runs) {
-			// setup feature transformation
-			run.transformers.add(new TFIDF());
-			run.transformers.add(new TDI());
-			run.transformers.add(new NoTransformation());
-			
-			// setup filter selection
-			run.filters.add(new FilterByRankedDF());
-			run.filters.add(new FilterByRankedIG());
-			run.filters.add(new FilterByRankedVariance());
-			run.filters.add(new FilterByRankedL0Norm1());
-			run.filters.add(new FilterByRankedL0Norm2());
-			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
-			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
-			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
-			
-			// setup classifiers
-			run.classifiers.add(new NaiveBayesTrainer());
-			
-			// run
-			run.run(10, 10);
+		ArrayList<File> files = new ArrayList<File>();
+//		files.add(new File("instances+0+0+tests"));
+//		files.add(new File("instances+1+1+bodies"));
+//		files.add(new File("instances+1+2+bodies"));
+//		files.add(new File("instances+1+3+bodies"));
+//		files.add(new File("instances+1+4+bodies"));
+//		files.add(new File("instances+1+5+bodies"));
+//		files.add(new File("instances+1+6+bodies"));
+//		files.add(new File("instances+1+7+bodies"));
+		files.add(new File("instances+2+1+bodies"));
+		
+		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		transformers.add(new TFIDF());
+		transformers.add(new TDI());
+		transformers.add(new NoTransformation());
+		
+		ArrayList<IFilter> filters = new ArrayList<IFilter>();
+		filters.add(new FilterByRankedDF());
+		filters.add(new FilterByRankedIG());
+		filters.add(new FilterByRankedVariance());
+		filters.add(new FilterByRankedL0Norm1());
+		filters.add(new FilterByRankedL0Norm2());
+		filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
+		filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
+		filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
+		
+		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
+		classifiers.add(new NaiveBayesTrainer());
+		
+		int step = 10;
+		int folds = 10;
+		
+		for (File file : files) {
+			for (ITransformer transformer : transformers) {
+				for (IFilter filter : filters) {
+					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
+						trainer = trainer.getClass().newInstance();
+						sequentialRun(file, transformer, filter, trainer, step, folds);						
+					}
+				}
+			}
 		}
-		
-		
-		
-		
-		
-//		ProcessorRun pr1 = new ProcessorRun(new File("instances+1+1+bodies"));
-//		
-//		// setup feature transformation
-//		pr1.transformers.add(new TFIDF());
-//		pr1.transformers.add(new TDI());
-//		pr1.transformers.add(new NoTransformation());
-//		
-//		// setup filter selection
-//		pr1.filters.add(new FilterByRankedDF());
-//		pr1.filters.add(new FilterByRankedIG());
-//		pr1.filters.add(new FilterByRankedVariance());
-//		pr1.filters.add(new FilterByRankedL0Norm1());
-//		pr1.filters.add(new FilterByRankedL0Norm2());
-//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
-//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
-//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
-//		
-//		// setup classifiers
-//		pr1.classifiers.add(new NaiveBayesTrainer());
-//		
-//		// run
-//		pr1.run(10, 10);
 	}
 	
-	
+	public static final void sequentialRun(File file, ITransformer transformer, 
+			IFilter filter, ClassifierTrainer<? extends Classifier> trainer, 
+			int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException 
+	{
+		Result r = new Result(file.getName(), transformer.getDescription(), filter.getDescription(), ProcessorRun.getClassifierDescription(trainer));
+		InstanceList instances = InstanceList.load(file);
+		
+		InstanceList transformedInstances = transformer.calculate(instances);
+		for (int n : new IteratedExecution(transformedInstances.getDataAlphabet().size(), step)) {
+			InstanceList filteredInstances = filter.filter(n, transformedInstances);
+			
+			r.trials.put(n, ProcessorRun.crossValidate(filteredInstances, folds, trainer));
+		}
+		
+		r.trial2out();
+		r.accuracies2out();
+	}
 	
 	private static final void db2file() {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
