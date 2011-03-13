@@ -2,10 +2,13 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -26,8 +29,14 @@ import cc.mallet.types.Labeling;
 import data.IDataSet;
 import ft.selection.Filter;
 import ft.selection.IFilter;
+import ft.selection.methods.FilterByRankedDF;
+import ft.selection.methods.FilterByRankedFisher;
+import ft.selection.methods.FilterByRankedIG;
+import ft.selection.methods.FilterByRankedL0Norm1;
+import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
+import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
 /* 
@@ -96,6 +105,61 @@ import ft.transformation.methods.TFIDF;
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
+		// (automatically) load instance lists from file
+		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
+		instanceLists.add(InstanceList.load(new File("instances+0+0+tests")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+1+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+2+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+3+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+4+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+5+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+6+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+1+7+bodies")));
+//		instanceLists.add(InstanceList.load(new File("instances+2+1+bodies")));
+		
+		// apply feature transformation
+		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		transformers.add(new TFIDF());
+		transformers.add(new TDI());
+		Map<ITransformer, InstanceList> ftil = transform(transformers, instanceLists);
+		
+		for (ITransformer transformer : ftil.keySet()) {
+			InstanceList instances = ftil.get(transformer);
+			
+			// apply feature selection
+			ArrayList<IFilter> fss = new ArrayList<IFilter>();
+			fss.add(new FilterByRankedDF(instances));
+			fss.add(new FilterByRankedIG(instances));
+			fss.add(new FilterByRankedVariance(instances));
+			fss.add(new FilterByRankedL0Norm1(instances));
+			fss.add(new FilterByRankedL0Norm2(instances));
+			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.MINIMUM_SCORE));
+			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SCORE));
+			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SQUARED_SCORE));
+			
+			for (int n : new IteratedExecution(instances.getDataAlphabet().size(), 5)) {
+				for (IFilter filter : fss) {
+					instances = filter.filter(n);
+					
+					// classify
+					ArrayList<ClassifierTrainer<? extends Classifier>> cs = new ArrayList<ClassifierTrainer<? extends Classifier>>();
+					cs.add(new NaiveBayesTrainer());
+//					cs.add(new BalancedWinnowTrainer());
+					
+					for (ClassifierTrainer<? extends Classifier> classifier : cs) {
+						Collection<Trial> trials = crossValidate(instances, 10, classifier);
+						for (Trial trial : trials) {
+							FileOutputStream fos = new FileOutputStream(new File(generateOutName(transformer, filter, classifier)));
+							trial2out(trial, fos);
+							fos.close();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public static final void db2file() {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 //		for (int collectionId : dal.getCollections()) {
 //			for (int userId : dal.getUsers(collectionId)) {
@@ -113,64 +177,24 @@ public class SEAMCE {
 //				// save into files of the following format: instances+collection+user+field+preprocessing
 //				for (PreProcessor instanceList : instanceLists)
 //					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
-//				
-//			}
-//		}
-		
-//		// (automatically) load instance lists from file
-//		// ...
-//		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
-//		instanceLists.add(InstanceList.load(new File("instances+0+0+tests")));
-//		
-//		// apply feature transformation
-//		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
-//		transformers.add(new TFIDF());
-//		transformers.add(new TDI());
-//		Map<ITransformer, InstanceList> ftil = transform(transformers, instanceLists);
-//		
-//		for (ITransformer transformer : ftil.keySet()) {
-//			InstanceList instances = ftil.get(transformer);
-//			
-//			// apply feature selection
-//			ArrayList<IFilter> fss = new ArrayList<IFilter>();
-//			fss.add(new FilterByRankedDF(instances));
-//			fss.add(new FilterByRankedIG(instances));
-//			fss.add(new FilterByRankedVariance(instances));
-//			fss.add(new FilterByRankedL0Norm1(instances));
-//			fss.add(new FilterByRankedL0Norm2(instances));
-//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.MINIMUM_SCORE));
-//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SCORE));
-//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SQUARED_SCORE));
-//			
-//			for (int n : new IteratedExecution(instances.getAlphabet().size(), 5)) {
-//				for (IFilter filter : fss) {
-//					instances = filter.filter(n);
-//					
-//					// classify
-//					ArrayList<ClassifierTrainer<? extends Classifier>> cs = new ArrayList<ClassifierTrainer<? extends Classifier>>();
-//					cs.add(new NaiveBayesTrainer());
-//					cs.add(new BalancedWinnowTrainer());
-//					
-//					for (ClassifierTrainer<? extends Classifier> classifier : cs) {
-//						Collection<Trial> trials = crossValidate(instances, 10, classifier);
-//						for (Trial trial : trials) {
-//							StringBuffer sb = new StringBuffer();
-//							sb.append(transformer.getDescription());
-//							sb.append("+");
-//							sb.append(filter.getDescription());
-//							sb.append("+");
-//							sb.append(getClassifierDescription(classifier));
-//							
-//							
-//							FileOutputStream fos = new FileOutputStream(new File(sb.toString()));
-//							trial2out(trial, fos);
-//							fos.close();
-//						}
-//					}
-//				}
 //			}
 //		}
 	}
+	
+	public static final String generateOutName(ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(transformer.getDescription());
+		sb.append("+");
+		sb.append(filter.getDescription());
+		sb.append("+");
+		sb.append(getClassifierDescription(classifier));
+		sb.append("+");
+		sb.append(new Date().toString());
+
+		return sb.toString();
+	}
+	
+	
 	
 	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
