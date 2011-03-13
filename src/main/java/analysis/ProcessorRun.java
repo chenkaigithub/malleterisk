@@ -52,7 +52,7 @@ public class ProcessorRun {
 		this.results = new ArrayList<ProcessorRun.Result>();
 	}
 	
-	public void run(int step, int folds) throws FileNotFoundException {
+	public void run(int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		this.transform();
 		this.filter(step);
 		this.classify(folds);
@@ -79,10 +79,12 @@ public class ProcessorRun {
 		}
 	}
 	
-	public void classify(int numFolds) {
+	@SuppressWarnings("unchecked")
+	public void classify(int numFolds) throws InstantiationException, IllegalAccessException {
 		for (FilteredInstances fi : this.filteredInstances)
 			for (Integer n : fi.instances.keySet())
 				for (ClassifierTrainer<? extends Classifier> trainer : this.classifiers) {
+					trainer = trainer.getClass().newInstance();
 					Result r = new Result(fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
 					r.trials.put(n, crossValidate(fi.instances.get(n), numFolds, trainer));
 					this.results.add(r);
@@ -222,7 +224,7 @@ public class ProcessorRun {
 			PrintWriter pw = new PrintWriter(out);
 			
 			for (Integer n : this.trials.keySet()) {
-				pw.write(n);
+				pw.write(n.intValue());
 				pw.write(", ");
 				int i = 0;
 				for (Trial trial : this.trials.get(n)) {

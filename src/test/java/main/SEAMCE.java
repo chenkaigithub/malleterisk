@@ -105,8 +105,8 @@ public class SEAMCE {
 
 		// setup feature transformation
 		pr1.transformers.add(new TFIDF());
-		pr1.transformers.add(new TDI());
-		pr1.transformers.add(new NoTransformation());
+//		pr1.transformers.add(new TDI());
+//		pr1.transformers.add(new NoTransformation());
 		
 		// setup filter selection
 		pr1.filters.add(new FilterByRankedDF());
@@ -114,13 +114,13 @@ public class SEAMCE {
 		pr1.filters.add(new FilterByRankedVariance());
 		pr1.filters.add(new FilterByRankedL0Norm1());
 		pr1.filters.add(new FilterByRankedL0Norm2());
-		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
-		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
-		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
+//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
+//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
+//		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
 		
 		// setup classifiers
 		pr1.classifiers.add(new NaiveBayesTrainer());
-		pr1.classifiers.add(new BalancedWinnowTrainer());
+//		pr1.classifiers.add(new BalancedWinnowTrainer());
 		
 		// run
 		pr1.run(10, 10);
@@ -163,9 +163,6 @@ public class SEAMCE {
 	}
 	
 	/*
-		//
-		// COLLECTION ANALYSIS
-		//
 //		System.out.println("1-1");
 //		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "subjects")))).toString());
 //		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "bodies")))).toString());
