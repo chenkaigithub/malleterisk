@@ -1,15 +1,18 @@
-[file_name, path_name, filter_index] = uigetfile('*.*');
+%[file_name, path_name, filter_index] = uigetfile('*.*');
+
+path_name = '/Temp/dl/';
+file_name = 'trial+instances+2+1+subjects+NoTransformation+FilterByRankedDF+NaiveBayesTrainer+2011-03-14_05-12-02';
 
 % load data
 data = importdata([path_name file_name], ',');
 instances = data.textdata(:, 1);
 
 % format data (only retrieve specified columns)
-real_class_indices = cell2mat(data.textdata(:, 2));
-%real_class_names = data.textdata(:, 3);
-best_class_indices = cell2mat(data.textdata(:, 4));
-%best_class_names = data.textdata(:, 5);
-%best_class_values = cell2mat(data.textdata(:, 6));
+real_class_indices = data.data(:, 2);
+%real_class_names = data.data(:, 3);
+best_class_indices = data.data(:, 4);
+%best_class_names = data.data(:, 5);
+%best_class_values = data.data(:, 6);
 
 % compute confusion matrix
 minx = min(real_class_indices);
