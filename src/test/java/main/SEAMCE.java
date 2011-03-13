@@ -6,10 +6,8 @@ import java.util.Collection;
 
 import pp.PreProcessor;
 import analysis.ProcessorRun;
-import cc.mallet.classify.BalancedWinnowTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
 import data.IDataSet;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -82,34 +80,53 @@ import ft.transformation.methods.TFIDF;
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
-		// (automatically) load instance lists from file
-		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
-//		ProcessorRun pr0 = new ProcessorRun(new File("instances+0+0+tests"));
-//		instanceLists.add(pr0.instances);
-		ProcessorRun pr1 = new ProcessorRun(new File("instances+2+1+subjects"/*"instances+1+1+bodies"*/));
-		instanceLists.add(pr1.instances);
-//		ProcessorRun pr2 = new ProcessorRun(new File("instances+1+2+bodies"));
-//		instanceLists.add(pr2.instances);
-//		ProcessorRun pr3 = new ProcessorRun(new File("instances+1+3+bodies"));
-//		instanceLists.add(pr3.instances);
-//		ProcessorRun pr4 = new ProcessorRun(new File("instances+1+4+bodies"));
-//		instanceLists.add(pr4.instances);
-//		ProcessorRun pr5 = new ProcessorRun(new File("instances+1+5+bodies"));
-//		instanceLists.add(pr5.instances);
-//		ProcessorRun pr6 = new ProcessorRun(new File("instances+1+6+bodies"));
-//		instanceLists.add(pr6.instances);
-//		ProcessorRun pr7 = new ProcessorRun(new File("instances+1+7+bodies"));
-//		instanceLists.add(pr7.instances);
-//		ProcessorRun pr8 = new ProcessorRun(new File("instances+2+1+bodies"));
-//		instanceLists.add(pr8.instances);
+		ArrayList<ProcessorRun> runs = new ArrayList<ProcessorRun>();
+		runs.add(new ProcessorRun(new File("instances+0+0+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+1+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+2+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+3+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+4+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+5+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+6+bodies")));
+		runs.add(new ProcessorRun(new File("instances+1+7+bodies")));
+		runs.add(new ProcessorRun(new File("instances+2+1+bodies")));
 
-		// setup feature transformation
+		for (ProcessorRun run : runs) {
+			// setup feature transformation
+			run.transformers.add(new TFIDF());
+			run.transformers.add(new TDI());
+			run.transformers.add(new NoTransformation());
+			
+			// setup filter selection
+			run.filters.add(new FilterByRankedDF());
+			run.filters.add(new FilterByRankedIG());
+			run.filters.add(new FilterByRankedVariance());
+			run.filters.add(new FilterByRankedL0Norm1());
+			run.filters.add(new FilterByRankedL0Norm2());
+			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
+			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
+			run.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
+			
+			// setup classifiers
+			run.classifiers.add(new NaiveBayesTrainer());
+			
+			// run
+			run.run(10, 10);
+		}
+		
+		
+		
+		
+		
+//		ProcessorRun pr1 = new ProcessorRun(new File("instances+1+1+bodies"));
+//		
+//		// setup feature transformation
 //		pr1.transformers.add(new TFIDF());
 //		pr1.transformers.add(new TDI());
-		pr1.transformers.add(new NoTransformation());
-		
-		// setup filter selection
-		pr1.filters.add(new FilterByRankedDF());
+//		pr1.transformers.add(new NoTransformation());
+//		
+//		// setup filter selection
+//		pr1.filters.add(new FilterByRankedDF());
 //		pr1.filters.add(new FilterByRankedIG());
 //		pr1.filters.add(new FilterByRankedVariance());
 //		pr1.filters.add(new FilterByRankedL0Norm1());
@@ -117,13 +134,12 @@ public class SEAMCE {
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
 //		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
-		
-		// setup classifiers
-		pr1.classifiers.add(new NaiveBayesTrainer());
-//		pr1.classifiers.add(new BalancedWinnowTrainer());
-		
-		// run
-		pr1.run(10, 10);
+//		
+//		// setup classifiers
+//		pr1.classifiers.add(new NaiveBayesTrainer());
+//		
+//		// run
+//		pr1.run(10, 10);
 	}
 	
 	
