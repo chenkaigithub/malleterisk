@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -159,6 +160,8 @@ public class SEAMCE {
 		}
 	}
 	
+	
+	
 	public static final void db2file() {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 //		for (int collectionId : dal.getCollections()) {
@@ -189,8 +192,8 @@ public class SEAMCE {
 		sb.append("+");
 		sb.append(getClassifierDescription(classifier));
 		sb.append("+");
-		sb.append(new Date().toString());
-
+		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
+		
 		return sb.toString();
 	}
 	
