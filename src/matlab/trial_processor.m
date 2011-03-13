@@ -1,7 +1,4 @@
-%[file_name, path_name, filter_index] = uigetfile('*.*');
-
-path_name = '/Temp/dl/';
-file_name = 'trial+instances+2+1+subjects+NoTransformation+FilterByRankedDF+NaiveBayesTrainer+2011-03-14_05-12-02';
+[file_name, path_name, filter_index] = uigetfile('*.*');
 
 % load data
 data = importdata([path_name file_name], ',');
