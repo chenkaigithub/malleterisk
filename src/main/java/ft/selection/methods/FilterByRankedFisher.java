@@ -17,16 +17,14 @@ public class FilterByRankedFisher extends Filter {
 	
 	private final int scoringType;
 	
-	public FilterByRankedFisher(InstanceList instances, int scoringType) {
-		super(instances);
-		
+	public FilterByRankedFisher(int scoringType) {
 		this.scoringType = scoringType;
 	}
 		
 	// apply the Fisher criterion to all features for all pairs of classes
 	// by using the selected method for scoring the features
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		RankedFeatureVector r = null;
 		
 		switch(scoringType) {

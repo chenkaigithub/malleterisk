@@ -6,12 +6,8 @@ import ft.selection.Filter;
 import ft.selection.functions.Functions;
 
 public class FilterByRankedVariance extends Filter {
-	public FilterByRankedVariance(InstanceList instances) {
-		super(instances);
-	}
-
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		return Functions.variance(instances);
 	}
 }

@@ -6,12 +6,8 @@ import cc.mallet.types.RankedFeatureVector;
 import ft.selection.Filter;
 
 public class FilterByRankedIG extends Filter {
-	public FilterByRankedIG(InstanceList instances) {
-		super(instances);
-	}
-	
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		return new InfoGain(instances);
 	}
 }

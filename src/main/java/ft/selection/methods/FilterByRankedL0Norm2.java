@@ -14,12 +14,8 @@ import ft.selection.functions.Functions;
  * Pattern Recognition in Information Systems, (2010), pp. 72-81.
  */
 public class FilterByRankedL0Norm2 extends Filter {
-	public FilterByRankedL0Norm2(InstanceList instances) {
-		super(instances);
-	}
-
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		// step 1. compute l0 norm of each feature and remove non informative features
 		RankedFeatureVector rfv = Functions.l0norm(instances);
 		instances = FilterByRankedL0Norm1.removeNonInformativeFeatures(instances, rfv);

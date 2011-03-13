@@ -7,12 +7,8 @@ import ft.selection.functions.Functions;
 
 // TODO: look at FeatureCounts
 public class FilterByRankedDF extends Filter {
-	public FilterByRankedDF(InstanceList instances) {
-		super(instances);
-	}
-
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		return Functions.df(instances);
 	}
 }

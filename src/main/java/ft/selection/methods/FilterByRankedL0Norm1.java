@@ -19,13 +19,8 @@ import ft.selection.functions.Functions;
  * 
  */
 public class FilterByRankedL0Norm1 extends Filter {
-	
-	public FilterByRankedL0Norm1(InstanceList instances) {
-		super(instances);
-	}
-	
 	@Override
-	protected RankedFeatureVector calculate() {
+	protected RankedFeatureVector calculate(InstanceList instances) {
 		// this method (possibly) applies a feature selection step before
 		// returning the ranked features (step 2. removal of non-informative features)
 		

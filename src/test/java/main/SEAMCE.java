@@ -1,53 +1,28 @@
 package main;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
 import pp.PreProcessor;
-import pp.email.body.BodyPreProcessor1;
-import pp.email.subject.SubjectPreProcessor1;
-import utils.IteratedExecution;
-import cc.mallet.classify.Classification;
-import cc.mallet.classify.Classifier;
-import cc.mallet.classify.ClassifierTrainer;
+import analysis.ProcessorRun;
+import cc.mallet.classify.BalancedWinnowTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import cc.mallet.types.InstanceList.CrossValidationIterator;
-import cc.mallet.types.Labeling;
 import data.IDataSet;
-import ft.selection.Filter;
-import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedVariance;
-import ft.transformation.ITransformer;
 import ft.transformation.methods.NoTransformation;
 import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
 /* 
  * TODO:
- * 
- * 0.
- * streamline everything into big pipelines
- * of processing
- * 
  * 3.
  * combater o desiquilibro das classes
  * 	variar o nœmero de classes
@@ -109,60 +84,46 @@ public class SEAMCE {
 	public static void main(String[] args) throws Exception {
 		// (automatically) load instance lists from file
 		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
-//		String instanceList0 = "instances+0+0+tests";
-//		instanceLists.add(InstanceList.load(new File(instanceList0)));
-		String instanceList1 = "instances+0+0+tests";
-		instanceLists.add(InstanceList.load(new File("instances+1+1+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+2+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+3+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+4+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+5+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+6+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+1+7+bodies")));
-//		instanceLists.add(InstanceList.load(new File("instances+2+1+bodies")));
-		
-		// apply feature transformation
-		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
-		transformers.add(new TFIDF());
-		transformers.add(new TDI());
-		transformers.add(new NoTransformation());
-		Map<ITransformer, InstanceList> ftil = transform(transformers, instanceLists);
-		
-		for (ITransformer transformer : ftil.keySet()) {
-			InstanceList instances = ftil.get(transformer);
+//		ProcessorRun pr0 = new ProcessorRun(new File("instances+0+0+tests"));
+//		instanceLists.add(pr0.instances);
+		ProcessorRun pr1 = new ProcessorRun(new File("instances+1+1+bodies"));
+		instanceLists.add(pr1.instances);
+//		ProcessorRun pr2 = new ProcessorRun(new File("instances+1+2+bodies"));
+//		instanceLists.add(pr2.instances);
+//		ProcessorRun pr3 = new ProcessorRun(new File("instances+1+3+bodies"));
+//		instanceLists.add(pr3.instances);
+//		ProcessorRun pr4 = new ProcessorRun(new File("instances+1+4+bodies"));
+//		instanceLists.add(pr4.instances);
+//		ProcessorRun pr5 = new ProcessorRun(new File("instances+1+5+bodies"));
+//		instanceLists.add(pr5.instances);
+//		ProcessorRun pr6 = new ProcessorRun(new File("instances+1+6+bodies"));
+//		instanceLists.add(pr6.instances);
+//		ProcessorRun pr7 = new ProcessorRun(new File("instances+1+7+bodies"));
+//		instanceLists.add(pr7.instances);
+//		ProcessorRun pr8 = new ProcessorRun(new File("instances+2+1+bodies"));
+//		instanceLists.add(pr8.instances);
 
-			// apply feature selection
-			ArrayList<IFilter> fss = new ArrayList<IFilter>();
-			fss.add(new FilterByRankedDF(instances));
-			fss.add(new FilterByRankedIG(instances));
-			fss.add(new FilterByRankedVariance(instances));
-			fss.add(new FilterByRankedL0Norm1(instances));
-			fss.add(new FilterByRankedL0Norm2(instances));
-			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.MINIMUM_SCORE));
-			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SCORE));
-			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SQUARED_SCORE));
-			
-			for (int n : new IteratedExecution(instances.getDataAlphabet().size(), 5)) {
-				for (IFilter filter : fss) {
-					instances = filter.filter(n);
-					
-					// classify
-					ArrayList<ClassifierTrainer<? extends Classifier>> cs = new ArrayList<ClassifierTrainer<? extends Classifier>>();
-					cs.add(new NaiveBayesTrainer());
-//					cs.add(new BalancedWinnowTrainer());
-					
-					for (ClassifierTrainer<? extends Classifier> classifier : cs) {
-						Collection<Trial> trials = crossValidate(instances, 10, classifier);
-						for (Trial trial : trials) {
-							FileOutputStream fos = new FileOutputStream(new File(generateTrialOutName(instanceList1, transformer, filter, classifier)));
-							trial2out(trial, fos);
-							fos.close();
-						}
-						trialsAccuracies2out(n, trials, new FileOutputStream(new File(generateTrialAccuraciesOutName(instanceList1, transformer, filter, classifier))));
-					}
-				}
-			}
-		}
+		// setup feature transformation
+		pr1.transformers.add(new TFIDF());
+		pr1.transformers.add(new TDI());
+		pr1.transformers.add(new NoTransformation());
+		
+		// setup filter selection
+		pr1.filters.add(new FilterByRankedDF());
+		pr1.filters.add(new FilterByRankedIG());
+		pr1.filters.add(new FilterByRankedVariance());
+		pr1.filters.add(new FilterByRankedL0Norm1());
+		pr1.filters.add(new FilterByRankedL0Norm2());
+		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
+		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
+		pr1.filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
+		
+		// setup classifiers
+		pr1.classifiers.add(new NaiveBayesTrainer());
+		pr1.classifiers.add(new BalancedWinnowTrainer());
+		
+		// run
+		pr1.run(10, 10);
 	}
 	
 	
@@ -189,42 +150,6 @@ public class SEAMCE {
 //		}
 	}
 	
-	private static final String generateTrialOutName(String s, ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("trial");
-		sb.append("+");
-		sb.append(s);
-		sb.append("+");
-		sb.append(transformer.getDescription());
-		sb.append("+");
-		sb.append(filter.getDescription());
-		sb.append("+");
-		sb.append(getClassifierDescription(classifier));
-		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
-		
-		return sb.toString();
-	}
-	
-	private static final String generateTrialAccuraciesOutName(String s, ITransformer transformer, IFilter filter, ClassifierTrainer<? extends Classifier> classifier) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("accuracies");
-		sb.append("+");
-		sb.append(transformer.getDescription());
-		sb.append("+");
-		sb.append(filter.getDescription());
-		sb.append("+");
-		sb.append(getClassifierDescription(classifier));
-		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
-		
-		return sb.toString();
-	}
-	
-	
-	
-	
-	
 	private static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
 		while(ds.hasNext()) {
@@ -236,116 +161,6 @@ public class SEAMCE {
 		
 		return preprocessors;
 	}
-	
-	private static final Map<ITransformer, InstanceList> transform(Collection<ITransformer> transformers, Collection<InstanceList> instanceLists) {
-		Map<ITransformer, InstanceList> m = new HashMap<ITransformer, InstanceList>();
-		
-		for (ITransformer transformer : transformers)
-			for (InstanceList instanceList : instanceLists) 
-				m.put(transformer, transformer.calculate(instanceList));
-		
-		return m;
-	}
-	
-	/*
-	private static final Map<Integer, Collection<Trial>> classificationRun(InstanceList instances, IFilter fs, ClassifierTrainer<Classifier> trainer, int numFolds) {
-		Map<Integer, Collection<Trial>> trials = new HashMap<Integer, Collection<Trial>>();
-		
-		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
-			InstanceList newInstances = fs.filter(nf);
-
-			trials.put(nf, crossValidate(newInstances, numFolds, trainer));
-		}
-		
-		return trials;
-	}
-	*/
-		
-	/**
-	 * Performs cross validation to an instance list.
-	 * Returns the results of all the runs in the form of trial objects.
-	 * 
-	 * @param instances
-	 * @param numFolds
-	 * @param trainer
-	 * @return
-	 */
-	private static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
-		LinkedList<Trial> trials = new LinkedList<Trial>();
-		
-		CrossValidationIterator cvi = instances.crossValidationIterator(numFolds);
-		InstanceList[] folds = null;
-		Classifier classifier = null;
-		while(cvi.hasNext()) {
-			folds = cvi.next();
-			classifier = trainer.train(folds[0]);
-			trials.add(new Trial(classifier, folds[1]));
-		}
-		
-		return trials;
-	}
-	
-	/**
-	 * Writes the results of the classification into the output stream in a formatted manner.
-	 * (instance, real_class_idx, real_class, class_n1_idx, class_n1, class_n1_val, ..., class_nK_idx, class_nK, class_nK_val)
-	 * 
-	 * @param trial
-	 * @param out
-	 * @throws FileNotFoundException
-	 */
-	private static final void trial2out(Collection<Classification> trial, OutputStream out) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(out);
-		
-		Instance instance;
-		Labeling labeling;
-		for (Classification classification : trial) {
-			// write out results in the form of:
-			// instance, real_class_idx, real_class, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
-			// class_nN = class classified at position N
-			// val_nN = value of class at position N
-			
-			// instance
-			instance = classification.getInstance();
-			pw.write(instance.getName() + ", ");
-			
-			// real class
-			pw.write(instance.getLabeling().getBestIndex() + ", ");
-			pw.write(instance.getLabeling().getBestLabel() + ", ");
-			
-			// pairs of class_nN, val_nN
-			labeling = classification.getLabeling();
-			int n = labeling.numLocations();
-			for(int i=0; i < n; ++i) {
-				pw.write(labeling.indexAtLocation(i) + ", ");
-				pw.write(labeling.labelAtLocation(i) + ", ");
-				pw.write(String.valueOf(labeling.valueAtLocation(i)));
-				
-				if(i+1 < n) pw.write(", ");
-			}
-			pw.write('\n');
-		}
-		
-		pw.flush();
-//		pw.close();
-	}
-	
-	private static final void trialsAccuracies2out(int numFeatures, Collection<Trial> trials, OutputStream out) {
-		PrintWriter pw = new PrintWriter(out);
-		
-		pw.write(numFeatures);
-		pw.write(", ");
-		int i = 0;
-		for (Trial trial : trials) {
-			pw.write(String.valueOf(trial.getAccuracy()));
-			if(i++ < trials.size()) pw.write(", ");
-		}
-	}
-	
-	private static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
-		return classifier.getClass().getSimpleName();
-	}
-	
-	
 	
 	/*
 		//
@@ -372,83 +187,5 @@ public class SEAMCE {
 //		System.out.println("1-7");
 //		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "subjects")))).toString());
 //		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "bodies")))).toString());	
-
-		//
-		// COLLECTION PROCESSING
-		//
-//		processToFile(String.format("instances_%d-%d_%s", 0, 0, "tests"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 0, 0, "tests", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 1, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 1, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 1, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 1, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 2, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 2, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 2, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 2, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 3, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 3, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 3, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 3, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 4, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 4, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 4, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 4, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 5, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 5, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 5, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 5, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 6, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 6, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 6, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 6, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 7, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 7, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
-//		processToFile(String.format("instances_%d-%d_%s", 1, 7, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 7, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
 	 */
-	
-	// ------------------------------------------------------------------------
-	
-	// transition methods. deprecated.
-	
-	private static final void preprocessToFile(IDataSet ds) throws SQLException {
-//		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
-//		int collectionId = 1;
-		
-//		for (int userId : dal.getUsers(collectionId)) {
-//			IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
-			
-			InstanceList subjects = new SubjectPreProcessor1();
-			InstanceList bodies = new BodyPreProcessor1();
-//			InstanceList dates = new DatePreProcessor1();
-//			InstanceList participants = new ParticipantsPreProcessor1();		
-			for (Instance instance : ds) {
-				subjects.addThruPipe(instance);
-				bodies.addThruPipe(instance);
-//				dates.addThruPipe(instance);
-//				participants.addThruPipe(instance);
-			}
-			
-//			subjects.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "subjects")));
-//			bodies.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "bodies")));
-//			dates.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "dates")));
-//			participants.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "participants")));
-//		}
-	}
-	
-	private static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(new File(dstFilename));
-		
-		InstanceList instances = InstanceList.load(new File(srcFilename));
-		
-		int numFolds = 10;
-		
-//		Filter fs = new FilterByRankedFisher(TFIDF.tfidf(instances), FilterByRankedFisher.MINIMUM_SCORE);
-		Filter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
-		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
-			InstanceList newInstances = fs.filter(nf);
-
-			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
-			
-			writeToFile(""+nf, trials, pw);
-			pw.flush();
-		}
-		
-		pw.close();
-	}
-	
-	private static void writeToFile(String title, Collection<Trial> trials, PrintWriter pw) {
-		pw.write(title);
-		pw.write("\n");
-		for (Trial trial : trials) {
-			pw.write(String.valueOf(trial.getAccuracy()));
-			pw.write("\n");
-		}
-	}
 }
