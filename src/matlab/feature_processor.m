@@ -14,7 +14,7 @@ for i = 1:num_files
         R = load([dir_name '/' file_name]);
         
         % calculate the mean of the runs
-        l = length(R);
+        l = size(R, 1);
         m = zeros(l,2);
         for j = 1:l
             r = R(j, 2:end);
@@ -24,7 +24,8 @@ for i = 1:num_files
         
         % create new [feature, runs-mean] matrix
         M = [ R(:,1), m ]';
-
+        M = sortrows(M.',1).';
+        
         marker_idx = i;
         if marker_idx > num_markers
             marker_idx = uint8(i/length(markers));
