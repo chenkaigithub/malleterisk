@@ -2,10 +2,15 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import pp.PreProcessor;
+import pp.email.body.BodyPreProcessor1;
+import pp.email.date.DatePreProcessor1;
+import pp.email.participants.ParticipantsPreProcessor1;
+import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
 import analysis.ProcessorRun;
 import analysis.Result;
@@ -15,6 +20,9 @@ import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import data.IDataSet;
+import data.enron.EnronDbDataSet;
+import data.enron.db.EnronDbConnector;
+import data.enron.db.EnronDbDataAccess;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -91,13 +99,13 @@ public class SEAMCE {
 	public static void main(String[] args) throws Exception {
 		ArrayList<File> files = new ArrayList<File>();
 //		files.add(new File("instances+0+0+tests"));
-//		files.add(new File("instances+1+1+bodies"));
-//		files.add(new File("instances+1+2+bodies"));
-//		files.add(new File("instances+1+3+bodies"));
-//		files.add(new File("instances+1+4+bodies"));
-//		files.add(new File("instances+1+5+bodies"));
-//		files.add(new File("instances+1+6+bodies"));
-//		files.add(new File("instances+1+7+bodies"));
+		files.add(new File("instances+1+1+bodies"));
+		files.add(new File("instances+1+2+bodies"));
+		files.add(new File("instances+1+3+bodies"));
+		files.add(new File("instances+1+4+bodies"));
+		files.add(new File("instances+1+5+bodies"));
+		files.add(new File("instances+1+6+bodies"));
+		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
 		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
@@ -151,26 +159,26 @@ public class SEAMCE {
 		r.accuracies2out();
 	}
 	
-	private static final void db2file() {
-//		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
-//		for (int collectionId : dal.getCollections()) {
-//			for (int userId : dal.getUsers(collectionId)) {
-//				// get dataset of specified collection and user
-//				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
-//				
-//				// preprocess data from the dataset into instance lists (aka preprocessors)
-//				ArrayList<PreProcessor> preprocessors = new ArrayList<PreProcessor>();
-//				preprocessors.add(new SubjectPreProcessor1());
-//				preprocessors.add(new BodyPreProcessor1());
-//				preprocessors.add(new DatePreProcessor1());
-//				preprocessors.add(new ParticipantsPreProcessor1());
-//				Collection<PreProcessor> instanceLists = preprocess(ds, preprocessors);
-//				
-//				// save into files of the following format: instances+collection+user+field+preprocessing
-//				for (PreProcessor instanceList : instanceLists)
-//					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
-//			}
-//		}
+	private static final void db2file() throws SQLException {
+		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+		for (int collectionId : dal.getCollections()) {
+			for (int userId : dal.getUsers(collectionId)) {
+				// get dataset of specified collection and user
+				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+				
+				// preprocess data from the dataset into instance lists (aka preprocessors)
+				ArrayList<PreProcessor> preprocessors = new ArrayList<PreProcessor>();
+				preprocessors.add(new SubjectPreProcessor1());
+				preprocessors.add(new BodyPreProcessor1());
+				preprocessors.add(new DatePreProcessor1());
+				preprocessors.add(new ParticipantsPreProcessor1());
+				Collection<PreProcessor> instanceLists = preprocess(ds, preprocessors);
+				
+				// save into files of the following format: instances+collection+user+field+preprocessing
+				for (PreProcessor instanceList : instanceLists)
+					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
+			}
+		}
 	}
 	
 	private static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {

@@ -114,7 +114,7 @@ public 	class Result {
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
+		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()));
 		
 		return sb.toString();
 	}
@@ -131,7 +131,7 @@ public 	class Result {
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss").format(new Date()));
+		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()));
 		
 		return sb.toString();
 	}
