@@ -7,7 +7,7 @@ import java.io.FileReader;
 
 public class ResultTransformationScript {
 	public static void main(String[] args) throws Exception {
-		File folder = new File("seamce-results-2011-03-09-insticc/");
+		File folder = null; // new File("seamce-results-2011-03-09-insticc/");
 
 		int i = 0;
 		boolean stop;

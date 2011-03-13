@@ -1,9 +1,9 @@
-package fs;
+package ft.selection;
 
 import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
-import fs.functions.Functions;
+import ft.selection.functions.Functions;
 
 public abstract class Filter implements IFilter {
 	protected InstanceList instances;
@@ -13,6 +13,7 @@ public abstract class Filter implements IFilter {
 		this.instances = instances;
 	}
 
+	@Override
 	public InstanceList filter(int numFeatures) {
 		// the calculation needs to be done only once (for the given instancelist)
 		if(this.rfv==null) this.rfv = calculate();
@@ -23,4 +24,9 @@ public abstract class Filter implements IFilter {
 	}
 	
 	protected abstract RankedFeatureVector calculate();
+	
+	@Override
+	public String getDescription() {
+		return this.getClass().getSimpleName();
+	}
 }

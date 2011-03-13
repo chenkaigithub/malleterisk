@@ -1,11 +1,11 @@
-package fs.methods;
+package ft.selection.methods;
 
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureSelection;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
-import fs.Filter;
-import fs.functions.Functions;
+import ft.selection.Filter;
+import ft.selection.functions.Functions;
 
 // reference:
 // A. J. Ferreira, A. T. Figueiredo, in International Workshop on 

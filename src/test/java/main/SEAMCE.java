@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import pp.PreProcessor;
 import pp.email.body.BodyPreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
@@ -23,10 +24,11 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 import cc.mallet.types.Labeling;
 import data.IDataSet;
-import fs.Filter;
-import fs.IFilter;
-import fs.methods.FilterByRankedVariance;
-import fs.methods.TFIDF;
+import ft.selection.Filter;
+import ft.selection.IFilter;
+import ft.selection.methods.FilterByRankedVariance;
+import ft.transformation.ITransformer;
+import ft.transformation.methods.TFIDF;
 
 /* 
  * TODO:
@@ -55,8 +57,6 @@ import fs.methods.TFIDF;
  * feature clustering
  * 	find the most similar features (cosine similarity)
  * 	remove least relevant features from each cluster
- * 
- * 
  * 
  * X.
  * + tests
@@ -95,149 +95,104 @@ import fs.methods.TFIDF;
  * + experiment, experiment, experiment
  */
 public class SEAMCE {
-//	private static final String SRC_FILENAME_FORMAT = "instances_%d-%d_%s";
-//	private static final String DST_FILENAME_FORMAT = "collection%d+user%d+%s+%s+%s+%s+%s";
-//	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
-	
 	public static void main(String[] args) throws Exception {
-		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
-		int m = instances.getDataAlphabet().size();
-//		IFilter fs = new FilterByRankedDF(TFIDF.tfidf(instances));
-//		IFilter fs = new FilterByRankedL0Norm1(TFIDF.tfidf(instances));
-//		IFilter fs = new FilterByRankedL0Norm2(TFIDF.tfidf(instances));
-		IFilter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
-		InstanceList newInstances = fs.filter(m);
-		
-		Collection<Trial> trials = crossValidate(newInstances, 3, new NaiveBayesTrainer());
-		
-		for (Trial trial : trials) {
-			trial2out(trial, System.out);
-		}
-	}
-	
-	
-	
-	/*
-		//
-		// COLLECTION PREPROCESSING
-		//
-		
-//		preprocessToFile();
-		//
-		// COLLECTION ANALYSIS
-		//
-		
-//		System.out.println("1-1");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies")))).toString());
-//		
-//		System.out.println("1-2");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 2, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies")))).toString());
-//		
-//		System.out.println("1-3");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 3, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies")))).toString());
-//		
-//		System.out.println("1-4");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 4, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies")))).toString());
-//		
-//		System.out.println("1-5");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies")))).toString());
-//		
-//		System.out.println("1-6");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies")))).toString());
-//		
-//		System.out.println("1-7");
-////		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies")))).toString());	
-
-		//
-		// COLLECTION PROCESSING
-		//
-		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 1, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 1, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 1, "bodies", DATE_FORMAT.format(new Date())));
-//		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 2, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 2, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 2, "bodies", DATE_FORMAT.format(new Date())));
-//
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 3, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 3, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 3, "bodies", DATE_FORMAT.format(new Date())));
-//		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 4, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 4, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 4, "bodies", DATE_FORMAT.format(new Date())));
-//		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 5, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 5, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 5, "bodies", DATE_FORMAT.format(new Date())));
-//		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 6, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 6, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 6, "bodies", DATE_FORMAT.format(new Date())));
-//		
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "subjects"), String.format(DST_FILENAME_FORMAT, 1, 7, "subjects", DATE_FORMAT.format(new Date())));
-//		processToFile(String.format(SRC_FILENAME_FORMAT, 1, 7, "bodies"), String.format(DST_FILENAME_FORMAT, 1, 7, "bodies", DATE_FORMAT.format(new Date())));
-	 */
-		
-	public static final void preprocessToFile(IDataSet ds) throws SQLException {
 //		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
-//		int collectionId = 1;
+//		for (int collectionId : dal.getCollections()) {
+//			for (int userId : dal.getUsers(collectionId)) {
+//				// get dataset of specified collection and user
+//				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+//				
+//				// preprocess data from the dataset into instance lists (aka preprocessors)
+//				ArrayList<PreProcessor> preprocessors = new ArrayList<PreProcessor>();
+//				preprocessors.add(new SubjectPreProcessor1());
+//				preprocessors.add(new BodyPreProcessor1());
+//				preprocessors.add(new DatePreProcessor1());
+//				preprocessors.add(new ParticipantsPreProcessor1());
+//				Collection<PreProcessor> instanceLists = preprocess(ds, preprocessors);
+//				
+//				// save into files of the following format: instances+collection+user+field+preprocessing
+//				for (PreProcessor instanceList : instanceLists)
+//					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
+//				
+//			}
+//		}
 		
-//		for (int userId : dal.getUsers(collectionId)) {
-//			IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
-			
-			InstanceList subjects = new SubjectPreProcessor1();
-			InstanceList bodies = new BodyPreProcessor1();
-//			InstanceList dates = new DatePreProcessor1();
-//			InstanceList participants = new ParticipantsPreProcessor1();		
-			for (Instance instance : ds) {
-				subjects.addThruPipe(instance);
-				bodies.addThruPipe(instance);
-//				dates.addThruPipe(instance);
-//				participants.addThruPipe(instance);
-			}
-			
-//			subjects.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "subjects")));
-//			bodies.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "bodies")));
-//			dates.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "dates")));
-//			participants.save(new File(String.format(SRC_FILENAME_FORMAT, collectionId, userId, "participants")));
+//		// (automatically) load instance lists from file
+//		// ...
+//		ArrayList<InstanceList> instanceLists = new ArrayList<InstanceList>();
+//		instanceLists.add(InstanceList.load(new File("instances+0+0+tests")));
+//		
+//		// apply feature transformation
+//		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+//		transformers.add(new TFIDF());
+//		transformers.add(new TDI());
+//		Map<ITransformer, InstanceList> ftil = transform(transformers, instanceLists);
+//		
+//		for (ITransformer transformer : ftil.keySet()) {
+//			InstanceList instances = ftil.get(transformer);
+//			
+//			// apply feature selection
+//			ArrayList<IFilter> fss = new ArrayList<IFilter>();
+//			fss.add(new FilterByRankedDF(instances));
+//			fss.add(new FilterByRankedIG(instances));
+//			fss.add(new FilterByRankedVariance(instances));
+//			fss.add(new FilterByRankedL0Norm1(instances));
+//			fss.add(new FilterByRankedL0Norm2(instances));
+//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.MINIMUM_SCORE));
+//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SCORE));
+//			fss.add(new FilterByRankedFisher(instances, FilterByRankedFisher.SUM_SQUARED_SCORE));
+//			
+//			for (int n : new IteratedExecution(instances.getAlphabet().size(), 5)) {
+//				for (IFilter filter : fss) {
+//					instances = filter.filter(n);
+//					
+//					// classify
+//					ArrayList<ClassifierTrainer<? extends Classifier>> cs = new ArrayList<ClassifierTrainer<? extends Classifier>>();
+//					cs.add(new NaiveBayesTrainer());
+//					cs.add(new BalancedWinnowTrainer());
+//					
+//					for (ClassifierTrainer<? extends Classifier> classifier : cs) {
+//						Collection<Trial> trials = crossValidate(instances, 10, classifier);
+//						for (Trial trial : trials) {
+//							StringBuffer sb = new StringBuffer();
+//							sb.append(transformer.getDescription());
+//							sb.append("+");
+//							sb.append(filter.getDescription());
+//							sb.append("+");
+//							sb.append(getClassifierDescription(classifier));
+//							
+//							
+//							FileOutputStream fos = new FileOutputStream(new File(sb.toString()));
+//							trial2out(trial, fos);
+//							fos.close();
+//						}
+//					}
+//				}
+//			}
 //		}
 	}
 	
-	public static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
-		PrintWriter pw = new PrintWriter(new File(dstFilename));
-		
-		InstanceList instances = InstanceList.load(new File(srcFilename));
-		
-		int numFolds = 10;
-		
-//		Filter fs = new FilterByRankedFisher(TFIDF.tfidf(instances), FilterByRankedFisher.MINIMUM_SCORE);
-		Filter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
-		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
-			InstanceList newInstances = fs.filter(nf);
-
-			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
+	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
+		Instance instance;
+		while(ds.hasNext()) {
+			instance = ds.next();
 			
-			writeToFile(""+nf, trials, pw);
-			pw.flush();
+			for (PreProcessor pp : preprocessors)
+				pp.addThruPipe(instance);
 		}
 		
-		pw.close();
+		return preprocessors;
 	}
 	
-	private static void writeToFile(String title, Collection<Trial> trials, PrintWriter pw) {
-		pw.write(title);
-		pw.write("\n");
-		for (Trial trial : trials) {
-			pw.write(String.valueOf(trial.getAccuracy()));
-			pw.write("\n");
-		}
+	public static final Map<ITransformer, InstanceList> transform(Collection<ITransformer> transformers, Collection<InstanceList> instanceLists) {
+		Map<ITransformer, InstanceList> m = new HashMap<ITransformer, InstanceList>();
+		
+		for (ITransformer transformer : transformers)
+			for (InstanceList instanceList : instanceLists) 
+				m.put(transformer, transformer.calculate(instanceList));
+		
+		return m;
 	}
-	
-	
-	// ------------------------------------------------------------------------
 	
 	public static final Map<Integer, Collection<Trial>> classificationRun(InstanceList instances, IFilter fs, ClassifierTrainer<Classifier> trainer, int numFolds) {
 		Map<Integer, Collection<Trial>> trials = new HashMap<Integer, Collection<Trial>>();
@@ -250,14 +205,7 @@ public class SEAMCE {
 		
 		return trials;
 	}
-
-	
-	
-	
-	
-	
-	// ------------------------------------------------------------------------
-	
+		
 	/**
 	 * Performs cross validation to an instance list.
 	 * Returns the results of all the runs in the form of trial objects.
@@ -326,4 +274,128 @@ public class SEAMCE {
 //		pw.close();
 	}
 	
+	public static final void trialsAccuracies2out(int numFeatures, Collection<Trial> trials, OutputStream out) {
+		PrintWriter pw = new PrintWriter(out);
+		
+		pw.write(numFeatures);
+		pw.write(", ");
+		int i = 0;
+		for (Trial trial : trials) {
+			pw.write(String.valueOf(trial.getAccuracy()));
+			if(i++ < trials.size()) pw.write(", ");
+		}
+	}
+	
+	
+	
+	public static final String getClassifierDescription(ClassifierTrainer<? extends Classifier> classifier) {
+		return classifier.getClass().getSimpleName();
+	}
+	
+	
+	
+	/*
+		//
+		// COLLECTION ANALYSIS
+		//
+//		System.out.println("1-1");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "bodies")))).toString());
+//		System.out.println("1-2");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "bodies")))).toString());
+//		System.out.println("1-3");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "bodies")))).toString());
+//		System.out.println("1-4");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "bodies")))).toString());
+//		System.out.println("1-5");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "bodies")))).toString());
+//		System.out.println("1-6");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "bodies")))).toString());
+//		System.out.println("1-7");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "bodies")))).toString());	
+
+		//
+		// COLLECTION PROCESSING
+		//
+//		processToFile(String.format("instances_%d-%d_%s", 0, 0, "tests"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 0, 0, "tests", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 1, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 1, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 1, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 1, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 2, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 2, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 2, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 2, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 3, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 3, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 3, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 3, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 4, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 4, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 4, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 4, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 5, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 5, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 5, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 5, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 6, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 6, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 6, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 6, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 7, "subjects"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 7, "subjects", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+//		processToFile(String.format("instances_%d-%d_%s", 1, 7, "bodies"), String.format("collection%d+user%d+%s+%s+%s+%s+%s", 1, 7, "bodies", "yyyy-MM-dd_hh-mm-ss".format(new Date())));
+	 */
+	
+	// ------------------------------------------------------------------------
+	
+	// transition methods. deprecated.
+	
+	public static final void preprocessToFile(IDataSet ds) throws SQLException {
+//		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+//		int collectionId = 1;
+		
+//		for (int userId : dal.getUsers(collectionId)) {
+//			IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+			
+			InstanceList subjects = new SubjectPreProcessor1();
+			InstanceList bodies = new BodyPreProcessor1();
+//			InstanceList dates = new DatePreProcessor1();
+//			InstanceList participants = new ParticipantsPreProcessor1();		
+			for (Instance instance : ds) {
+				subjects.addThruPipe(instance);
+				bodies.addThruPipe(instance);
+//				dates.addThruPipe(instance);
+//				participants.addThruPipe(instance);
+			}
+			
+//			subjects.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "subjects")));
+//			bodies.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "bodies")));
+//			dates.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "dates")));
+//			participants.save(new File(String.format("instances_%d-%d_%s", collectionId, userId, "participants")));
+//		}
+	}
+	
+	public static final void processToFile(String srcFilename, String dstFilename) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(new File(dstFilename));
+		
+		InstanceList instances = InstanceList.load(new File(srcFilename));
+		
+		int numFolds = 10;
+		
+//		Filter fs = new FilterByRankedFisher(TFIDF.tfidf(instances), FilterByRankedFisher.MINIMUM_SCORE);
+		Filter fs = new FilterByRankedVariance(TFIDF.tfidf(instances));
+		for (int nf : new IteratedExecution(instances.getAlphabet().size(), 5)) {
+			InstanceList newInstances = fs.filter(nf);
+
+			Collection<Trial> trials = crossValidate(newInstances, numFolds, new NaiveBayesTrainer());
+			
+			writeToFile(""+nf, trials, pw);
+			pw.flush();
+		}
+		
+		pw.close();
+	}
+	
+	private static void writeToFile(String title, Collection<Trial> trials, PrintWriter pw) {
+		pw.write(title);
+		pw.write("\n");
+		for (Trial trial : trials) {
+			pw.write(String.valueOf(trial.getAccuracy()));
+			pw.write("\n");
+		}
+	}
 }

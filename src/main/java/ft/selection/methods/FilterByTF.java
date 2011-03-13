@@ -1,4 +1,4 @@
-package fs.methods;
+package ft.selection.methods;
 
 // TODO: how should this be used?
 // - rank and keep N highest features?

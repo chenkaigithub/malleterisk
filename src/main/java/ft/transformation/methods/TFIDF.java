@@ -1,4 +1,4 @@
-package fs.methods;
+package ft.transformation.methods;
 
 import java.util.TreeMap;
 
@@ -6,9 +6,14 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import fs.functions.Functions;
+import ft.selection.functions.Functions;
+import ft.transformation.Transformer;
 
-public class TFIDF {
+public class TFIDF extends Transformer {
+	public InstanceList calculate(InstanceList instances) {
+		return tfidf(instances);
+	}
+
 	// TODO: kinda inefficient - think abut a new solution
 	// TODO: implement the several variants of TFIDF?
 	// tfidf = ntf * log(N/N(t))
@@ -20,11 +25,7 @@ public class TFIDF {
 	// http://nlp.stanford.edu/IR-book/html/htmledition/variant-tf-idf-functions-1.html
 	// http://nlp.stanford.edu/IR-book/html/htmledition/document-and-query-weighting-schemes-1.html 
 	// https://openaccess.leidenuniv.nl/bitstream/1887/13575/8/Appendix%2BB.pdf
-
-	public InstanceList calculate(InstanceList instances) {
-		return tfidf(instances);
-	}
-
+	
 	public static final InstanceList tfidf(InstanceList instances) {
 		Alphabet alphabet = instances.getDataAlphabet();
 		InstanceList newInstances = new InstanceList(alphabet, instances.getTargetAlphabet());

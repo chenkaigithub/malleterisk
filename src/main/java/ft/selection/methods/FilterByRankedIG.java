@@ -1,9 +1,9 @@
-package fs.methods;
+package ft.selection.methods;
 
 import cc.mallet.types.InfoGain;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
-import fs.Filter;
+import ft.selection.Filter;
 
 public class FilterByRankedIG extends Filter {
 	public FilterByRankedIG(InstanceList instances) {

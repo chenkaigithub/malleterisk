@@ -1,4 +1,4 @@
-package fs.functions;
+package ft.selection.functions;
 
 import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;

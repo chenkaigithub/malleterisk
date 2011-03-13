@@ -1,10 +1,11 @@
-package fs.methods;
+package ft.transformation.methods;
 
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import ft.transformation.Transformer;
 
-public class TDI {
+public class TDI extends Transformer {
 	public InstanceList calculate(InstanceList instances) {
 		return tdi(instances);
 	}

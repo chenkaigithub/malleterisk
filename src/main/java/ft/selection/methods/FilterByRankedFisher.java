@@ -1,4 +1,4 @@
-package fs.methods;
+package ft.selection.methods;
 
 import java.util.Arrays;
 
@@ -7,10 +7,9 @@ import cc.mallet.types.FeatureVector;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.RankedFeatureVector;
 import cc.mallet.types.SparseVector;
-import fs.Filter;
-import fs.functions.Functions;
+import ft.selection.Filter;
+import ft.selection.functions.Functions;
 
-// TODO: holly molly, this is really SLOW!
 public class FilterByRankedFisher extends Filter {
 	public static final int MINIMUM_SCORE = 0;
 	public static final int SUM_SCORE = 1;
