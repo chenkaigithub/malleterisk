@@ -36,6 +36,19 @@ public class FilterByRankedFisher extends Filter {
 		return r;
 	}
 	
+	@Override
+	public String getDescription() {
+		String st = "";
+		
+		switch(scoringType) {
+		case MINIMUM_SCORE: st = "-Minimum-Score"; break;
+		case SUM_SCORE: st = "-Sum-Score"; break;
+		case SUM_SQUARED_SCORE: st = "-Sum-Squared-Score"; break;
+		}
+		
+		return super.getDescription() + st;
+	}
+	
 	//
 	// Scoring Methods
 	//

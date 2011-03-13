@@ -2,27 +2,15 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import pp.PreProcessor;
-import pp.email.body.BodyPreProcessor1;
-import pp.email.date.DatePreProcessor1;
-import pp.email.participants.ParticipantsPreProcessor1;
-import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
 import analysis.ProcessorRun;
 import analysis.Result;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import data.IDataSet;
-import data.enron.EnronDbDataSet;
-import data.enron.db.EnronDbConnector;
-import data.enron.db.EnronDbDataAccess;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -95,7 +83,6 @@ import ft.transformation.methods.TFIDF;
  * + experiment, experiment, experiment
  */
 public class SEAMCE {
-	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
 		ArrayList<File> files = new ArrayList<File>();
 //		files.add(new File("instances+0+0+tests"));
@@ -130,22 +117,22 @@ public class SEAMCE {
 		int folds = 10;
 		
 		for (File file : files) {
+			InstanceList instances = InstanceList.load(file);
 			for (ITransformer transformer : transformers) {
 				for (IFilter filter : filters) {
 					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						sequentialRun(file, transformer, filter, trainer.getClass().newInstance(), step, folds);						
+						sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
 					}
 				}
 			}
 		}
 	}
 	
-	public static final void sequentialRun(File file, ITransformer transformer, 
+	public static final void sequentialRun(String name, InstanceList instances, ITransformer transformer, 
 			IFilter filter, ClassifierTrainer<? extends Classifier> trainer, 
 			int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException 
 	{
-		Result r = new Result(file.getName(), transformer.getDescription(), filter.getDescription(), ProcessorRun.getClassifierDescription(trainer));
-		InstanceList instances = InstanceList.load(file);
+		Result r = new Result(name, transformer.getDescription(), filter.getDescription(), ProcessorRun.getClassifierDescription(trainer));
 		
 		InstanceList transformedInstances = transformer.calculate(instances);
 		for (int n : new IteratedExecution(transformedInstances.getDataAlphabet().size(), step)) {
@@ -159,6 +146,7 @@ public class SEAMCE {
 		r.accuracies2out();
 	}
 	
+	/*
 	private static final void db2file() throws SQLException {
 		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
@@ -192,6 +180,7 @@ public class SEAMCE {
 		
 		return preprocessors;
 	}
+	*/
 	
 	/*
 //		System.out.println("1-1");
