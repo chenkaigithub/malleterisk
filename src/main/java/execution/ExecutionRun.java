@@ -1,4 +1,4 @@
-package analysis;
+package execution;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import utils.IteratedExecution;
+
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.Trial;
@@ -17,8 +17,8 @@ import cc.mallet.types.InstanceList.CrossValidationIterator;
 import ft.selection.IFilter;
 import ft.transformation.ITransformer;
 
-// ATTN: this will waste your memory
-public class ProcessorRun {
+// ATTN: this will waste your memory! not recommended!
+public class ExecutionRun {
 	public final String name;
 	public final InstanceList instances;
 	
@@ -29,9 +29,9 @@ public class ProcessorRun {
 	public final Collection<TransformedInstances> transformedInstances;
 	public final Collection<FilteredInstances> filteredInstances;
 	
-	public final Collection<Result> results;
+	public final Collection<ExecutionResult> results;
 	
-	public ProcessorRun(File file) {
+	public ExecutionRun(File file) {
 		this.name = file.getName();
 		
 		this.instances = InstanceList.load(file);
@@ -40,10 +40,10 @@ public class ProcessorRun {
 		this.filters = new ArrayList<IFilter>();
 		this.classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		
-		this.transformedInstances = new ArrayList<ProcessorRun.TransformedInstances>();
-		this.filteredInstances = new ArrayList<ProcessorRun.FilteredInstances>();
+		this.transformedInstances = new ArrayList<ExecutionRun.TransformedInstances>();
+		this.filteredInstances = new ArrayList<ExecutionRun.FilteredInstances>();
 		
-		this.results = new ArrayList<Result>();
+		this.results = new ArrayList<ExecutionResult>();
 	}
 	
 	public void run(int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -77,7 +77,7 @@ public class ProcessorRun {
 	public void classify(int numFolds) throws InstantiationException, IllegalAccessException {
 		for (ClassifierTrainer<? extends Classifier> trainer : this.classifiers) {
 			for (FilteredInstances fi : this.filteredInstances) {
-				Result r = new Result(this.name, fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
+				ExecutionResult r = new ExecutionResult(this.name, fi.transformer.getDescription(), fi.filter.getDescription(), getClassifierDescription(trainer));
 				for (Integer n : fi.instances.keySet()) {
 					trainer = trainer.getClass().newInstance();
 					
@@ -89,7 +89,7 @@ public class ProcessorRun {
 	}
 	
 	public void results() throws FileNotFoundException {
-		for (Result r : this.results) {
+		for (ExecutionResult r : this.results) {
 			r.trial2out();
 			r.accuracies2out();
 		}

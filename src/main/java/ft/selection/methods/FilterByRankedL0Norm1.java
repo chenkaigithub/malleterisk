@@ -11,12 +11,9 @@ import ft.selection.functions.Functions;
 // A. J. Ferreira, A. T. Figueiredo, in International Workshop on 
 // Pattern Recognition in Information Systems, (2010), pp. 72-81.
 /**
- * TODO: 
  * This is pretty much the same as DF. 
  * 
- * But this method also removes all features with 
- * l0 == 0 or l0 == instances.size().
- * 
+ * Difference: this method also removes all features with l0 == 0 or l0 == instances.size().
  */
 public class FilterByRankedL0Norm1 extends Filter {
 	@Override
@@ -28,10 +25,10 @@ public class FilterByRankedL0Norm1 extends Filter {
 		RankedFeatureVector rfv = Functions.l0norm(instances);
 		
 		// - step 2. remove non-informative features, i.e. l0 == 0 or l0 == n
-		instances = removeNonInformativeFeatures(instances, rfv);  // NOTE: InstanceList is changed here
+		instances = removeNonInformativeFeatures(instances, rfv);  // NOTE: InstanceList is changed here TODO: instances should be cloned?
 		
 		// create a new rfv with the new data alphabet and kept values
-		return new RankedFeatureVector(instances.getDataAlphabet(), rfv.getValues()); // TODO: exception (hope not, but it will happen)
+		return new RankedFeatureVector(instances.getDataAlphabet(), rfv.getValues());
 	}
 		
 	public static final InstanceList removeNonInformativeFeatures(InstanceList instances, RankedFeatureVector rfv) {

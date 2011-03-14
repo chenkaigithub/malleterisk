@@ -7,13 +7,13 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.SparseVector;
 
-public class TextCollectionAnalysis {
+public class CollectionAnalysis {
 	private final InstanceList instances;
 	private final LabeledInstancesList labeledInstances;
 	private final Alphabet dataAlphabet;
 	private final Alphabet targetAlphabet;
 	
-	public TextCollectionAnalysis(InstanceList instances) {
+	public CollectionAnalysis(InstanceList instances) {
 		this.instances = instances;
 		this.dataAlphabet = instances.getDataAlphabet();
 		this.targetAlphabet = instances.getTargetAlphabet();
@@ -64,9 +64,6 @@ public class TextCollectionAnalysis {
 		for (Instance instance : instances) {
 			FeatureVector fv = (FeatureVector) instance.getData();
 			int i = fv.getIndices().length;
-			if(i==0) {
-				System.out.println(instance.getName());
-			}
 			if(m == -1 || m > i) m = i;
 		}
 		
@@ -153,17 +150,7 @@ public class TextCollectionAnalysis {
 		sb.append("min number of terms in documents: ");
 		sb.append(getMinNumTermsInDocuments());
 		sb.append("\n");
-		
-		sb.append("num docs in classes: ");
-		sb.append("\n");
-		for (InstanceList is : labeledInstances.getLabeledInstances()) {
-			sb.append(is.size());
-			sb.append("\n");
-		}
-		
-//		SparseVector to = getTermOccurrences();
-//		to.print();
-		
+				
 		return sb.toString();
 	}
 }

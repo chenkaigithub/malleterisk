@@ -1,4 +1,4 @@
-package analysis;
+package execution;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,7 +14,7 @@ import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
 import cc.mallet.types.Labeling;
 
-public 	class Result {
+public class ExecutionResult {
 	public final String name;
 	public final String transformer;
 	public final String filter;
@@ -22,7 +22,7 @@ public 	class Result {
 	
 	public Map<Integer, Collection<Trial>> trials;
 	
-	public Result(String n, String t, String f, String c) {
+	public ExecutionResult(String n, String t, String f, String c) {
 		this.name = n;
 		this.transformer = t;
 		this.filter = f;

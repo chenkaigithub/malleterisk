@@ -31,8 +31,8 @@ for i = 1:num_files
             marker_idx = uint8(i/length(markers));
         end
         
-        plots(i) = plot(M(1,:), M(2,:), 'color', rand(1,3), 'marker', markers(marker_idx));
-        %plots(i) = errorbar(M(1,:)+(i*20), M(2,:), M(3,:), 'color', rand(1,3), 'marker', markers(marker_idx)); 
+        %plots(i) = plot(M(1,:), M(2,:), 'color', rand(1,3), 'marker', markers(marker_idx));
+        plots(i) = errorbar(M(1,:)+(i*20), M(2,:), M(3,:), 'color', rand(1,3), 'marker', markers(marker_idx)); 
         names{i} = file_name;
         hold on;
     end

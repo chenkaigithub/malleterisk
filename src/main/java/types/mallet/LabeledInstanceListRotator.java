@@ -1,6 +1,5 @@
-package utils;
+package types.mallet;
 
-import types.mallet.LabeledInstancesList;
 import cc.mallet.types.InstanceList;
 
 // TODO: 

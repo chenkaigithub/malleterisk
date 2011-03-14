@@ -1,12 +1,5 @@
 package ft.selection.methods;
 
-// TODO: how should this be used?
-// - rank and keep N highest features?
-// - remove top N highest and M lowest features?
-// - remove all features with less than N occurrences?
-
-
-
 /*
  * TODO:
  * normalize TF: term-frequency, count of a term;
@@ -17,14 +10,8 @@ package ft.selection.methods;
  * alternative tf weight: (maybe for some other IFeatureTransformer?)
  * w(t,d) = 1 + log10 tf(t,d), if tf(t,d) > 0
  *          0, otherwise
- *          
- * TODO:
- * this is a really naive approach
- * instead of removing by minimum occurrences/max occurrences
- * maybe it should be by percentage?
- * 
  */
-public class FilterByTF {
+public class FilterByRankedTF {
 	/*
 	private final double minOccurs;
 	private final double maxOccurs;

@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import utils.IteratedExecution;
-import analysis.ProcessorRun;
-import analysis.Result;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
+import execution.IteratedExecution;
+import execution.ExecutionRun;
+import execution.ExecutionResult;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -24,7 +24,6 @@ import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
 /* 
- * TODO:
  * 3.
  * combater o desiquilibro das classes
  * 	variar o nœmero de classes
@@ -51,11 +50,12 @@ import ft.transformation.methods.TFIDF;
  * - unit test for every implementation
  * - test everything in detail
  * - must make sure everything is correctly implemented
- * 
- * + must automatize all the experiments
  * - try out different users (use enron-flat, it's big enough)
- * - create classes that for each setup, write out results 
- * to somewhere so I can plot some graphs in matlab/etc 
+ * 
+ * + automation
+ * this could be cleaned up using dependency injection
+ * create some class that represents the processing (kind of like ProcessorRun)
+ * and apply processing over the passed files
  * 
  * + implement the remaining stuff
  * - analyzers
@@ -65,22 +65,6 @@ import ft.transformation.methods.TFIDF;
  * - topic models
  * - classifiers
  * - integrate SVM into mallet (libsvm)
- * 
- * TODO: use a log-based approach! e.g.
- * LinkedList<String> operations = new LinkedList<String>();
- * operations.add("preprocessing: tokenization");
- * operations.add("preprocessing: part of speech tagging");
- * operations.add("..");
- * operations.add("feature transformation: tf idf");
- * operations.add("feature selection: ig, keeping xxx features");
- * operations.add("classification: naive bayes");
- * in the end, dump this with the results
- * must do this in some generic way, maybe with reflection?
- * must intercept values at constructor time, etc
- * AOP looks nice for this?
- * 
- * + test, test, test
- * + experiment, experiment, experiment
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
@@ -126,20 +110,44 @@ public class SEAMCE {
 				}
 			}
 		}
+		
+		/*
+//		System.out.println("1-1");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "bodies")))).toString());
+//		System.out.println("1-2");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "bodies")))).toString());
+//		System.out.println("1-3");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "bodies")))).toString());
+//		System.out.println("1-4");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "bodies")))).toString());
+//		System.out.println("1-5");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "bodies")))).toString());
+//		System.out.println("1-6");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "bodies")))).toString());
+//		System.out.println("1-7");
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "subjects")))).toString());
+//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "bodies")))).toString());	
+	 */
 	}
 	
 	public static final void sequentialRun(String name, InstanceList instances, ITransformer transformer, 
 			IFilter filter, ClassifierTrainer<? extends Classifier> trainer, 
 			int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException 
 	{
-		Result r = new Result(name, transformer.getDescription(), filter.getDescription(), ProcessorRun.getClassifierDescription(trainer));
+		ExecutionResult r = new ExecutionResult(name, transformer.getDescription(), filter.getDescription(), ExecutionRun.getClassifierDescription(trainer));
 		
 		InstanceList transformedInstances = transformer.calculate(instances);
 		for (int n : new IteratedExecution(transformedInstances.getDataAlphabet().size(), step)) {
 			InstanceList filteredInstances = filter.filter(n, transformedInstances);
 			
 			// classifier trainer must be a new instance since it might accumulate the previous alphabet 
-			r.trials.put(n, ProcessorRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
+			r.trials.put(n, ExecutionRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
 		}
 		
 		r.trial2out();
@@ -181,28 +189,4 @@ public class SEAMCE {
 		return preprocessors;
 	}
 	*/
-	
-	/*
-//		System.out.println("1-1");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "bodies")))).toString());
-//		System.out.println("1-2");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "bodies")))).toString());
-//		System.out.println("1-3");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "bodies")))).toString());
-//		System.out.println("1-4");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "bodies")))).toString());
-//		System.out.println("1-5");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "bodies")))).toString());
-//		System.out.println("1-6");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "bodies")))).toString());
-//		System.out.println("1-7");
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "subjects")))).toString());
-//		System.out.println(new TextCollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "bodies")))).toString());	
-	 */
 }

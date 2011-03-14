@@ -1,6 +1,5 @@
 package unitary.fs.methods;
 
-
 public class FilterByRankedL0Norm1UnitTest {
 //	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 //	
@@ -13,7 +12,7 @@ public class FilterByRankedL0Norm1UnitTest {
 //	
 //	@Test
 //	public void testL0Norm() {
-//		// TODO: test that Functions.l0norm is working correctly
+//		// test if  Functions.l0norm is working correctly
 //	}
 //	
 //	@Test
