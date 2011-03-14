@@ -17,6 +17,9 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
+/**
+ * Generate mock data.
+ */
 public class TestData {
 	public static void main(String[] args) throws SQLException, FileNotFoundException {
 		ArrayList<Pipe> pipes = new ArrayList<Pipe>();
