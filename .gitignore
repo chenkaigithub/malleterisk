@@ -3,4 +3,4 @@
 *.lock
 *.DS_Store
 *.class
-
+/results/*
