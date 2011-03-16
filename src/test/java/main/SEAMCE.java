@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import analysis.CollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
-import execution.IteratedExecution;
-import execution.ExecutionRun;
 import execution.ExecutionResult;
+import execution.ExecutionRun;
+import execution.IteratedExecution;
+import execution.OneVersusAll;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -24,6 +26,11 @@ import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
 /* 
+ * + automation
+ * this could be cleaned up using dependency injection
+ * create some class that represents the processing (kind of like ProcessorRun)
+ * and apply processing over the passed files
+ * 
  * 3.
  * combater o desiquilibro das classes
  * 	variar o nœmero de classes
@@ -52,11 +59,6 @@ import ft.transformation.methods.TFIDF;
  * - must make sure everything is correctly implemented
  * - try out different users (use enron-flat, it's big enough)
  * 
- * + automation
- * this could be cleaned up using dependency injection
- * create some class that represents the processing (kind of like ProcessorRun)
- * and apply processing over the passed files
- * 
  * + implement the remaining stuff
  * - analyzers
  * - different preprocessing setups
@@ -68,6 +70,24 @@ import ft.transformation.methods.TFIDF;
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
+		InstanceList instances = InstanceList.load(new File("instances+2+1+bodies"));
+		
+		OneVersusAll ova = new OneVersusAll(instances);
+		while(ova.hasNext()) {
+			instances = ova.next();
+			
+			int step = 10;
+			int folds = 10;
+			
+			ITransformer transformer = new TFIDF();
+			IFilter filter = new FilterByRankedDF();
+			ClassifierTrainer<? extends Classifier> trainer = new NaiveBayesTrainer();
+			
+			sequentialRun("instances+2+1+bodies", instances, transformer, filter, trainer, step, folds);
+		}
+	}
+	
+	public static final void classify() throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 //		files.add(new File("instances+0+0+tests"));
 		files.add(new File("instances+1+1+bodies"));
@@ -110,31 +130,36 @@ public class SEAMCE {
 				}
 			}
 		}
-		
-		/*
-//		System.out.println("1-1");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 1, "bodies")))).toString());
-//		System.out.println("1-2");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 2, "bodies")))).toString());
-//		System.out.println("1-3");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 3, "bodies")))).toString());
-//		System.out.println("1-4");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 4, "bodies")))).toString());
-//		System.out.println("1-5");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 5, "bodies")))).toString());
-//		System.out.println("1-6");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 6, "bodies")))).toString());
-//		System.out.println("1-7");
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "subjects")))).toString());
-//		System.out.println(new CollectionAnalysis(InstanceList.load(new File(String.format("instances_%d-%d_%s", 1, 7, "bodies")))).toString());	
-	 */
 	}
+	
+	public static final void analyze() {
+		System.out.println("1-1");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-1_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-1_bodies"))).toString());
+		System.out.println("1-2");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-2_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-2_bodies"))).toString());
+		System.out.println("1-3");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-3_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-3_bodies"))).toString());
+		System.out.println("1-4");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-4_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-4_bodies"))).toString());
+		System.out.println("1-5");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-5_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-5_bodies"))).toString());
+		System.out.println("1-6");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-6_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-6_bodies"))).toString());
+		System.out.println("1-7");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-7_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-7_bodies"))).toString());
+		System.out.println("2-1");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_bodies"))).toString());
+	}
+	
+	// ------------------------------------------------------------------------
 	
 	public static final void sequentialRun(String name, InstanceList instances, ITransformer transformer, 
 			IFilter filter, ClassifierTrainer<? extends Classifier> trainer, 
