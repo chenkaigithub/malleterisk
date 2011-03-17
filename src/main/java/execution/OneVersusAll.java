@@ -22,6 +22,7 @@ public class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceLi
 	private final InstanceList instances;
 	private final InstanceList[] labeledInstances;
 	private int currentOneClassIndex;
+	public Object currentOneClassLabel;
 	
 	public OneVersusAll(InstanceList instances) {
 		this.instances = instances;
@@ -48,15 +49,15 @@ public class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceLi
 		InstanceList newInstances = new InstanceList(features, newLabels);
 		
 		// get the "current" label
-		Object currentLabel = labels.lookupObject(currentOneClassIndex++);
-		Object labelOne = newLabels.lookupLabel(currentLabel, true);
+		this.currentOneClassLabel = labels.lookupObject(currentOneClassIndex++);
+		Object labelOne = newLabels.lookupLabel(this.currentOneClassLabel, true);
 		Object labelAll = newLabels.lookupLabel(-1, true);
 		
 		// set the new targets for all the instances
 		for (Instance instance : this.instances) {
 			newInstances.add(new Instance(
 				instance.getData(), 
-				((Label) instance.getTarget()).getEntry().equals(currentLabel) ? labelOne : labelAll, 
+				((Label) instance.getTarget()).getEntry().equals(this.currentOneClassLabel) ? labelOne : labelAll, 
 				instance.getName(), 
 				instance.getSource())
 			);

@@ -112,6 +112,13 @@ public class ExecutionRun {
 		Classifier classifier = null;
 		while(cvi.hasNext()) {
 			folds = cvi.next();
+			
+			/* TODO: operate here! 
+			 * here's the information regarding number of instances in train/test
+			 * how should i give back the info? wrap in an object?
+			 * there should be info for each fold (10fold = 10 objects with #instances in train/test) 
+			 */
+			
 			classifier = trainer.train(folds[0]);
 			trials.add(new Trial(classifier, folds[1]));
 		}

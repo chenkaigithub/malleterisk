@@ -2,13 +2,25 @@ package main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
+import pp.PreProcessor;
+import pp.email.body.BodyPreProcessor1;
+import pp.email.date.DatePreProcessor1;
+import pp.email.participants.ParticipantsPreProcessor1;
+import pp.email.subject.SubjectPreProcessor1;
 import analysis.CollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import data.IDataSet;
+import data.enron.EnronDbDataSet;
+import data.enron.db.EnronDbConnector;
+import data.enron.db.EnronDbDataAccess;
 import execution.ExecutionResult;
 import execution.ExecutionRun;
 import execution.IteratedExecution;
@@ -26,6 +38,13 @@ import ft.transformation.methods.TDI;
 import ft.transformation.methods.TFIDF;
 
 /* 
+ * 0.
+ * things that I want to know when executing:
+ * when using one vs all, the current one class
+ * number of instances of each class used in train and in test
+ * logging seems like a great idea..
+ * make sure accuracy and trials dates match
+ * 
  * + automation
  * this could be cleaned up using dependency injection
  * create some class that represents the processing (kind of like ProcessorRun)
@@ -70,6 +89,7 @@ import ft.transformation.methods.TFIDF;
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
+		
 		InstanceList instances = InstanceList.load(new File("instances+2+1+bodies"));
 		
 		OneVersusAll ova = new OneVersusAll(instances);
@@ -83,7 +103,7 @@ public class SEAMCE {
 			IFilter filter = new FilterByRankedDF();
 			ClassifierTrainer<? extends Classifier> trainer = new NaiveBayesTrainer();
 			
-			sequentialRun("instances+2+1+bodies", instances, transformer, filter, trainer, step, folds);
+			sequentialRun("instances+2+1+bodies+"+ova.currentOneClassLabel, instances, transformer, filter, trainer, step, folds);
 		}
 	}
 	
@@ -179,8 +199,7 @@ public class SEAMCE {
 		r.accuracies2out();
 	}
 	
-	/*
-	private static final void db2file() throws SQLException {
+	public static final void db2file() throws SQLException {
 		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
 			for (int userId : dal.getUsers(collectionId)) {
@@ -202,7 +221,7 @@ public class SEAMCE {
 		}
 	}
 	
-	private static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
+	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
 		while(ds.hasNext()) {
 			instance = ds.next();
@@ -213,5 +232,4 @@ public class SEAMCE {
 		
 		return preprocessors;
 	}
-	*/
 }
