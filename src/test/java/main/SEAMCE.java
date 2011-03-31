@@ -35,7 +35,6 @@ import ft.selection.methods.FilterByRankedTF;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
 import ft.transformation.methods.FeatureWeighting;
-import ft.transformation.methods.NoTransformation;
 
 /* 
  * + automation
@@ -60,20 +59,20 @@ import ft.transformation.methods.NoTransformation;
  * 		clustering + escolha representantes
  * 		clustering + divis‹o em subclasses
  * 
- * 5.
+ * X.
  * participants:
  * 	treat as a feature selection problem
  * 	documents x participants incidence matrix
  * 	apply feature selection methods
  * 
- * 6.
+ * Y.
  * pearson correlation
  * mRMR (Minimum Redundancy Maximum Relevance)
  * feature clustering
  * 	find the most similar features (cosine similarity)
  * 	remove least relevant features from each cluster
  * 
- * X.
+ * Z.
  * + tests
  * - unit test for every implementation
  * - test everything in detail
@@ -125,11 +124,11 @@ public class SEAMCE {
 		files.add(new File("instances+2+1+bodies"));
 		
 		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE)); // nnn
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE)); // ntn
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // ltc
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_MAX_NORM, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // mtc
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE)); // boolean
-		transformers.add(new NoTransformation());
 		
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
 		filters.add(new FilterByRankedTF());
