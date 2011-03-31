@@ -33,22 +33,25 @@ import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
+import ft.transformation.methods.FeatureWeighting;
 import ft.transformation.methods.NoTransformation;
-import ft.transformation.methods.TDI;
-import ft.transformation.methods.TFIDF;
 
 /* 
- * 0.
- * things that I want to know when executing:
- * when using one vs all, the current one class
- * number of instances of each class used in train and in test
- * logging seems like a great idea..
- * make sure accuracy and trials dates match
- * 
  * + automation
  * this could be cleaned up using dependency injection
  * create some class that represents the processing (kind of like ProcessorRun)
  * and apply processing over the passed files
+ * 
+ * 0.
+ * things that I want to know when executing:
+ * number of instances of each class used in train and in test
+ * logging seems like a great idea..
+ * 
+ * 1.
+ * escolher documentos representativos
+ * 		random sampling
+ * 		clustering + escolha representantes
+ * 		clustering + divis‹o em subclasses
  * 
  * 3.
  * combater o desiquilibro das classes
@@ -86,10 +89,13 @@ import ft.transformation.methods.TFIDF;
  * - topic models
  * - classifiers
  * - integrate SVM into mallet (libsvm)
+ * svm, knn, trees
  */
 public class SEAMCE {
 	public static void main(String[] args) throws Exception {
-		
+	}
+	
+	public static final void oneVsAll() throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		InstanceList instances = InstanceList.load(new File("instances+2+1+bodies"));
 		
 		OneVersusAll ova = new OneVersusAll(instances);
@@ -99,7 +105,7 @@ public class SEAMCE {
 			int step = 10;
 			int folds = 10;
 			
-			ITransformer transformer = new TFIDF();
+			ITransformer transformer = new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE); // ltc
 			IFilter filter = new FilterByRankedDF();
 			ClassifierTrainer<? extends Classifier> trainer = new NaiveBayesTrainer();
 			
@@ -120,8 +126,10 @@ public class SEAMCE {
 		files.add(new File("instances+2+1+bodies"));
 		
 		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
-		transformers.add(new TFIDF());
-		transformers.add(new TDI());
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE)); // ntn
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // ltc
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_MAX_NORM, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // mtc
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE)); // boolean
 		transformers.add(new NoTransformation());
 		
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();

@@ -16,6 +16,8 @@ import cc.mallet.types.Labeling;
 
 public class ExecutionResult {
 	public final String name;
+	private final Date datetime;
+	
 	public final String transformer;
 	public final String filter;
 	public final String classifier;
@@ -24,6 +26,7 @@ public class ExecutionResult {
 	
 	public ExecutionResult(String n, String t, String f, String c) {
 		this.name = n;
+		this.datetime = new Date();
 		this.transformer = t;
 		this.filter = f;
 		this.classifier = c;
@@ -114,7 +117,7 @@ public class ExecutionResult {
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()));
+		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
 		
 		return sb.toString();
 	}
@@ -131,7 +134,7 @@ public class ExecutionResult {
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");
-		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()));
+		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
 		
 		return sb.toString();
 	}

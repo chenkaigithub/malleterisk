@@ -25,28 +25,22 @@ public class FilterByRankedFisher extends Filter {
 	// by using the selected method for scoring the features
 	@Override
 	protected RankedFeatureVector calculate(InstanceList instances) {
-		RankedFeatureVector r = null;
-		
 		switch(scoringType) {
-			case MINIMUM_SCORE: r = minScore(this.instances); break;
-			case SUM_SCORE: r = sumScore(this.instances); break;
-			case SUM_SQUARED_SCORE: r = sumSquaredScore(this.instances); break;
+			case MINIMUM_SCORE: return minScore(this.instances);
+			case SUM_SCORE: return sumScore(this.instances);
+			case SUM_SQUARED_SCORE: return sumSquaredScore(this.instances);
+			default: return null;
 		}
-		
-		return r;
 	}
 	
 	@Override
 	public String getDescription() {
-		String st = "";
-		
 		switch(scoringType) {
-		case MINIMUM_SCORE: st = "-Minimum-Score"; break;
-		case SUM_SCORE: st = "-Sum-Score"; break;
-		case SUM_SQUARED_SCORE: st = "-Sum-Squared-Score"; break;
+		case MINIMUM_SCORE: return super.getDescription() + "-Minimum-Score";
+		case SUM_SCORE: return super.getDescription() + "-Sum-Score";
+		case SUM_SQUARED_SCORE: return super.getDescription() + "-Sum-Squared-Score";
+		default: return super.getDescription();
 		}
-		
-		return super.getDescription() + st;
 	}
 	
 	//
