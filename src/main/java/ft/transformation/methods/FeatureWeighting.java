@@ -35,8 +35,8 @@ public class FeatureWeighting extends Transformer {
 		switch(this.tf) {
 		case TF_NONE: sb.append("-TF"); break;
 		case TF_MAX_NORM: sb.append("-TF-Max-Norm"); break;
-		case TF_LOG: sb.append("TF-Log"); break;
-		case TF_BOOLEAN: sb.append("TF-Boolean"); break;
+		case TF_LOG: sb.append("-TF-Log"); break;
+		case TF_BOOLEAN: sb.append("-TF-Boolean"); break;
 		}
 
 		switch(this.idf) {

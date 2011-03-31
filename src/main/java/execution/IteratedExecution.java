@@ -22,7 +22,7 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	
 	@Override
 	public boolean hasNext() {
-		return ((currentStep - percentageStep) > 0);
+		return ((currentStep - percentageStep) >= 0);
 	}
 
 	@Override

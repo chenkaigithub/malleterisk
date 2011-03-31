@@ -7,6 +7,7 @@ plots = zeros(1, num_files);
 names = cell(1, num_files);
 markers = ['.' 'o' 'x' '+' '*' 's' 'd' 'v' '^' '<' '>' 'p' 'h'];
 num_markers = length(markers);
+figure
 for i = 1:num_files
     file_name = files(file_indices(i)).name;
     if ~strcmp(file_name, '.DS_Store')
