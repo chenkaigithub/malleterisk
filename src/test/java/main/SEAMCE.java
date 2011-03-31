@@ -31,6 +31,7 @@ import ft.selection.methods.FilterByRankedFisher;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
+import ft.selection.methods.FilterByRankedTF;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
 import ft.transformation.methods.FeatureWeighting;
@@ -48,18 +49,16 @@ import ft.transformation.methods.NoTransformation;
  * logging seems like a great idea..
  * 
  * 1.
- * escolher documentos representativos
- * 		random sampling
- * 		clustering + escolha representantes
- * 		clustering + divis‹o em subclasses
- * 
- * 3.
  * combater o desiquilibro das classes
  * 	variar o nœmero de classes
  * 	equilibrar o nœmero de documentos das classes 
  * 		reduzir o nœmero de documentos se necess‡rio (~100)
  * 	one class classifiers
  * 	one vs all, all vs all
+ *  escolher documentos representativos
+ * 		random sampling
+ * 		clustering + escolha representantes
+ * 		clustering + divis‹o em subclasses
  * 
  * 5.
  * participants:
@@ -133,6 +132,7 @@ public class SEAMCE {
 		transformers.add(new NoTransformation());
 		
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
+		filters.add(new FilterByRankedTF());
 		filters.add(new FilterByRankedDF());
 		filters.add(new FilterByRankedIG());
 		filters.add(new FilterByRankedVariance());
