@@ -49,15 +49,15 @@ import ft.transformation.methods.FeatureWeighting;
  * 
  * 1.
  * combater o desiquilibro das classes
- * 	variar o nœmero de classes
- * 	equilibrar o nœmero de documentos das classes 
+ *  - equilibrar o nœmero de documentos das classes 
  * 		reduzir o nœmero de documentos se necess‡rio (~100)
- * 	one class classifiers
- * 	one vs all, all vs all
- *  escolher documentos representativos
+ *  - como? escolher documentos representativos
  * 		random sampling
  * 		clustering + escolha representantes
  * 		clustering + divis‹o em subclasses
+ * 	- variar o nœmero de classes
+ * 	- one class classifiers
+ * 	- one vs all, all vs all
  * 
  * X.
  * participants:
