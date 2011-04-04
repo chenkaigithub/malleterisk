@@ -7,6 +7,8 @@ plots = zeros(1, num_files);
 names = cell(1, num_files);
 markers = ['.' 'o' 'x' '+' '*' 's' 'd' 'v' '^' '<' '>' 'p' 'h'];
 num_markers = length(markers);
+colors = [0.6 0.6 0.6; 0.3 0.3 0.3; 0 0.6 0.6; 0.8 0.6 0.2; 0 0 1; 0 1 0; 1 0 0; 1 0 1; 1 1 0; 0 1 1; 0 0 0];
+num_colors = length(colors);
 figure
 for i = 1:num_files
     file_name = files(file_indices(i)).name;
@@ -29,11 +31,16 @@ for i = 1:num_files
         
         marker_idx = i;
         if marker_idx > num_markers
-            marker_idx = uint8(i/length(markers));
+            marker_idx = uint8(i/num_markers);
+        end
+        
+        color_idx = i;
+        if color_idx > num_colors
+           color_idx = uint8(i/num_colors);
         end
         
         %plots(i) = plot(M(1,:), M(2,:), 'color', rand(1,3), 'marker', markers(marker_idx));
-        plots(i) = errorbar(M(1,:)+(i*20), M(2,:), M(3,:), 'color', rand(1,3), 'marker', markers(marker_idx)); 
+        plots(i) = errorbar(M(1,:)+(i*20), M(2,:), M(3,:), 'color', colors(color_idx, :), 'marker', markers(marker_idx));%, 'linewidth', i*0.25); 
         names{i} = file_name;
         hold on;
     end

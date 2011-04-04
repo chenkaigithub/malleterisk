@@ -8,7 +8,6 @@ import main.SEAMCE;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
-import cc.mallet.types.InstanceList;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -18,7 +17,6 @@ import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedTF;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.transformation.ITransformer;
-import ft.transformation.methods.FeatureWeighting;
 
 public class ExecFeatureSelection {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -27,10 +25,10 @@ public class ExecFeatureSelection {
 //		booleanTransformer.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
 //		x(booleanTransformer);
 
-		System.out.println("tf + feature selection");
-		ArrayList<ITransformer> tfTransformer = new ArrayList<ITransformer>();
-		tfTransformer.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
-		x(tfTransformer);
+//		System.out.println("tf + feature selection");
+//		ArrayList<ITransformer> tfTransformer = new ArrayList<ITransformer>();
+//		tfTransformer.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
+//		x(tfTransformer);
 
 //		System.out.println("tfidf + feature selection");
 //		ArrayList<ITransformer> tfidfTransformer = new ArrayList<ITransformer>();
@@ -66,18 +64,6 @@ public class ExecFeatureSelection {
 		int step = 10;
 		int folds = 10;
 		
-		for (File file : files) {
-			System.out.println("+ processing " + file.getName());
-			InstanceList instances = InstanceList.load(file);
-			for (ITransformer transformer : transformers) {
-				System.out.println("- transformer: " + transformer.getDescription());
-				for (IFilter filter : filters) {
-					System.out.println("- filter: " + filter.getDescription());
-					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						SEAMCE.sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
-					}
-				}
-			}
-		}
+		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
 	}
 }

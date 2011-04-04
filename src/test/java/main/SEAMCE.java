@@ -49,15 +49,15 @@ import ft.transformation.methods.FeatureWeighting;
  * 
  * 1.
  * combater o desiquilibro das classes
- * 	variar o nœmero de classes
- * 	equilibrar o nœmero de documentos das classes 
+ *  - equilibrar o nœmero de documentos das classes 
  * 		reduzir o nœmero de documentos se necess‡rio (~100)
- * 	one class classifiers
- * 	one vs all, all vs all
- *  escolher documentos representativos
+ *  - como? escolher documentos representativos
  * 		random sampling
  * 		clustering + escolha representantes
  * 		clustering + divis‹o em subclasses
+ * 	- variar o nœmero de classes
+ * 	- one class classifiers
+ * 	- one vs all, all vs all
  * 
  * X.
  * participants:
@@ -147,16 +147,7 @@ public class SEAMCE {
 		int step = 10;
 		int folds = 10;
 		
-		for (File file : files) {
-			InstanceList instances = InstanceList.load(file);
-			for (ITransformer transformer : transformers) {
-				for (IFilter filter : filters) {
-					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
-					}
-				}
-			}
-		}
+		x(files, transformers, filters, classifiers, step, folds);
 	}
 	
 	public static final void analyze() {
@@ -184,6 +175,25 @@ public class SEAMCE {
 		System.out.println("2-1");
 		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_subjects"))).toString());
 		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_bodies"))).toString());
+	}
+	
+	// ------------------------------------------------------------------------
+	
+	public static final void x(ArrayList<File> files, ArrayList<ITransformer> transformers, ArrayList<IFilter> filters, ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, int step, int folds) 
+		throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		for (File file : files) {
+			System.out.println("+ processing " + file.getName());
+			InstanceList instances = InstanceList.load(file);
+			for (ITransformer transformer : transformers) {
+				System.out.println("- transformer: " + transformer.getDescription());
+				for (IFilter filter : filters) {
+					System.out.println("- filter: " + filter.getDescription());
+					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
+						SEAMCE.sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
+					}
+				}
+			}
+		}
 	}
 	
 	// ------------------------------------------------------------------------
