@@ -1,4 +1,7 @@
-dir_name = uigetdir;
+%dir_name = uigetdir;
+dir_name = 'D:\work\seamce-test\u1+1\boolean\accuracies';
+%dir_name = 'D:\work\seamce-test\u1+1\tf-idf\accuracies';
+%dir_name = 'D:\work\seamce-test\u1+1\tf-log\accuracies';
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
@@ -7,7 +10,7 @@ plots = zeros(1, num_files);
 names = cell(1, num_files);
 markers = ['.' 'o' 'x' '+' '*' 's' 'd' 'v' '^' '<' '>' 'p' 'h'];
 num_markers = length(markers);
-colors = [0.6 0.6 0.6; 0.3 0.3 0.3; 0 0.6 0.6; 0.8 0.6 0.2; 0 0 1; 0 1 0; 1 0 0; 1 0 1; 1 1 0; 0 1 1; 0 0 0];
+colors = [0.6 0.6 0.6; 0.3 0.3 0.3; 0 0.6 0.6; 0.8 0.6 0.2; 0 0 1; 0 1 0; 1 0 0; 1 0 1; 0.8 0.8 0; 0 1 1; 0 0 0];
 num_colors = length(colors);
 figure
 for i = 1:num_files
