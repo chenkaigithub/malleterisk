@@ -1,3 +1,4 @@
+clear;
 [file_name, path_name, filter_index] = uigetfile('*.*');
 
 % load data
@@ -21,10 +22,11 @@ for i=1:n_lines
 end
 
 % compute confusion matrix
-cm = confusionmat(real_class_indices, best_class_indices);
+%order = sort(unique(real_class_indices));
+[cm, order] = confusionmat(real_class_indices, best_class_indices);
 
 % calculate class sizes
-p = sum(cm, 2);
+p = [sum(cm, 2) sum(cm, 2)]; % test documents size; training documents size
 
 % normalize values
 for i=1:length(p)
@@ -32,17 +34,21 @@ for i=1:length(p)
 end
 
 % plot horizontal graph bar, horizontal and vertical flip
-h1 = subplot(2,1,1); bar(1:length(p), p); set(gca,'xlim',[0.5 (length(p)+0.5)]); 
+h1 = subplot(2,1,1); bar(1:length(p), p, 'stacked'); set(gca,'xlim',[0.5 (length(p)+0.5)]); 
+% set class labels (indices)
+set(gca, 'XTick', 1:length(p)); set(gca, 'XTickLabel', order);
 % plot confusion matrix
 h2 = subplot(2,1,2); imagesc(cm);
-% reduce graph bar's with and adjust position
+% set class labels (indices)
+set(gca, 'XTick', 1:length(p)); set(gca, 'XTickLabel', order);
+% reduce graph bar's height and adjust position
 h1_pos = get(h1, 'pos');
 h1_pos(4) = h1_pos(4) - 0.25;
-h1_pos(2) = h1_pos(2) + h1_pos(4) + 0.20;
+h1_pos(2) = h1_pos(2) + h1_pos(4) + 0.15;
 set(h1, 'pos', h1_pos);
 % plot color bar
 h3 = colorbar('SouthOutside');
-% expand confusion matrix width and adjust position
+% expand confusion matrix height and adjust position
 h2_pos = get(h2, 'pos');
 h2_pos(4) = 0.7;%h2_pos(4) + 0.25;
 h2_pos(2) = 0.1;%h2_pos(2) + h2_pos(4);

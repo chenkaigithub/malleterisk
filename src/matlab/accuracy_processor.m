@@ -1,5 +1,38 @@
-%dir_name = uigetdir;
-dir_name = uigetdir('../..//results/2011-04-04/accuracies/');
+dir_name = uigetdir;
+%dir_name = uigetdir('../../results/2011-04-04/accuracies/');
+%dir_name = uigetdir('C:\Work\tt\seamce-test\results\2011-04-05-fs');
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+1\u1+1+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+1\u1+1+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+1\u1+1+tf-log';
+
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+2\u1+2+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+2\u1+2+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+2\u1+2+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+3\u1+3+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+3\u1+3+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+3\u1+3+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+4\u1+4+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+4\u1+4+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+4\u1+4+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+5\u1+5+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+5\u1+5+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+5\u1+5+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+6\u1+6+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+6\u1+6+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+6\u1+6+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+7\u1+7+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+7\u1+7+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u1+7\u1+7+tf-log';
+% 
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u2+1\u2+1+boolean';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u2+1\u2+1+tf-idf';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-05-fs\accuracies\u2+1\u2+1+tf-log';
+
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
