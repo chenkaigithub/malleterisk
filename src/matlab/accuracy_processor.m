@@ -1,3 +1,4 @@
+clear;
 dir_name = uigetdir;
 %dir_name = uigetdir('../../results/2011-04-04/accuracies/');
 %dir_name = uigetdir('C:\Work\tt\seamce-test\results\2011-04-05-fs');

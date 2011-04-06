@@ -43,11 +43,11 @@ public class ExecFeatureSelection {
 //		x(files, tflogTransformer);
 //		Runtime.getRuntime().gc();
 
-		System.out.println("tf-idf + feature selection");
-		ArrayList<ITransformer> tfidfTransformer = new ArrayList<ITransformer>();
-		tfidfTransformer.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
-		x(files, tfidfTransformer);
-		Runtime.getRuntime().gc();
+//		System.out.println("tf-idf + feature selection");
+//		ArrayList<ITransformer> tfidfTransformer = new ArrayList<ITransformer>();
+//		tfidfTransformer.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
+//		x(files, tfidfTransformer);
+//		Runtime.getRuntime().gc();
 	}
 
 	public static void x(ArrayList<File> files, ArrayList<ITransformer> transformers) throws FileNotFoundException, InstantiationException, IllegalAccessException {

@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import types.mallet.LabeledInstancesList;
+import types.mallet.classify.ExtendedTrial;
+
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
@@ -23,7 +26,7 @@ public class ExecutionResult {
 	public final String filter;
 	public final String classifier;
 	
-	public Map<Integer, Collection<Trial>> trials;
+	public Map<Integer, Collection<ExtendedTrial>> trials;
 	
 	public ExecutionResult(String n, String t, String f, String c) {
 		this.name = n;
@@ -31,7 +34,7 @@ public class ExecutionResult {
 		this.transformer = t;
 		this.filter = f;
 		this.classifier = c;
-		this.trials = new HashMap<Integer, Collection<Trial>>();
+		this.trials = new HashMap<Integer, Collection<ExtendedTrial>>();
 	}
 	
 	/**
@@ -40,13 +43,15 @@ public class ExecutionResult {
 	 */
 	public void trial2out() throws FileNotFoundException {
 		Instance instance;
-		Labeling labeling;
+		Labeling labeling; // ATTN: same variable used in 2 different contexts (why? cause i'm a cheap bastard)
 		
 		for (Integer n : this.trials.keySet()) {
-			for (Trial trial : this.trials.get(n)) {
-				FileOutputStream out = new FileOutputStream(getTrialOutName());
+			for (ExtendedTrial trial : this.trials.get(n)) {
+				FileOutputStream out = new FileOutputStream(getTrialOutName(n));
 				PrintWriter pw = new PrintWriter(out);
 				
+				LabeledInstancesList trainLabeledInstances = trial.getTrainLabeledInstances();
+				LabeledInstancesList testLabeledInstances = trial.getTestLabeledInstances();
 				for (Classification classification : trial) {
 					// write out results in the form of:
 					// instance, real_class_idx, real_class, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
@@ -58,11 +63,17 @@ public class ExecutionResult {
 					pw.write(instance.getName() + ", ");
 					
 					// real class
-					pw.write(instance.getLabeling().getBestIndex() + ", ");
-					pw.write(instance.getLabeling().getBestLabel() + ", ");
+					labeling = instance.getLabeling(); // ATTN: first use here, instance's labeling
+					int classIdx = labeling.getBestIndex();
+					pw.write(classIdx + ", ");
+					pw.write(labeling.getBestLabel() + ", ");
+					
+					// write out training set and testing set size
+					pw.write(trainLabeledInstances.labelSize(classIdx) + ".0, ");
+					pw.write(testLabeledInstances.labelSize(classIdx) + ".0, ");
 					
 					// pairs of class_nN, val_nN
-					labeling = classification.getLabeling();
+					labeling = classification.getLabeling(); // ATTN: second use here, classification's labeling
 					int nl = labeling.numLocations();
 					for(int i=0; i < nl; ++i) {
 						pw.write(labeling.indexAtLocation(i) + ", ");
@@ -106,7 +117,7 @@ public class ExecutionResult {
 		pw.close();
 	}
 	
-	private String getTrialOutName() {
+	private String getTrialOutName(int n) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("trial");
 		sb.append("+");
@@ -115,6 +126,8 @@ public class ExecutionResult {
 		sb.append(this.transformer);
 		sb.append("+");
 		sb.append(this.filter);
+		sb.append("+");
+		sb.append(n);
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");
