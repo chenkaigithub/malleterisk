@@ -212,6 +212,7 @@ public class SEAMCE {
 			r.trials.put(n, ExecutionRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
 		}
 		
+		// write results
 		r.trial2out();
 		r.accuracies2out();
 	}

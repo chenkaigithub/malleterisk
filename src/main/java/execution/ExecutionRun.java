@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-
+import types.mallet.classify.ExtendedTrial;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.Trial;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 import ft.selection.IFilter;
@@ -104,23 +103,21 @@ public class ExecutionRun {
 	 * @param trainer
 	 * @return
 	 */
-	public static final Collection<Trial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
-		LinkedList<Trial> trials = new LinkedList<Trial>();
+	public static final Collection<ExtendedTrial> crossValidate(InstanceList instances, int numFolds, ClassifierTrainer<?> trainer) {
+		LinkedList<ExtendedTrial> trials = new LinkedList<ExtendedTrial>();
 		
 		CrossValidationIterator cvi = instances.crossValidationIterator(numFolds);
 		InstanceList[] folds = null;
 		Classifier classifier = null;
+		InstanceList trainInstances, testInstances;
 		while(cvi.hasNext()) {
 			folds = cvi.next();
 			
-			/* TODO: operate here! 
-			 * here's the information regarding number of instances in train/test
-			 * how should i give back the info? wrap in an object?
-			 * there should be info for each fold (10fold = 10 objects with #instances in train/test) 
-			 */
+			trainInstances = folds[0];
+			testInstances = folds[1];
 			
-			classifier = trainer.train(folds[0]);
-			trials.add(new Trial(classifier, folds[1]));
+			classifier = trainer.train(trainInstances);
+			trials.add(new ExtendedTrial(classifier, trainInstances, testInstances));
 		}
 		
 		return trials;

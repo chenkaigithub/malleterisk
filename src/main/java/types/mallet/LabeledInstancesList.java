@@ -53,4 +53,11 @@ public class LabeledInstancesList {
 	public int size() {
 		return instancelists.length;
 	}
+	
+	public int labelSize(int labelIdx) {
+		InstanceList ilist = instancelists[labelIdx];
+		if(ilist!=null) return ilist.size();
+		
+		return 0;
+	}
 }

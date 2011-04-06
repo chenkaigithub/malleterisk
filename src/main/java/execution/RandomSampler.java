@@ -3,17 +3,15 @@ package execution;
 import java.util.Iterator;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import types.mallet.LabeledInstancesList;
 import cc.mallet.types.InstanceList;
 
 public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceList> {
-	private final InstanceList instances;
-	private final InstanceList[] labeledInstances;
+//	private final InstanceList instances;
+//	private final InstanceList[] labeledInstances;
 	
 	public RandomSampler(InstanceList instances) {
-		this.instances = instances;
-		
-		this.labeledInstances = new LabeledInstancesList(instances).getLabeledInstances();
+//		this.instances = instances;
+//		this.labeledInstances = new LabeledInstancesList(instances).getLabeledInstances();
 	}
 	
 	@Override
