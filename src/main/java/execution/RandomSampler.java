@@ -6,11 +6,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import types.mallet.LabeledInstancesList;
 import cc.mallet.types.InstanceList;
 
-public class RandomSampling implements Iterable<InstanceList>, Iterator<InstanceList> {
+public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceList> {
 	private final InstanceList instances;
 	private final InstanceList[] labeledInstances;
 	
-	public RandomSampling(InstanceList instances) {
+	public RandomSampler(InstanceList instances) {
 		this.instances = instances;
 		
 		this.labeledInstances = new LabeledInstancesList(instances).getLabeledInstances();

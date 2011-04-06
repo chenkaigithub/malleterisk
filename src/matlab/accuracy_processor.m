@@ -1,7 +1,5 @@
 %dir_name = uigetdir;
-dir_name = 'D:\work\seamce-test\u1+1\boolean\accuracies';
-%dir_name = 'D:\work\seamce-test\u1+1\tf-idf\accuracies';
-%dir_name = 'D:\work\seamce-test\u1+1\tf-log\accuracies';
+dir_name = uigetdir('../..//results/2011-04-04/accuracies/');
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
