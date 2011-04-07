@@ -47,6 +47,7 @@ end
 h1 = subplot(2,1,1); bar(p_x, p, 'stacked'); set(gca,'xlim',[0.5 (length(p)+0.5)]); 
 % set class labels (indices)
 set(gca, 'XTick', p_x); set(gca, 'XTickLabel', order);
+set(gca,'yscale','log');
 % plot confusion matrix
 h2 = subplot(2,1,2); imagesc(cm);
 % set class labels (indices)
