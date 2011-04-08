@@ -1,5 +1,17 @@
 clear;
+<<<<<<< HEAD
 dir_name = uigetdir;
+=======
+dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+1';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+2';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+3';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+4';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+5';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+6';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u1+7';
+% dir_name = 'C:\Work\tt\seamce-test\results\2011-04-08-rep\a+tf+u2+1';
+
+>>>>>>> 1cc0dd268f5a98289065d0263797187c8833d846
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
