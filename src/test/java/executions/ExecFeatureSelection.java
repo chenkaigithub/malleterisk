@@ -31,26 +31,11 @@ public class ExecFeatureSelection {
 		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
-//		System.out.println("tdi + feature selection");
-//		ArrayList<ITransformer> booleanTransformer = new ArrayList<ITransformer>();
-//		booleanTransformer.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
-//		x(files, booleanTransformer);
-//		Runtime.getRuntime().gc();
+		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
+		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
 
-//		System.out.println("tf-log + feature selection");
-//		ArrayList<ITransformer> tflogTransformer = new ArrayList<ITransformer>();
-//		tflogTransformer.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
-//		x(files, tflogTransformer);
-//		Runtime.getRuntime().gc();
-
-//		System.out.println("tf-idf + feature selection");
-//		ArrayList<ITransformer> tfidfTransformer = new ArrayList<ITransformer>();
-//		tfidfTransformer.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
-//		x(files, tfidfTransformer);
-//		Runtime.getRuntime().gc();
-	}
-
-	public static void x(ArrayList<File> files, ArrayList<ITransformer> transformers) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
 		filters.add(new FilterByRankedTF());
 		filters.add(new FilterByRankedDF());
