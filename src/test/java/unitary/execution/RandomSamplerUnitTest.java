@@ -22,9 +22,15 @@ public class RandomSamplerUnitTest {
 		InstanceList instances = InstanceList.load(new File(runName));
 
 		// random sampling
+<<<<<<< HEAD
 		runName += "+rs-t5-n10";
 		RandomSampler rs = new RandomSampler(instances, 5);
 		instances = rs.x(10);
+=======
+		runName += "+rs-t5-n100";
+		RandomSampler rs = new RandomSampler(instances, 5);
+		instances = rs.x(100);
+>>>>>>> d300174ea7ad8d97b7a490d5a5aebf25ecb96461
 		
 		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));

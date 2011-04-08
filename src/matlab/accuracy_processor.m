@@ -1,6 +1,8 @@
 clear;
 dir_name = uigetdir;
+<<<<<<< HEAD
 
+>>>>>>> d300174ea7ad8d97b7a490d5a5aebf25ecb96461
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
