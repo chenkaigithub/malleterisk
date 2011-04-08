@@ -1,49 +1,73 @@
 package execution;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Random;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import types.mallet.LabeledInstancesList;
+import cc.mallet.pipe.Noop;
+import cc.mallet.types.Alphabet;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
 public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceList> {
-//	private final InstanceList instances;
-//	private final InstanceList[] labeledInstances;
+	private final Alphabet featureAlphabet;
+	private final Alphabet labelAlphabet;
+	private final LabeledInstancesList labeledInstances;
+	private final int minThreshold;
 	
-	public RandomSampler(InstanceList instances) {
-//		this.instances = instances;
-//		this.labeledInstances = new LabeledInstancesList(instances).getLabeledInstances();
+	public RandomSampler(InstanceList instances, int minThreshold) {
+		this.featureAlphabet = instances.getDataAlphabet();
+		this.labelAlphabet = instances.getTargetAlphabet();
+		this.labeledInstances = new LabeledInstancesList(instances, featureAlphabet, labelAlphabet);
+		this.minThreshold = minThreshold;
 	}
 	
+	public InstanceList x(int n) {
+		Noop pipe = new Noop(this.featureAlphabet, this.labelAlphabet);
+		InstanceList newInstanceList = new InstanceList (pipe);
+		
+		Collection<Instance> ilist;
+		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
+			// class does not have enough documents to process
+			if(instances.size() < this.minThreshold) continue;
+			
+			if(instances.size() > n) ilist = rsample(instances, n, false);
+			else ilist = rsample(instances, n, true);
+			
+			for (Instance instance : ilist) 
+				newInstanceList.addThruPipe(instance);
+		}
+		
+		return newInstanceList;
+	}
+	
+	private Collection<Instance> rsample(InstanceList instances, int n, boolean reposition) {
+		LinkedList<Instance> sampledInstances = new LinkedList<Instance>();
+		int k = instances.size();
+		Random r = new Random();
+		
+		for (int i = 0; i < n; i++) {
+			Instance instance =instances.get(r.nextInt(k));
+			if(!reposition && sampledInstances.contains(instance)) i--;
+			else sampledInstances.add(instance);
+		}
+		
+		return sampledInstances;
+	}
+	
+	// Iterable
+
 	@Override
 	public boolean hasNext() {
-//		return currentOneClassIndex < labeledInstances.length;
+		
 		throw new NotImplementedException();
 	}
 
 	@Override
 	public InstanceList next() {
-//		// create new instancelist with changed target alphabet (empty for now, will be filled internally)
-//		Alphabet features = this.instances.getDataAlphabet();
-//		Alphabet labels = this.instances.getTargetAlphabet();
-//		LabelAlphabet newLabels = new LabelAlphabet();
-//		InstanceList newInstances = new InstanceList(features, newLabels);
-//		
-//		// get the "current" label
-//		this.currentOneClassLabel = labels.lookupObject(currentOneClassIndex++);
-//		Object labelOne = newLabels.lookupLabel(this.currentOneClassLabel, true);
-//		Object labelAll = newLabels.lookupLabel(-1, true);
-//		
-//		// set the new targets for all the instances
-//		for (Instance instance : this.instances) {
-//			newInstances.add(new Instance(
-//				instance.getData(), 
-//				((Label) instance.getTarget()).getEntry().equals(this.currentOneClassLabel) ? labelOne : labelAll, 
-//				instance.getName(), 
-//				instance.getSource())
-//			);
-//		}
-//		
-//		return newInstances;
 		throw new NotImplementedException();
 	}
 
@@ -52,6 +76,8 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 		throw new NotImplementedException();
 	}
 
+	// Iterator
+	
 	@Override
 	public Iterator<InstanceList> iterator() {
 		return this;

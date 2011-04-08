@@ -14,9 +14,10 @@ public class LabeledInstancesList {
 	public final Map<Object, InstanceList> labelsInstancelists;
 	
 	public LabeledInstancesList(InstanceList instances) {
-		final Alphabet featureAlphabet = instances.getDataAlphabet();
-		final Alphabet labelAlphabet = instances.getTargetAlphabet();
-		
+		this(instances, instances.getDataAlphabet(), instances.getTargetAlphabet());
+	}
+	
+	public LabeledInstancesList(InstanceList instances, Alphabet featureAlphabet, Alphabet labelAlphabet) {
 		int n = labelAlphabet.size();
 		instancelists = new InstanceList[n];
 		labels = new Object[n];
@@ -41,6 +42,7 @@ public class LabeledInstancesList {
 			lInstances.add(instance);
 		}
 	}
+	
 	
 	public InstanceList[] getLabeledInstances() {
 		return instancelists;

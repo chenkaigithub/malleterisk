@@ -54,7 +54,7 @@ public class ExecutionResult {
 				LabeledInstancesList testLabeledInstances = trial.getTestLabeledInstances();
 				for (Classification classification : trial) {
 					// write out results in the form of:
-					// instance, real_class_idx, real_class, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
+					// instance, real_class_idx, real_class, num_train_docs, num_test_docs, class_n1_idx, class_n1, val_n1, ..., class_nK_idx, class_nK, val_nK
 					// class_nN = class classified at position N
 					// val_nN = value of class at position N
 					
