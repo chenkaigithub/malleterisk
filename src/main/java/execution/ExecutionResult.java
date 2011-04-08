@@ -8,11 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import types.mallet.LabeledInstancesList;
 import types.mallet.classify.ExtendedTrial;
-
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
@@ -132,8 +130,8 @@ public class ExecutionResult {
 		sb.append(this.classifier);
 		sb.append("+");
 		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
-		sb.append("+");
-		sb.append(UUID.randomUUID());
+//		sb.append("+");
+//		sb.append(UUID.randomUUID());
 		
 		return sb.toString();
 	}
@@ -151,8 +149,8 @@ public class ExecutionResult {
 		sb.append(this.classifier);
 		sb.append("+");
 		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
-		sb.append("+");
-		sb.append(UUID.randomUUID());
+//		sb.append("+");
+//		sb.append(UUID.randomUUID());
 		
 		return sb.toString();
 	}

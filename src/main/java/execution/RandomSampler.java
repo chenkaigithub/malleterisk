@@ -26,7 +26,7 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 	}
 	
 	public InstanceList x(int n) {
-		Noop pipe = new Noop(this.featureAlphabet, this.labelAlphabet);
+		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
 		InstanceList newInstanceList = new InstanceList (pipe);
 		
 		Collection<Instance> ilist;
@@ -34,11 +34,11 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 			// class does not have enough documents to process
 			if(instances.size() < this.minThreshold) continue;
 			
+			// random sample with reposition if size < n; otherwise, no reposition 
 			if(instances.size() > n) ilist = rsample(instances, n, false);
 			else ilist = rsample(instances, n, true);
 			
-			for (Instance instance : ilist) 
-				newInstanceList.addThruPipe(instance);
+			for (Instance instance : ilist) newInstanceList.addThruPipe(instance);
 		}
 		
 		return newInstanceList;

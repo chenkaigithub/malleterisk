@@ -190,7 +190,22 @@ public class SEAMCE {
 					System.out.println("- filter: " + filter.getDescription());
 					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
 						SEAMCE.sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
+						Runtime.getRuntime().gc();
 					}
+				}
+			}
+		}
+	}
+	
+	public static final void y(String runName, InstanceList instances, ArrayList<ITransformer> transformers, ArrayList<IFilter> filters, ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, int step, int folds) 
+		throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		for (ITransformer transformer : transformers) {
+			System.out.println("- transformer: " + transformer.getDescription());
+			for (IFilter filter : filters) {
+				System.out.println("- filter: " + filter.getDescription());
+				for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
+					SEAMCE.sequentialRun(runName, instances, transformer, filter, trainer, step, folds);
+					Runtime.getRuntime().gc();
 				}
 			}
 		}
