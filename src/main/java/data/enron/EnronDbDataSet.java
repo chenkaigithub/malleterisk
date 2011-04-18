@@ -10,7 +10,7 @@ import utils.JavaMailUtils;
 import cc.mallet.types.Instance;
 import data.IDataSet;
 import data.enron.db.EnronDbDataAccess;
-import data.enron.utils.EnronUtils;
+import data.enron.utils.EnronConstants;
 
 public class EnronDbDataSet implements IDataSet, Iterator<Instance> {
 	private final EnronDbDataAccess dal;
@@ -49,18 +49,18 @@ public class EnronDbDataSet implements IDataSet, Iterator<Instance> {
 		Object source = null;
 		
 		try {
-			int emailId = messagesRS.getInt(EnronUtils.ENRON_DB_EMAIL_ID);
+			int emailId = messagesRS.getInt(EnronConstants.ENRON_DB_EMAIL_ID);
 			
-			name = messagesRS.getString(EnronUtils.ENRON_DB_EMAIL_NAME);
-			target = messagesRS.getInt(EnronUtils.ENRON_DB_CLASS_ID);
+			name = messagesRS.getString(EnronConstants.ENRON_DB_EMAIL_NAME);
+			target = messagesRS.getInt(EnronConstants.ENRON_DB_CLASS_ID);
 			data = new EmailMessage(
 				emailId,
-				messagesRS.getInt(EnronUtils.ENRON_DB_COLLECTION_ID),
-				messagesRS.getInt(EnronUtils.ENRON_DB_USER_ID),
-				messagesRS.getInt(EnronUtils.ENRON_DB_CLASS_ID),
-				JavaMailUtils.parseDateTime(messagesRS.getString(EnronUtils.ENRON_DB_EMAIL_DATE)),
-				messagesRS.getString(EnronUtils.ENRON_DB_EMAIL_SUBJECT),
-				messagesRS.getString(EnronUtils.ENRON_DB_EMAIL_BODY),
+				messagesRS.getInt(EnronConstants.ENRON_DB_COLLECTION_ID),
+				messagesRS.getInt(EnronConstants.ENRON_DB_USER_ID),
+				messagesRS.getInt(EnronConstants.ENRON_DB_CLASS_ID),
+				JavaMailUtils.parseDateTime(messagesRS.getString(EnronConstants.ENRON_DB_EMAIL_DATE)),
+				messagesRS.getString(EnronConstants.ENRON_DB_EMAIL_SUBJECT),
+				messagesRS.getString(EnronConstants.ENRON_DB_EMAIL_BODY),
 				dal.getEmailParticipants(emailId)
 			);
 		} catch (SQLException e) {

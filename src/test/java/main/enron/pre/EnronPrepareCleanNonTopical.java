@@ -2,7 +2,7 @@ package main.enron.pre;
 import java.util.LinkedList;
 
 import data.enron.file.EnronFileCleaning;
-import data.enron.utils.EnronUtils;
+import data.enron.utils.EnronConstants;
 
 public class EnronPrepareCleanNonTopical {
 	public static void main(String[] args) throws Exception {
@@ -17,8 +17,8 @@ public class EnronPrepareCleanNonTopical {
 		NON_TOPICAL_FOLDERS.add("sent_items");
 		
 		new EnronFileCleaning(
-			EnronUtils.ENRON_TOPICAL_FOLDERS_PATH, 
-			EnronUtils.ENRON_NON_TOPICAL_FOLDERS_PATH, 
+			EnronConstants.ENRON_TOPICAL_FOLDERS_PATH, 
+			EnronConstants.ENRON_NON_TOPICAL_FOLDERS_PATH, 
 			NON_TOPICAL_FOLDERS
 		).clean();
 	}

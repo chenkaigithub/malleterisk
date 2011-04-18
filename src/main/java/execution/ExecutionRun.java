@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import types.mallet.classify.ExtendedTrial;
+import utils.IteratedExecution;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.InstanceList;

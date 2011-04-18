@@ -1,7 +1,7 @@
 package data.enron.utils;
 
 
-public class EnronUtils {
+public class EnronConstants {
 	// folders
 	public static final String ENRON_FOLDER_PATH = "../../data/enron/";
 	

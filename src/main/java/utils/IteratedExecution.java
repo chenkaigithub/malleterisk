@@ -1,4 +1,4 @@
-package execution;
+package utils;
 
 import java.util.Iterator;
 
@@ -14,9 +14,9 @@ public class IteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	private final double stepSize;
 	private int currentStep;
 	
-	public IteratedExecution(int alphabetSize, int percentageStep) {
+	public IteratedExecution(int iterationSize, int percentageStep) {
 		this.percentageStep = percentageStep;
-		this.stepSize = (double)alphabetSize / 100.0;
+		this.stepSize = (double)iterationSize / 100.0;
 		this.currentStep = 100;
 	}
 	

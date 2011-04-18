@@ -1,8 +1,6 @@
 clear;
 dir_name = uigetdir;
-<<<<<<< HEAD
 
->>>>>>> d300174ea7ad8d97b7a490d5a5aebf25ecb96461
 files = dir(dir_name);
 file_indices = find(~[files.isdir]);
 num_files = length(file_indices);
@@ -18,7 +16,7 @@ for i = 1:num_files
     file_name = files(file_indices(i)).name;
     if ~strcmp(file_name, '.DS_Store')
         % load file into [feature, runs] matrix
-        R = load([dir_name '\' file_name]);
+        R = load([dir_name '/' file_name]);
         
         % calculate the mean of the runs
         l = size(R, 1);

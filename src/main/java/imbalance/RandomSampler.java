@@ -1,22 +1,27 @@
-package execution;
+package imbalance;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import types.mallet.LabeledInstancesList;
 import cc.mallet.pipe.Noop;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
-public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceList> {
+/**
+ * Performs class balancing using random under and oversampling.
+ * 
+ * 
+ * @author tt
+ *
+ */
+public class RandomSampler {
 	private final Alphabet featureAlphabet;
 	private final Alphabet labelAlphabet;
-	private final LabeledInstancesList labeledInstances;
-	private final int minThreshold;
+	public final LabeledInstancesList labeledInstances;
+	public final int minThreshold;
 	
 	public RandomSampler(InstanceList instances, int minThreshold) {
 		this.featureAlphabet = instances.getDataAlphabet();
@@ -25,7 +30,7 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 		this.minThreshold = minThreshold;
 	}
 	
-	public InstanceList x(int n) {
+	public InstanceList sample(int n) {
 		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
 		InstanceList newInstanceList = new InstanceList (pipe);
 		
@@ -35,8 +40,8 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 			if(instances.size() < this.minThreshold) continue;
 			
 			// random sample with reposition if size < n; otherwise, no reposition 
-			if(instances.size() > n) ilist = rsample(instances, n, false);
-			else ilist = rsample(instances, n, true);
+			if(instances.size() > n) ilist = rs(instances, n, false);
+			else ilist = rs(instances, n, true);
 			
 			for (Instance instance : ilist) newInstanceList.addThruPipe(instance);
 		}
@@ -44,7 +49,7 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 		return newInstanceList;
 	}
 	
-	private Collection<Instance> rsample(InstanceList instances, int n, boolean reposition) {
+	private Collection<Instance> rs(InstanceList instances, int n, boolean reposition) {
 		LinkedList<Instance> sampledInstances = new LinkedList<Instance>();
 		int k = instances.size();
 		Random r = new Random();
@@ -56,30 +61,5 @@ public class RandomSampler implements Iterable<InstanceList>, Iterator<InstanceL
 		}
 		
 		return sampledInstances;
-	}
-	
-	// Iterable
-
-	@Override
-	public boolean hasNext() {
-		
-		throw new NotImplementedException();
-	}
-
-	@Override
-	public InstanceList next() {
-		throw new NotImplementedException();
-	}
-
-	@Override
-	public void remove() {
-		throw new NotImplementedException();
-	}
-
-	// Iterator
-	
-	@Override
-	public Iterator<InstanceList> iterator() {
-		return this;
 	}
 }

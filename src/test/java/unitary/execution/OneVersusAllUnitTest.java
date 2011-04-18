@@ -1,5 +1,7 @@
 package unitary.execution;
 
+import imbalance.OneVersusAll;
+
 import java.io.File;
 
 import junit.framework.Assert;
@@ -11,7 +13,6 @@ import types.mallet.LabeledInstancesList;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
-import execution.OneVersusAll;
 
 public class OneVersusAllUnitTest {
 	private InstanceList instances;

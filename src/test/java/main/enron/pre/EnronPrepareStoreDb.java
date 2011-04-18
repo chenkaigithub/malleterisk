@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import data.enron.db.Enron2Db;
 import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
-import data.enron.utils.EnronUtils;
+import data.enron.utils.EnronConstants;
 
 public class EnronPrepareStoreDb {
 	public static void main(String[] args) throws SQLException {
@@ -12,6 +12,6 @@ public class EnronPrepareStoreDb {
 		EnronDbDataAccess dal = new EnronDbDataAccess(dbc);
 		
 //		new Enron2Db(dal).processEnron(EnronUtils.ENRON_FLAT_PATH);
-		new Enron2Db(dal).processEnron(EnronUtils.ENRON_TOPICAL_FOLDERS_PATH);
+		new Enron2Db(dal).processEnron(EnronConstants.ENRON_TOPICAL_FOLDERS_PATH);
 	}
 }

@@ -1,5 +1,7 @@
 package main;
 
+import imbalance.OneVersusAll;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -11,6 +13,7 @@ import pp.email.body.BodyPreProcessor1;
 import pp.email.date.DatePreProcessor1;
 import pp.email.participants.ParticipantsPreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
+import utils.IteratedExecution;
 import analysis.CollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -23,8 +26,6 @@ import data.enron.db.EnronDbConnector;
 import data.enron.db.EnronDbDataAccess;
 import execution.ExecutionResult;
 import execution.ExecutionRun;
-import execution.IteratedExecution;
-import execution.OneVersusAll;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -58,6 +59,9 @@ import ft.transformation.methods.FeatureWeighting;
  * 	- variar o número de classes
  * 	- one class classifiers
  * 	- one vs all, all vs all
+ *  - cost sensitive learning: atribuir um peso a cada classe, com base no número de documentos
+ *  - medir ganho (curva roc, tp-tn-fp-fn, etc)
+ *  - avaliar sampling + outra técnica
  * 
  * X.
  * participants:
@@ -90,9 +94,6 @@ import ft.transformation.methods.FeatureWeighting;
  * svm, knn, trees
  */
 public class SEAMCE {
-	public static void main(String[] args) throws Exception {
-	}
-	
 	public static final void oneVsAll() throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		InstanceList instances = InstanceList.load(new File("instances+2+1+bodies"));
 		

@@ -1,50 +1,49 @@
 package unitary.execution;
 
+import imbalance.RandomSampler;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import utils.IteratedExecution;
 
 import main.SEAMCE;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
-import execution.RandomSampler;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
 import ft.transformation.ITransformer;
 import ft.transformation.methods.FeatureWeighting;
 
 public class RandomSamplerUnitTest {
-	
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
-		String runName = "instances+1+1+subjects";
+		String runName = "instances+1+1+bodies";
 		InstanceList instances = InstanceList.load(new File(runName));
 
 		// random sampling
-<<<<<<< HEAD
-		runName += "+rs-t5-n10";
-		RandomSampler rs = new RandomSampler(instances, 5);
-		instances = rs.x(10);
-=======
-		runName += "+rs-t5-n100";
-		RandomSampler rs = new RandomSampler(instances, 5);
-		instances = rs.x(100);
->>>>>>> d300174ea7ad8d97b7a490d5a5aebf25ecb96461
+//		runName += "+rs-t5";
+//		RandomSampler rs = new RandomSampler(instances, 5);
 		
-		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
+//		for (int n : new IteratedExecution(rs.labeledInstances.size(), 5)) {
+//			instances = rs.sample(n);
+			
+			ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+			transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
 
-		ArrayList<IFilter> filters = new ArrayList<IFilter>();
-		filters.add(new FilterByRankedIG());
-		
-		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
-		classifiers.add(new NaiveBayesTrainer());
-		
-		int step = 10;
-		int folds = 10;
-		
-		SEAMCE.y(runName, instances, transformers, filters, classifiers, step, folds);
+			ArrayList<IFilter> filters = new ArrayList<IFilter>();
+			filters.add(new FilterByRankedIG());
+			
+			ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
+			classifiers.add(new NaiveBayesTrainer());
+			
+			int step = 10;
+			int folds = 10;
+			
+			SEAMCE.y(runName/*+"-n"+n*/, instances, transformers, filters, classifiers, step, folds);
+//		}
 	}
 	
 //	private InstanceList ilist;
