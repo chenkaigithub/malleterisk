@@ -1,4 +1,4 @@
-package unitary.execution;
+package unitary.unsorted;
 
 import junit.framework.Assert;
 
@@ -16,8 +16,6 @@ public class IteratedExecutionUnitTest {
 			double v = ie.next().doubleValue();
 			System.out.println(i + ": " + v);
 			Assert.assertEquals(1000.0-(100*i++), v);
-		}
-		
+		}		
 	}
-
 }
