@@ -1,21 +1,8 @@
 package unitary.imbalance;
 
-import imbalance.OneVersusAll;
-
-import java.io.File;
-
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import types.mallet.LabeledInstancesList;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import cc.mallet.types.Label;
 
 public class OneVersusAllUnitTest {
-	private InstanceList instances;
+/*	private InstanceList instances;
 	private LabeledInstancesList lil;
 	
 	@Before
@@ -39,10 +26,10 @@ public class OneVersusAllUnitTest {
 				else oneCount++;
 			}
 			
-			InstanceList oneInstances = lil.labelsInstancelists.get(ova.getCurrentOneClass());
-			
-			Assert.assertEquals(oneCount, oneInstances.size());
-			Assert.assertEquals(allCount, instances.size()-oneInstances.size());
+//			InstanceList oneInstances = lil.labelsInstancelists.get(ova.getCurrentOneClass());
+//			
+//			Assert.assertEquals(oneCount, oneInstances.size());
+//			Assert.assertEquals(allCount, instances.size()-oneInstances.size());
 		}
 	}
-}
+*/}

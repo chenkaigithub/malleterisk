@@ -1,8 +1,8 @@
-package ft.transformation;
+package ft.weighting;
 
 import cc.mallet.types.InstanceList;
 
-public interface ITransformer {
+public interface IWeighter {
 	InstanceList calculate(InstanceList instances);
 	String getDescription();
 }

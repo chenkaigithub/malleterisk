@@ -1,4 +1,4 @@
-package imbalance;
+package classifiers;
 
 import java.util.Arrays;
 

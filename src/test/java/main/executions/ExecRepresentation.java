@@ -1,4 +1,4 @@
-package executions;
+package main.executions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,8 +11,8 @@ import cc.mallet.classify.NaiveBayesTrainer;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedTF;
-import ft.transformation.ITransformer;
-import ft.transformation.methods.FeatureWeighting;
+import ft.weighting.IWeighter;
+import ft.weighting.methods.FeatureWeighting;
 
 public class ExecRepresentation {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -26,7 +26,7 @@ public class ExecRepresentation {
 		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
-		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));	// boolean
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));		// nnn
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_MAX_NORM, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));	// mnn

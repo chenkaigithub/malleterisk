@@ -1,11 +1,12 @@
 package unitary.unsorted;
 
-import imbalance.KNN;
 
 import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import classifiers.KNN;
 
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;

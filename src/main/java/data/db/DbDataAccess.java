@@ -1,4 +1,4 @@
-package data.enron.db;
+package data.db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,10 +21,24 @@ import types.ParticipantType;
 import utils.JavaMailUtils;
 
 // TODO: general jdbc cleanup & refactor; alot of duplicated code
-public class EnronDbDataAccess {
-	public final EnronDbConnector db;
+public class DbDataAccess {
+	// db columns
 	
-	public EnronDbDataAccess(EnronDbConnector db) {
+	public static final String DB_EMAIL_ID = "email_id";
+	public static final String DB_COLLECTION_ID = "collection_id";
+	public static final String DB_USER_ID = "user_id";
+	public static final String DB_CLASS_ID = "class_id";
+
+	public static final String DB_EMAIL_NAME = "email_name";
+	public static final String DB_EMAIL_DATE = "date";
+	public static final String DB_EMAIL_SUBJECT = "subject";
+	public static final String DB_EMAIL_BODY = "body";
+
+	// EnronDbDataAccess
+	
+	public final DbConnector db;
+	
+	public DbDataAccess(DbConnector db) {
 		this.db = db;
 	}
 

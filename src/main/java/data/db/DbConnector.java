@@ -1,10 +1,10 @@
-package data.enron.db;
+package data.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class EnronDbConnector {
+public class DbConnector {
 	static {
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -17,7 +17,7 @@ public class EnronDbConnector {
 	private final String user;
 	private final String password;	
 	
-	public EnronDbConnector(String url, String user, String pwd) {
+	public DbConnector(String url, String user, String pwd) {
 		this.url = url;
 		this.user = user;
 		this.password = pwd;

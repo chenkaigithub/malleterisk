@@ -1,23 +1,18 @@
-package data.enron;
+package main.insticc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Iterator;
 
-import types.EmailMessage;
-import utils.JavaMailUtils;
 import cc.mallet.types.Instance;
 import data.IDataSet;
 import data.db.DbDataAccess;
 
-public class EnronDbDataSet implements IDataSet, Iterator<Instance> {
-	private final DbDataAccess dal;
+public class INSTICCDataSet implements IDataSet, Iterator<Instance> {
 	private final ResultSet messagesRS;
 	
-	public EnronDbDataSet(DbDataAccess dal, int collectionId, int userId) throws SQLException {
-		this.dal = dal;
-		messagesRS = dal.getEmailMessages(collectionId, userId);
+	public INSTICCDataSet(DbDataAccess dal) throws SQLException {
+		messagesRS = dal.getEmailMessages(2, 1);
 	}
 
 	@Override
@@ -48,25 +43,13 @@ public class EnronDbDataSet implements IDataSet, Iterator<Instance> {
 		Object source = null;
 		
 		try {
-			int emailId = messagesRS.getInt(DbDataAccess.DB_EMAIL_ID);
-			
 			name = messagesRS.getString(DbDataAccess.DB_EMAIL_NAME);
 			target = messagesRS.getInt(DbDataAccess.DB_CLASS_ID);
-			data = new EmailMessage(
-				emailId,
-				messagesRS.getInt(DbDataAccess.DB_COLLECTION_ID),
-				messagesRS.getInt(DbDataAccess.DB_USER_ID),
-				messagesRS.getInt(DbDataAccess.DB_CLASS_ID), // same as target
-				JavaMailUtils.parseDateTime(messagesRS.getString(DbDataAccess.DB_EMAIL_DATE)),
-				messagesRS.getString(DbDataAccess.DB_EMAIL_SUBJECT),
-				messagesRS.getString(DbDataAccess.DB_EMAIL_BODY),
-				dal.getEmailParticipants(emailId)
-			);
+			data = messagesRS.getString(DbDataAccess.DB_EMAIL_BODY);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
 		}
+		if(data==null) data = "";
 		
 		return new Instance(data, target, name, source);
 	}

@@ -1,7 +1,5 @@
 package main;
 
-import imbalance.OneVersusAll;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -17,25 +15,16 @@ import utils.IteratedExecution;
 import analysis.CollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import data.IDataSet;
+import data.db.DbConnector;
+import data.db.DbDataAccess;
 import data.enron.EnronDbDataSet;
-import data.enron.db.EnronDbConnector;
-import data.enron.db.EnronDbDataAccess;
 import execution.ExecutionResult;
 import execution.ExecutionRun;
 import ft.selection.IFilter;
-import ft.selection.methods.FilterByRankedDF;
-import ft.selection.methods.FilterByRankedFisher;
-import ft.selection.methods.FilterByRankedIG;
-import ft.selection.methods.FilterByRankedL0Norm1;
-import ft.selection.methods.FilterByRankedL0Norm2;
-import ft.selection.methods.FilterByRankedTF;
-import ft.selection.methods.FilterByRankedVariance;
-import ft.transformation.ITransformer;
-import ft.transformation.methods.FeatureWeighting;
+import ft.weighting.IWeighter;
 
 /* 
  * + automation
@@ -47,21 +36,6 @@ import ft.transformation.methods.FeatureWeighting;
  * things that I want to know when executing:
  * number of instances of each class used in train and in test
  * logging seems like a great idea..
- * 
- * 1.
- * combater o desiquilibro das classes
- *  - equilibrar o número de documentos das classes 
- * 		reduzir o número de documentos se necessário (~100)
- *  - como? escolher documentos representativos
- * 		random sampling
- * 		clustering + escolha representantes
- * 		clustering + divisão em subclasses
- * 	- variar o número de classes
- * 	- one class classifiers
- * 	- one vs all, all vs all
- *  - cost sensitive learning: atribuir um peso a cada classe, com base no número de documentos
- *  - medir ganho (curva roc, tp-tn-fp-fn, etc)
- *  - avaliar sampling + outra técnica
  * 
  * X.
  * participants:
@@ -94,113 +68,65 @@ import ft.transformation.methods.FeatureWeighting;
  * svm, knn, trees
  */
 public class SEAMCE {
-	public static final void oneVsAll() throws FileNotFoundException, InstantiationException, IllegalAccessException {
-		InstanceList instances = InstanceList.load(new File("instances+2+1+bodies"));
-		
-		OneVersusAll ova = new OneVersusAll(instances);
-		while(ova.hasNext()) {
-			instances = ova.next();
-			
-			int step = 10;
-			int folds = 10;
-			
-			ITransformer transformer = new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE); // ltc
-			IFilter filter = new FilterByRankedDF();
-			ClassifierTrainer<? extends Classifier> trainer = new NaiveBayesTrainer();
-			
-			sequentialRun("instances+2+1+bodies+"+ova.currentOneClassLabel, instances, transformer, filter, trainer, step, folds);
-		}
-	}
-	
-	public static final void classify() throws FileNotFoundException, InstantiationException, IllegalAccessException {
-		ArrayList<File> files = new ArrayList<File>();
-//		files.add(new File("instances+0+0+tests"));
-		files.add(new File("instances+1+1+bodies"));
-		files.add(new File("instances+1+2+bodies"));
-		files.add(new File("instances+1+3+bodies"));
-		files.add(new File("instances+1+4+bodies"));
-		files.add(new File("instances+1+5+bodies"));
-		files.add(new File("instances+1+6+bodies"));
-		files.add(new File("instances+1+7+bodies"));
-		files.add(new File("instances+2+1+bodies"));
-		
-		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE)); // nnn
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE)); // ntn
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // ltc
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_MAX_NORM, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE)); // mtc
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE)); // boolean
-		
-		ArrayList<IFilter> filters = new ArrayList<IFilter>();
-		filters.add(new FilterByRankedTF());
-		filters.add(new FilterByRankedDF());
-		filters.add(new FilterByRankedIG());
-		filters.add(new FilterByRankedVariance());
-		filters.add(new FilterByRankedL0Norm1());
-		filters.add(new FilterByRankedL0Norm2());
-		filters.add(new FilterByRankedFisher(FilterByRankedFisher.MINIMUM_SCORE));
-		filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SCORE));
-		filters.add(new FilterByRankedFisher(FilterByRankedFisher.SUM_SQUARED_SCORE));
-		
-		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
-		classifiers.add(new NaiveBayesTrainer());
-		
-		int step = 10;
-		int folds = 10;
-		
-		x(files, transformers, filters, classifiers, step, folds);
-	}
-	
-	public static final void analyze() {
-		System.out.println("1-1");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-1_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-1_bodies"))).toString());
-		System.out.println("1-2");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-2_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-2_bodies"))).toString());
-		System.out.println("1-3");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-3_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-3_bodies"))).toString());
-		System.out.println("1-4");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-4_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-4_bodies"))).toString());
-		System.out.println("1-5");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-5_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-5_bodies"))).toString());
-		System.out.println("1-6");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-6_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-6_bodies"))).toString());
-		System.out.println("1-7");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-7_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_1-7_bodies"))).toString());
-		System.out.println("2-1");
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_subjects"))).toString());
-		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances_2-1_bodies"))).toString());
+	public static void main(String[] args) {
+		// do stuff
 	}
 	
 	// ------------------------------------------------------------------------
 	
-	public static final void x(ArrayList<File> files, ArrayList<ITransformer> transformers, ArrayList<IFilter> filters, ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, int step, int folds) 
-		throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static final void analyze() {
+		System.out.println("1-1");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+1+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+1+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+1+bodies"))).toString());
+		System.out.println("1-2");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+2+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+2+bodies"))).toString());
+		System.out.println("1-3");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+3+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+3+bodies"))).toString());
+		System.out.println("1-4");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+4+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+4+bodies"))).toString());
+		System.out.println("1-5");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+5+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+5+bodies"))).toString());
+		System.out.println("1-6");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+6+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+6+bodies"))).toString());
+		System.out.println("1-7");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+7+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+1+7+bodies"))).toString());
+		System.out.println("2-1");
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+2+1+subjects"))).toString());
+		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+2+1+bodies"))).toString());
+	}
+	
+	public static final void x(
+		ArrayList<File> files, 
+		ArrayList<IWeighter> transformers, 
+		ArrayList<IFilter> filters, 
+		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, 
+		int step, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		for (File file : files) {
 			System.out.println("+ processing " + file.getName());
 			InstanceList instances = InstanceList.load(file);
-			for (ITransformer transformer : transformers) {
-				System.out.println("- transformer: " + transformer.getDescription());
-				for (IFilter filter : filters) {
-					System.out.println("- filter: " + filter.getDescription());
-					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						SEAMCE.sequentialRun(file.getName(), instances, transformer, filter, trainer, step, folds);
-						Runtime.getRuntime().gc();
-					}
-				}
-			}
+			y(file.getName(), instances, transformers, filters, classifiers, step, folds);
 		}
 	}
 	
-	public static final void y(String runName, InstanceList instances, ArrayList<ITransformer> transformers, ArrayList<IFilter> filters, ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, int step, int folds) 
-		throws FileNotFoundException, InstantiationException, IllegalAccessException {
-		for (ITransformer transformer : transformers) {
+	public static final void y(
+		String runName,
+		InstanceList instances, 
+		ArrayList<IWeighter> transformers, 
+		ArrayList<IFilter> filters, 
+		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, 
+		int step, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		for (IWeighter transformer : transformers) {
 			System.out.println("- transformer: " + transformer.getDescription());
 			for (IFilter filter : filters) {
 				System.out.println("- filter: " + filter.getDescription());
@@ -212,12 +138,17 @@ public class SEAMCE {
 		}
 	}
 	
-	// ------------------------------------------------------------------------
-	
-	public static final void sequentialRun(String name, InstanceList instances, ITransformer transformer, 
-			IFilter filter, ClassifierTrainer<? extends Classifier> trainer, 
-			int step, int folds) throws FileNotFoundException, InstantiationException, IllegalAccessException 
-	{
+	// transforms, filters and classifies with cross-validation the given instances
+	// results are written out to pre-specified files
+	public static final void sequentialRun(
+		String name, 
+		InstanceList instances, 
+		IWeighter transformer, 
+		IFilter filter, 
+		ClassifierTrainer<? extends Classifier> trainer,
+		int step, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ExecutionResult r = new ExecutionResult(name, transformer.getDescription(), filter.getDescription(), ExecutionRun.getClassifierDescription(trainer));
 		
 		InstanceList transformedInstances = transformer.calculate(instances);
@@ -232,9 +163,10 @@ public class SEAMCE {
 		r.trial2out();
 		r.accuracies2out();
 	}
-	
+
+	// stores email data from database to preprocessed files
 	public static final void db2file() throws SQLException {
-		EnronDbDataAccess dal = new EnronDbDataAccess(new EnronDbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
 			for (int userId : dal.getUsers(collectionId)) {
 				// get dataset of specified collection and user
@@ -255,6 +187,7 @@ public class SEAMCE {
 		}
 	}
 	
+	// preprocess the instances of the given dataset through the given preprocessors
 	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
 		while(ds.hasNext()) {

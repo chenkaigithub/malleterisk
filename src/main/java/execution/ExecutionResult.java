@@ -67,8 +67,8 @@ public class ExecutionResult {
 					pw.write(labeling.getBestLabel() + ", ");
 					
 					// write out training set and testing set size
-					pw.write(trainLabeledInstances.labelSize(classIdx) + ".0, ");
-					pw.write(testLabeledInstances.labelSize(classIdx) + ".0, ");
+					pw.write(trainLabeledInstances.getNumLabelInstances(classIdx) + ".0, ");
+					pw.write(testLabeledInstances.getNumLabelInstances(classIdx) + ".0, ");
 					
 					// pairs of class_nN, val_nN
 					labeling = classification.getLabeling(); // ATTN: second use here, classification's labeling
@@ -106,7 +106,7 @@ public class ExecutionResult {
 			int i = 0;
 			for (Trial trial : this.trials.get(n)) {
 				pw.write(String.valueOf(trial.getAccuracy()));
-				if(i++ < trials.size()) pw.write(", ");
+				if(++i < trials.size()) pw.write(", ");
 			}
 			pw.write('\n');
 		}

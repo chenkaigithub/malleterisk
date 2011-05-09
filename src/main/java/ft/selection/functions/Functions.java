@@ -112,8 +112,8 @@ public class Functions {
 	}
 	
 	private static final SparseVector rank(LabeledInstancesList lil, int class1idx, int class2idx) {
-		InstanceList cls1instances = lil.getInstances(class1idx);
-		InstanceList cls2instances = lil.getInstances(class2idx);
+		InstanceList cls1instances = lil.getLabelInstances(class1idx);
+		InstanceList cls2instances = lil.getLabelInstances(class2idx);
 		
 		// Calculate the L0 norm value of a feature, constrained by a class.
 		// I.e. the number of documents of the given class where the feature occurs.
@@ -188,8 +188,8 @@ public class Functions {
 	
 	public static final FeatureVector fisher(InstanceList instances, int class1idx, int class2idx) {
 		LabeledInstancesList lil = new LabeledInstancesList(instances);
-		InstanceList cls1instances = lil.getInstances(class1idx);
-		InstanceList cls2instances = lil.getInstances(class2idx);
+		InstanceList cls1instances = lil.getLabelInstances(class1idx);
+		InstanceList cls2instances = lil.getLabelInstances(class2idx);
 		final double n1 = cls1instances.size();
 		final double n2 = cls2instances.size();
 		

@@ -91,7 +91,7 @@ public class CollectionAnalysis {
 	public int getMinNumDocumentsInClass() {
 		int c = -1;
 
-		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
+		for (InstanceList instances : labeledInstances.getInstances()) {
 			int i = instances.size();
 			if(c==-1 || c > i) c = i;
 		}
@@ -102,7 +102,7 @@ public class CollectionAnalysis {
 	public int getMaxNumDocumentsInClass() {
 		int c = 0;
 
-		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
+		for (InstanceList instances : labeledInstances.getInstances()) {
 			int i = instances.size();
 			if(i > c) c = i;
 		}

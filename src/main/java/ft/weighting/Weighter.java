@@ -1,8 +1,8 @@
-package ft.transformation;
+package ft.weighting;
 
 import cc.mallet.types.InstanceList;
 
-public abstract class Transformer implements ITransformer {
+public abstract class Weighter implements IWeighter {
 	@Override
 	public abstract InstanceList calculate(InstanceList instances);
 

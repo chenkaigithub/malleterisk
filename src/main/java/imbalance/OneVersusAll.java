@@ -1,14 +1,6 @@
 package imbalance;
 
-import java.util.Iterator;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import types.mallet.LabeledInstancesList;
-import cc.mallet.types.Alphabet;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import cc.mallet.types.Label;
-import cc.mallet.types.LabelAlphabet;
 
 /**
  * Implements the One vs All strategy for classification.
@@ -18,7 +10,8 @@ import cc.mallet.types.LabelAlphabet;
  * @author tt
  *
  */
-public class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceList> {
+@Deprecated
+public class OneVersusAll {/*implements Iterable<InstanceList>, Iterator<InstanceList> {
 	private final InstanceList instances;
 	private final InstanceList[] labeledInstances;
 	private int currentOneClassIndex;
@@ -27,7 +20,7 @@ public class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceLi
 	public OneVersusAll(InstanceList instances) {
 		this.instances = instances;
 		
-		this.labeledInstances = new LabeledInstancesList(instances).getLabeledInstances();
+		this.labeledInstances = new LabeledInstancesList(instances).getInstances();
 		this.currentOneClassIndex = 0;
 	}
 	
@@ -75,4 +68,5 @@ public class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceLi
 	public Iterator<InstanceList> iterator() {
 		return this;
 	}
+*/
 }

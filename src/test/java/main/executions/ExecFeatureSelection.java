@@ -1,4 +1,4 @@
-package executions;
+package main.executions;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,8 +16,8 @@ import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
 import ft.selection.methods.FilterByRankedTF;
 import ft.selection.methods.FilterByRankedVariance;
-import ft.transformation.ITransformer;
-import ft.transformation.methods.FeatureWeighting;
+import ft.weighting.IWeighter;
+import ft.weighting.methods.FeatureWeighting;
 
 public class ExecFeatureSelection {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -31,7 +31,7 @@ public class ExecFeatureSelection {
 		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
-		ArrayList<ITransformer> transformers = new ArrayList<ITransformer>();
+		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_BOOLEAN, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));

@@ -1,62 +1,73 @@
 package imbalance;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 
-import types.mallet.LabeledInstancesList;
-import cc.mallet.pipe.Noop;
-import cc.mallet.types.Alphabet;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
 /**
  * Performs class balancing using random under and oversampling.
  * 
+ * - Classes with more instances than given N are undersampled (a subset of the 
+ * instances is randomly selected).
+ * - Classes with less instances than given N are oversampled (a set of the 
+ * instances is randomly and repeatedly selected).
+ * 
+ * When undersampling, repeated instances are _added_ to the existent instances.
  * 
  * @author tt
- *
  */
-public class RandomSampler {
-	private final Alphabet featureAlphabet;
-	private final Alphabet labelAlphabet;
-	public final LabeledInstancesList labeledInstances;
+public class RandomSampler extends Balancer {
+	public static final Random r = new Random();
 	public final int minThreshold;
 	
-	public RandomSampler(InstanceList instances, int minThreshold) {
-		this.featureAlphabet = instances.getDataAlphabet();
-		this.labelAlphabet = instances.getTargetAlphabet();
-		this.labeledInstances = new LabeledInstancesList(instances, featureAlphabet, labelAlphabet);
+	public RandomSampler(int minThreshold) {
 		this.minThreshold = minThreshold;
 	}
 	
-	public InstanceList sample(int n) {
-		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
-		InstanceList newInstanceList = new InstanceList (pipe);
+	public RandomSampler(InstanceList instances, int minThreshold) {
+		super(instances);
 		
+		this.minThreshold = minThreshold;
+	}
+	
+	@Override
+	protected Collection<Instance> balanceHook(InstanceList classInstances, int n) {
+		return sample(classInstances, n);
+	}
+	
+	public Collection<Instance> sample(InstanceList classInstances, int n) {
+		// class does not have enough documents to process, discard this class (return empty collection)
+		if(classInstances.size() < this.minThreshold) return new ArrayList<Instance>();
+			
+		// random sample with reposition if size < n; otherwise, no reposition 
 		Collection<Instance> ilist;
-		for (InstanceList instances : labeledInstances.getLabeledInstances()) {
-			// class does not have enough documents to process
-			if(instances.size() < this.minThreshold) continue;
-			
-			// random sample with reposition if size < n; otherwise, no reposition 
-			if(instances.size() > n) ilist = rs(instances, n, false);
-			else ilist = rs(instances, n, true);
-			
-			for (Instance instance : ilist) newInstanceList.addThruPipe(instance);
-		}
-		
-		return newInstanceList;
+		if(classInstances.size() > n) ilist = rs(classInstances, n, false);
+		else ilist = rs(classInstances, n, true);
+		return ilist;
 	}
 	
 	private Collection<Instance> rs(InstanceList instances, int n, boolean reposition) {
 		LinkedList<Instance> sampledInstances = new LinkedList<Instance>();
-		int k = instances.size();
-		Random r = new Random();
+		int k = instances.size(); // number of samples
+		
+		// when oversampling, keep all of the original samples and only sample until (N - instances.size())
+		// this way we avoid the chance of randomly not selecting given instances
+		if(reposition) {
+			sampledInstances.addAll(instances);
+			n -= sampledInstances.size();
+		}
 		
 		for (int i = 0; i < n; i++) {
+			// grab a random sample
 			Instance instance =instances.get(r.nextInt(k));
-			if(!reposition && sampledInstances.contains(instance)) i--;
+			
+			// when sampling with no reposition, verify if it is repeated
+			// in such case, re-sample until a new one is found; finally add it
+			if(!reposition && sampledInstances.contains(instance)) i--; 
 			else sampledInstances.add(instance);
 		}
 		

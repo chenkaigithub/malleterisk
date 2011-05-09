@@ -1,4 +1,4 @@
-package ft.transformation.methods;
+package ft.weighting.methods;
 
 import java.util.TreeMap;
 
@@ -6,14 +6,14 @@ import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import ft.selection.functions.Functions;
-import ft.transformation.Transformer;
+import ft.weighting.Weighter;
 
 /**
  * Implements some feature weighting schemes, described in:
  * http://nlp.stanford.edu/IR-book/html/htmledition/document-and-query-weighting-schemes-1.html
  * https://openaccess.leidenuniv.nl/bitstream/1887/13575/8/Appendix%2BB.pdf
  */
-public class FeatureWeighting extends Transformer {
+public class FeatureWeighting extends Weighter {
 	private int tf;
 	private int idf;
 	private int normalization;

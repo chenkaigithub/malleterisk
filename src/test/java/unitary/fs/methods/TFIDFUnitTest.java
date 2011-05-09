@@ -13,8 +13,8 @@ import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import ft.selection.functions.Functions;
-import ft.transformation.ITransformer;
-import ft.transformation.methods.FeatureWeighting;
+import ft.weighting.IWeighter;
+import ft.weighting.methods.FeatureWeighting;
 
 
 public class TFIDFUnitTest {
@@ -101,7 +101,7 @@ public class TFIDFUnitTest {
 	
 	@Test
 	public void test1() {
-		ITransformer transformer = new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE);
+		IWeighter transformer = new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE);
 		InstanceList newInstances1 = transformer.calculate(instances);
 		InstanceList newInstances2 = tfidf(instances);
 		
