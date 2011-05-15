@@ -12,12 +12,14 @@ public abstract class Balancer {
 	private Alphabet featureAlphabet;
 	private Alphabet labelAlphabet;
 	public LabeledInstancesList labeledInstances;
-
-	public Balancer() {
-		
+	private final int minThreshold;
+	
+	public Balancer(int t) {
+		this.minThreshold = t;
 	}
 	
-	public Balancer(InstanceList instances) {
+	public Balancer(InstanceList instances, int t) {
+		this(t);
 		setInstances(instances);
 	}
 	
@@ -31,9 +33,13 @@ public abstract class Balancer {
 		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
 		InstanceList newInstanceList = new InstanceList (pipe);
 		
-		for (InstanceList classInstances : this.labeledInstances.getInstances())
+		for (InstanceList classInstances : this.labeledInstances.getInstances()) {
+			// class does not have enough documents to process, ignore
+			if(classInstances.size() < this.minThreshold) continue;
+
 			for (Instance instance : balanceHook(classInstances, n)) 
 				newInstanceList.addThruPipe(instance);
+		}
 		
 		return newInstanceList;
 	}

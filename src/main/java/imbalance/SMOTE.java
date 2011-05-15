@@ -28,14 +28,15 @@ public class SMOTE extends Balancer {
 	private static final Random random = new Random();
 	private final int k; // number of nearest neighbours to be used
 	
-	public SMOTE(int k) {
+	public SMOTE(int k, int t) {
+		super(t);
 		this.k = k;
 	}
 	
-	public SMOTE(InstanceList instances, int k) {
-		super(instances);
-		this.k = k;
-	}
+//	public SMOTE(InstanceList instances, int k, int t) {
+//		super(instances, t);
+//		this.k = k;
+//	}
 	
 	@Override
 	protected Collection<Instance> balanceHook(InstanceList classInstances, int n) {

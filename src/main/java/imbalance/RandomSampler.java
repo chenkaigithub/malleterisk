@@ -1,6 +1,5 @@
 package imbalance;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
@@ -22,17 +21,14 @@ import cc.mallet.types.InstanceList;
  */
 public class RandomSampler extends Balancer {
 	public static final Random r = new Random();
-	public final int minThreshold;
 	
 	public RandomSampler(int minThreshold) {
-		this.minThreshold = minThreshold;
+		super(minThreshold);
 	}
 	
-	public RandomSampler(InstanceList instances, int minThreshold) {
-		super(instances);
-		
-		this.minThreshold = minThreshold;
-	}
+//	public RandomSampler(InstanceList instances, int minThreshold) {
+//		super(instances, minThreshold);
+//	}
 	
 	@Override
 	protected Collection<Instance> balanceHook(InstanceList classInstances, int n) {
@@ -40,9 +36,6 @@ public class RandomSampler extends Balancer {
 	}
 	
 	public Collection<Instance> sample(InstanceList classInstances, int n) {
-		// class does not have enough documents to process, discard this class (return empty collection)
-		if(classInstances.size() < this.minThreshold) return new ArrayList<Instance>();
-			
 		// random sample with reposition if size < n; otherwise, no reposition 
 		Collection<Instance> ilist;
 		if(classInstances.size() > n) ilist = rs(classInstances, n, false);

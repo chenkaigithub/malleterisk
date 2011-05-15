@@ -66,4 +66,16 @@ public class LabeledInstancesList {
 	public int getNumLabelInstances(int labelIdx) {
 		return instancelists[labelIdx].size();
 	}
+	
+	public int getMaxNumInstances() {
+		int max = 0;
+		int current;
+		
+		for (InstanceList instances : instancelists) {
+			current = instances.size();
+			if(current > max) max = current;
+		}
+		
+		return max;
+	}
 }
