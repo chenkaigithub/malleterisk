@@ -1,86 +1,104 @@
 clear;
-%[file_name, path_name, filter_index] = uigetfile('*.*');
-path_name = '/Work/msc/code/seamce-test/';
-file_name = 'trial+instances+1+6+subjects+RandomSampler+1188+FeatureWeighting-TF-IDF+FilterByRankedIG+122+NaiveBayesTrainer+2011-05-08-02-21-44';
+files = uipickfiles('FilterSpec', '/Work/msc/code/results/');
 
-% load data
-data = importdata([path_name file_name], ',');
-instances = data.textdata(:, 1);
+num_samples = 20;
+step = 1/num_samples;
+num_samples = num_samples + 1; % fix this value, since fpr will be +1
+ones_aux = ones(num_samples, 1); % vector used for internal computations
 
-% format data (only retrieve specified columns)
-real_class_indices = data.data(:, 1:2);
+fpr = (0:step:1)';
+tpr_sum = zeros(num_samples,1);
+tpr_n = zeros(num_samples,1);
+tpr_max = zeros(num_samples,1); 
+tpr_min = ones(num_samples,1);
 
-% retrieve best class indices
-% values are not ordered
-l0 = data.data(:, 5:end);
-n_lines = size(l0,1);
-n_columns = size(l0, 2);
-
-for i=1:3:n_columns
-    classes = l0(:, i);
-    values = l0(:, i+2);
+figure;
+for i=1:length(files)
+    % load and format data (only retrieve specific columns)
+    data = importdata([files{i}], ',');
+    % true classes
+    real_class_indices = data.data(:, 1:2); % 1: indice, 2: label
+    % data of all classes
+    l0 = data.data(:, 5:end);
     
-    % lines that are equal to the current class
-    rp = (real_class_indices(:, 1) == classes);
-    rn = (real_class_indices(:, 1) ~= classes);
+    n_lines = size(l0,1);
+    n_columns = size(l0, 2);
 
-    for t=0.1:0.1:0.9
-        % classification results
-        p = (values >= t);
-        n = (values < t);
-        np = sum(p);
-        nn = sum(n);
+    % current file's information
+    current_file_tpr_sum = zeros(num_samples,1);
+    current_file_tpr_n = zeros(num_samples,1);
 
-        % true/false positives/negatives
-        tp = 0;
-        fn = 0;
-        fp = 0;
-        tn = 0;
+    for j=1:3:n_columns % iterate all classes
+        % get values for current class
+        class = l0(:, j);
+        values = l0(:, j+2);
 
-        
-        for l=1:n_lines
-            if rp(l) == 1
-                if p(l) == 1
-                    tp = tp + 1;
-                else
-                    fn = fn + 1;
-                end
-            else
-                if p(l) == 1
-                    fp = fp + 1;
-                else
-                    tn = tn + 1;
-                end
+        % lines that are equal to the current class
+        rp = (real_class_indices(:, 1) == class);
+        rn = (real_class_indices(:, 1) ~= class);
+
+        for k=1:n_lines% iterate all instances
+            t = values(k); % threshold
+            
+            % classification results
+            p = (values >= t);
+            n = (values < t);
+            np = sum(p);
+            nn = sum(n);
+
+            % true/false positives/negatives
+            tp = sum(rp==p & p==1);
+            fp = sum(rn==p & p==1);
+            tn = sum(rn==n & n==1);
+            fn = sum(rp==n & n==1);
+
+            x = fp / (tn + fp);
+            y = tp / (tp + fn);
+            if isnan(x)
+                x = 0;
             end
+            if isnan(y)
+                y = 0;
+            end
+            
+            % find the idx aka nearest_fpr to x
+            % calculate the difference of fpr to x and find the last indice
+            % (when the distance is the same to 2 points, use the highest value)
+            dif = abs(fpr - (ones_aux*x));
+            idx = find(dif == min(dif), 1, 'last' );
+            
+            current_file_tpr_sum(idx, 1) = current_file_tpr_sum(idx, 1) + y;
+            current_file_tpr_n(idx, 1) = current_file_tpr_n(idx, 1) + 1;
         end
-
-        x = fp / (tn + fn);
-        y = tp / (tp + fp);
-
-        plot(x, y, 'o'); hold on;
+    end
+    
+    % plot current file
+    current_file_tpr_avg = current_file_tpr_sum ./ current_file_tpr_n;
+    plot(fpr, current_file_tpr_avg);
+    hold on;
+    
+    % add to global average
+    tpr_sum = tpr_sum + current_file_tpr_sum;
+    tpr_n = tpr_n + current_file_tpr_n;
+    
+    % update max/min for errorbar
+    % this only works for more than one file
+    for j=1:num_samples
+        y = current_file_tpr_avg(j, 1);
+        
+        if y > tpr_max(j, 1)
+            tpr_max(j, 1) = y;
+        end
+        if y < tpr_min(j, 1)
+            tpr_min(j, 1) = y;
+        end
     end
 end
 
-% for i=1:3:n_columns
-%     classes = l0(:, i);
-%     values = l0(:, i+2);
-%     
-%     for t=0.1:0.1:0.9
-%         positives = values >= t;
-%         negatives = values < t;
-%         p = sum(positives); % number of positives
-%         n = sum(negatives); % number of negatives
-%         
-%         rp = (real_class_indices(:, 1) == classes); % real positives (all instances belonging to the class)
-%         rn = (real_class_indices(:, 1) ~= classes); % real negatives (all instances not belonging to the class)
-%         
-%         fp = sum(rn==positives); % number of false positives
-%         tp = p-fp; % number of true positives
-%         fn = sum(rp == negatives); % number of false negatives
-%         tn = n-fn; % number of true negatives
-%         y = tp / p;
-%         x = fp / n;
-%         
-%         plot(x, y, 'o'); hold on;
-%     end
-% end
+% compute final average
+tpr_avg = tpr_sum ./ tpr_n;
+errorbar(fpr, tpr_avg, tpr_max-tpr_min, '--s', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 10);
+%plot(fpr, tpr_avg, '--s', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 10);
+axis([0 1 0 1]); xlabel('FP Rate'); ylabel('TP Rate');
+
+

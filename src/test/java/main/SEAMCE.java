@@ -12,6 +12,7 @@ import pp.email.date.DatePreProcessor1;
 import pp.email.participants.ParticipantsPreProcessor1;
 import pp.email.subject.SubjectPreProcessor1;
 import utils.IteratedExecution;
+import utils.IteratedExecution2;
 import analysis.CollectionAnalysis;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -138,6 +139,27 @@ public class SEAMCE {
 		}
 	}
 	
+	public static final void z(
+		String runName,
+		InstanceList instances, 
+		ArrayList<IWeighter> transformers, 
+		ArrayList<IFilter> filters, 
+		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, 
+		int[] ns, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		for (IWeighter transformer : transformers) {
+			System.out.println("- transformer: " + transformer.getDescription());
+			for (IFilter filter : filters) {
+				System.out.println("- filter: " + filter.getDescription());
+				for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
+					SEAMCE.sequentialRunCustomFiltering(runName, instances, transformer, filter, trainer, ns, folds);
+					Runtime.getRuntime().gc();
+				}
+			}
+		}
+	}
+	
 	// transforms, filters and classifies with cross-validation the given instances
 	// results are written out to pre-specified files
 	public static final void sequentialRun(
@@ -155,7 +177,8 @@ public class SEAMCE {
 		for (int n : new IteratedExecution(transformedInstances.getDataAlphabet().size(), step)) {
 			InstanceList filteredInstances = filter.filter(n, transformedInstances);
 			
-			// classifier trainer must be a new instance since it might accumulate the previous alphabet 
+			// classifier trainer must be a new instance since it might accumulate the previous alphabet
+			// associate the trials to the run with 'n' features
 			r.trials.put(n, ExecutionRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
 		}
 		
@@ -163,7 +186,32 @@ public class SEAMCE {
 		r.trial2out();
 		r.accuracies2out();
 	}
-
+	
+	public static final void sequentialRunCustomFiltering(
+		String name, 
+		InstanceList instances, 
+		IWeighter transformer, 
+		IFilter filter, 
+		ClassifierTrainer<? extends Classifier> trainer,
+		int[] ns, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		ExecutionResult r = new ExecutionResult(name, transformer.getDescription(), filter.getDescription(), ExecutionRun.getClassifierDescription(trainer));
+		
+		InstanceList transformedInstances = transformer.calculate(instances);
+		for (int n : new IteratedExecution2(transformedInstances.getDataAlphabet().size(), ns)) {
+			InstanceList filteredInstances = filter.filter(n, transformedInstances);
+			
+			// classifier trainer must be a new instance since it might accumulate the previous alphabet
+			// associate the trials to the run with 'n' features
+			r.trials.put(n, ExecutionRun.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
+		}
+		
+		// write results
+		r.trial2out();
+		r.accuracies2out();
+	}
+	
 	// stores email data from database to preprocessed files
 	public static final void db2file() throws SQLException {
 		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));

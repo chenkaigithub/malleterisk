@@ -26,6 +26,7 @@ public class ExecutionRun {
 		InstanceList[] folds = null;
 		Classifier classifier = null;
 		InstanceList trainInstances, testInstances;
+		int foldCounter = 0;
 		while(cvi.hasNext()) {
 			folds = cvi.next();
 			
@@ -33,7 +34,7 @@ public class ExecutionRun {
 			testInstances = folds[1];
 			
 			classifier = trainer.train(trainInstances);
-			trials.add(new ExtendedTrial(classifier, trainInstances, testInstances));
+			trials.add(new ExtendedTrial(classifier, trainInstances, testInstances, foldCounter++));
 		}
 		
 		return trials;

@@ -12,10 +12,11 @@ import imbalance.SMOTE;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import utils.IteratedExecution;
+import java.util.Arrays;
 
 import main.SEAMCE;
+import utils.IteratedExecution;
+import utils.IteratedExecution2;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -36,34 +37,43 @@ public class ExecImbalance {
 		
 		ArrayList<Balancer> balancers = new ArrayList<Balancer>();
 		balancers.add(new RandomSampler(5));
-		balancers.add(new SMOTE(5));
+//		balancers.add(new SMOTE(5));
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
+//		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
 
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
 		filters.add(new FilterByRankedIG());
-		filters.add(new FilterByRankedVariance());
+//		filters.add(new FilterByRankedVariance());
 		
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());
 		
-		int step = 10;
 		int folds = 10;
 		
 		for (File file : files) {
-			String name = file.getName();
+			final String name = file.getName();
 			System.out.println("+ processing " + name);
 			InstanceList instances = InstanceList.load(file);
 			for (Balancer balancer : balancers) {
 				balancer.setInstances(instances);
-				name += "+" + balancer.getClass().getSimpleName();
+				final String name2 = name + "+" + balancer.getClass().getSimpleName();
 				IteratedExecution itex = new IteratedExecution(instances.size(), 10);
 				for (Integer n : itex) {
-					System.out.println("- balancing with " + name + ": " + n);
-					SEAMCE.y(name + "+" + n, balancer.balance(n), transformers, filters, classifiers, step, folds);
-					break;
+					System.out.println("- balancing with " + name2 + ": " + n);
+					
+					SEAMCE.z(
+						name2 + "+" + n, 
+						balancer.balance(n), 
+						transformers, 
+						filters, 
+						classifiers, 
+						Arrays.copyOfRange(IteratedExecution2.generatePercentages(10), 7, 10), 
+						folds
+					);
+					
+//					break;
 				}
 			}
 		}

@@ -45,7 +45,7 @@ public class ExecutionResult {
 		
 		for (Integer n : this.trials.keySet()) {
 			for (ExtendedTrial trial : this.trials.get(n)) {
-				FileOutputStream out = new FileOutputStream(getTrialOutName(n));
+				FileOutputStream out = new FileOutputStream(getTrialOutName(trial, n));
 				PrintWriter pw = new PrintWriter(out);
 				
 				LabeledInstancesList trainLabeledInstances = trial.getTrainLabeledInstances();
@@ -115,7 +115,7 @@ public class ExecutionResult {
 		pw.close();
 	}
 	
-	private String getTrialOutName(int n) {
+	private String getTrialOutName(ExtendedTrial trial, int n) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("trial");
 		sb.append("+");
@@ -130,11 +130,15 @@ public class ExecutionResult {
 		sb.append(this.classifier);
 		sb.append("+");
 		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
-//		sb.append("+");
-//		sb.append(UUID.randomUUID());
+		sb.append("+");
+		sb.append("fold");
+		sb.append("+");
+		sb.append(trial.fold);
 		
 		return sb.toString();
 	}
+	
+	private int accuracyCounter = 0;
 	
 	private String getAccuraciesOutName() {
 		StringBuffer sb = new StringBuffer();
@@ -149,8 +153,8 @@ public class ExecutionResult {
 		sb.append(this.classifier);
 		sb.append("+");
 		sb.append(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(this.datetime));
-//		sb.append("+");
-//		sb.append(UUID.randomUUID());
+		sb.append("+");
+		sb.append(accuracyCounter++);
 		
 		return sb.toString();
 	}

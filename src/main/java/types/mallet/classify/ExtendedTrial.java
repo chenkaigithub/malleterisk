@@ -10,14 +10,16 @@ public class ExtendedTrial extends Trial {
 	
 	private final InstanceList trainInstances;
 	private final InstanceList testInstances;
-
+	public final int fold;
+	
 	private LabeledInstancesList trainLabeledInstances;
 	private LabeledInstancesList testLabeledInstances;
 	
-	public ExtendedTrial(Classifier c, InstanceList trainInstances, InstanceList testInstances) {
+	public ExtendedTrial(Classifier c, InstanceList trainInstances, InstanceList testInstances, int fold) {
 		super(c, testInstances);
 		this.trainInstances = trainInstances;
 		this.testInstances = testInstances;
+		this.fold = fold;
 	}
 	
 	public LabeledInstancesList getTrainLabeledInstances() {
