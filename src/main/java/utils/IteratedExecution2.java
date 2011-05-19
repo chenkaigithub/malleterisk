@@ -19,6 +19,7 @@ import java.util.Iterator;
  *
  */
 public class IteratedExecution2 implements Iterator<Integer>, Iterable<Integer> {
+	// generates values in ascending mode
 	public static final int[] generatePercentages(int step) {
 		if(step > 100) throw new InvalidParameterException("Step cannot be over 100.");
 		int counter = 0;

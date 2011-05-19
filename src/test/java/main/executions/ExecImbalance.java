@@ -70,7 +70,7 @@ public class ExecImbalance {
 
 				// setup number of features to be used in feature selection
 				int[] featurePcts = IteratedExecution2.generatePercentages(10);
-				featurePcts = Arrays.copyOfRange(featurePcts, 7, 10); // 7, 8, 9
+				featurePcts = Arrays.copyOfRange(featurePcts, 0, 3); // 10%, 20%, 30%
 				for (int fp : featurePcts) System.out.println("feature %: " + fp);
 				
 				for (int ns : new IteratedExecution2(balancer.labeledInstances.getMaxNumInstances(), samplePcts)) {

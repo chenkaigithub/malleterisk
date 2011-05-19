@@ -1,5 +1,12 @@
+% plots the ROC curve for a set of trials
+% for each file, for each threshold, for each class 
+% the tp/fp/tn/fn values are calculated
+% threshold values are averaged into the nearest step value
+% the end result is a set of N graphs, each corresponding to a trial
+% the set of N graphs is averaged into one single ROC curve
+
 clear;
-files = uipickfiles('FilterSpec', '/Work/msc/code/results/');
+files = uipickfiles('FilterSpec', '/Work/msc/code/seamce-test/tests-subset');
 
 num_samples = 20;
 step = 1/num_samples;
@@ -100,5 +107,3 @@ tpr_avg = tpr_sum ./ tpr_n;
 errorbar(fpr, tpr_avg, tpr_max-tpr_min, '--s', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 10);
 %plot(fpr, tpr_avg, '--s', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 10);
 axis([0 1 0 1]); xlabel('FP Rate'); ylabel('TP Rate');
-
-
