@@ -1,7 +1,7 @@
 package tests.fs.methods;
 
 
-public class FilterByRankedDTest {
+public class FilterByRankedDFTest {
 //	private InstanceList instances;
 //	private int threshold;
 //	
