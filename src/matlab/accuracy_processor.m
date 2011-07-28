@@ -10,11 +10,7 @@ colors = [0.6 0.6 0.6; 0.3 0.3 0.3; 0 0.6 0.6; 0.8 0.6 0.2; 0 0 1; 0 1 0; 1 0 0;
 num_colors = length(colors);
 figure
 for i = 1:num_files
-<<<<<<< HEAD
-    indices = find(files{i} == '\');
-=======
     indices = find(files{i} == '/');
->>>>>>> b46e61be82c2640de45898f738d0796416a6f0e7
     file_name = files{i}(indices(length(indices))+1:end);
     
     % load file into [feature, runs] matrix

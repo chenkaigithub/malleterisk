@@ -1,7 +1,7 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 
-public class TDIUnitTest {
+public class TDITest {
 //	private InstanceList instances;
 //	
 //	@Before

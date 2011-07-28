@@ -103,6 +103,7 @@ public class SEAMCE {
 		System.out.println(new CollectionAnalysis(InstanceList.load(new File("instances+2+1+bodies"))).toString());
 	}
 	
+	// this method just iterates over the files and deserializes the InstanceLists.
 	public static final void x(
 		ArrayList<File> files, 
 		ArrayList<IWeighter> transformers, 
@@ -118,6 +119,7 @@ public class SEAMCE {
 		}
 	}
 	
+	// iterates over the IWeighters, IFilters and classifiers and issues a single execution order.
 	public static final void y(
 		String runName,
 		InstanceList instances, 
@@ -139,6 +141,7 @@ public class SEAMCE {
 		}
 	}
 	
+	// Used by class imbalance. Uses custom filtering.
 	public static final void z(
 		String runName,
 		InstanceList instances, 
@@ -160,7 +163,7 @@ public class SEAMCE {
 		}
 	}
 	
-	// transforms, filters and classifies with cross-validation the given instances
+	// transforms, filters (with several feature selection levels) and classifies with cross-validation the given instances
 	// results are written out to pre-specified files
 	public static final void sequentialRun(
 		String name, 
@@ -187,6 +190,8 @@ public class SEAMCE {
 		r.accuracies2out();
 	}
 	
+	// Used when custom steps (int[] ns) are needed in the feature selection stage.
+	// Everything else is identical to sequentialRun.
 	public static final void sequentialRunCustomFiltering(
 		String name, 
 		InstanceList instances, 

@@ -1,7 +1,7 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 
-public class FilterByRankedDFUnitTest {
+public class FilterByRankedDTest {
 //	private InstanceList instances;
 //	private int threshold;
 //	

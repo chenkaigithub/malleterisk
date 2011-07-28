@@ -5,7 +5,7 @@ import cc.mallet.types.RankedFeatureVector;
 import ft.selection.Filter;
 import ft.selection.functions.Functions;
 
-public class FilterByRankedTF extends Filter {
+public class FilterByRankedTW extends Filter {
 	@Override
 	protected RankedFeatureVector calculate(InstanceList instances) {
 		return Functions.ttf(instances);

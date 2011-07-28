@@ -1,4 +1,4 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 import java.io.File;
 import java.util.TreeMap;
@@ -17,7 +17,7 @@ import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
 
 
-public class TFIDFUnitTest {
+public class TFIDFTest {
 	private InstanceList instances;
 	
 	@Before

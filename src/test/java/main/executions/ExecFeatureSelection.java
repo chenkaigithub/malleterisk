@@ -14,7 +14,7 @@ import ft.selection.methods.FilterByRankedFisher;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedL0Norm1;
 import ft.selection.methods.FilterByRankedL0Norm2;
-import ft.selection.methods.FilterByRankedTF;
+import ft.selection.methods.FilterByRankedTW;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
@@ -37,7 +37,7 @@ public class ExecFeatureSelection {
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
 
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
-		filters.add(new FilterByRankedTF());
+		filters.add(new FilterByRankedTW());
 		filters.add(new FilterByRankedDF());
 		filters.add(new FilterByRankedIG());
 		filters.add(new FilterByRankedVariance());

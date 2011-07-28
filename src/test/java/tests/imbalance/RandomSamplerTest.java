@@ -1,8 +1,8 @@
-package unitary.imbalance;
+package tests.imbalance;
 
 import java.io.FileNotFoundException;
 
-public class RandomSamplerUnitTest {
+public class RandomSamplerTest {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 //		String runName = "instances+1+1+bodies";
 //		InstanceList instances = InstanceList.load(new File(runName));

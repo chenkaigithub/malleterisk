@@ -1,7 +1,7 @@
-package unitary.imbalance;
+package tests.imbalance;
 
 
-public class SMOTEUnitTest {
+public class SMOTETest {
 //	private int k;
 //	private InstanceList instances;
 //		

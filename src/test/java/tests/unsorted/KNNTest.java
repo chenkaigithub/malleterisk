@@ -1,4 +1,4 @@
-package unitary.unsorted;
+package tests.unsorted;
 
 
 import java.io.File;
@@ -11,7 +11,7 @@ import classifiers.KNN;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
-public class KNNUnitTest {
+public class KNNTest {
 	private int k;
 	private InstanceList instances;
 		

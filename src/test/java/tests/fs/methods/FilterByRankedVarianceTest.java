@@ -1,8 +1,9 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 
-public class FilterByRankedVarianceUnitTest {
-//	public static final void main(String[] args) {
+
+public class FilterByRankedVarianceTest {
+	public static final void main(String[] args) {
 //		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
 //		Alphabet features = instances.getDataAlphabet();
 //		((FeatureVector)instances.get(4).getData()).setValue(11, 10);
@@ -17,7 +18,7 @@ public class FilterByRankedVarianceUnitTest {
 //		while(it.hasNext()) {
 //			int idx = alphabet.lookupIndex(it.next());
 //			
-//			double v = Functions.variance(idx, instances);
+//			double v = Functions.variance(instances);
 //			if(v!=0.0) System.out.println("v: "+idx+"="+v);
 //		}
 //		
@@ -29,5 +30,5 @@ public class FilterByRankedVarianceUnitTest {
 //			int[] indices = v.getIndices();
 //			for (Object o : features.lookupObjects(indices)) System.out.println(o);
 //		}
-//	}
+	}
 }

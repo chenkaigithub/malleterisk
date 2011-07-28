@@ -14,6 +14,11 @@ public abstract class Balancer {
 	public LabeledInstancesList labeledInstances;
 	private final int minThreshold;
 	
+	/**
+	 * 
+	 * @param t The minimum threshold number that classes must satisfy 
+	 * (i.e. minimum number of documents a class should have in order to be considered).
+	 */
 	public Balancer(int t) {
 		this.minThreshold = t;
 	}
@@ -29,6 +34,11 @@ public abstract class Balancer {
 		this.labeledInstances = new LabeledInstancesList(instances, featureAlphabet, labelAlphabet);
 	}
 	
+	/**
+	 * 
+	 * @param n		The desired balance value (number of documents that all classes should have).
+	 * @return		Balanced instancelist
+	 */
 	public InstanceList balance(int n) {
 		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
 		InstanceList newInstanceList = new InstanceList (pipe);

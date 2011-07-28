@@ -1,4 +1,4 @@
-package unitary.unsorted;
+package tests.unsorted;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import utils.IteratedExecution;
 import utils.IteratedExecution2;
 
 
-public class IteratedExecutionUnitTest {
+public class IteratedExecutionTest {
 	@Test
 	public void testIE1() {
 		IteratedExecution ie = new IteratedExecution(1000, 10);

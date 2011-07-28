@@ -1,7 +1,7 @@
-package unitary.imbalance;
+package tests.imbalance;
 
 
-public class OneVersusAllUnitTest {
+public class OneVersusAllTest {
 /*	private InstanceList instances;
 	private LabeledInstancesList lil;
 	

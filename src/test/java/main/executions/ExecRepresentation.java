@@ -10,7 +10,7 @@ import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
-import ft.selection.methods.FilterByRankedTF;
+import ft.selection.methods.FilterByRankedTW;
 import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
 
@@ -36,7 +36,7 @@ public class ExecRepresentation {
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_COSINE));		// ltc
 		
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
-		filters.add(new FilterByRankedTF());
+		filters.add(new FilterByRankedTW());
 		filters.add(new FilterByRankedIG());
 		
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();

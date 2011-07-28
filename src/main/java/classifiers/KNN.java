@@ -9,6 +9,7 @@ import cc.mallet.types.Metric;
 import cc.mallet.types.NormalizedDotProductMetric;
 
 public class KNN {
+	// TODO: extract cosine (either receive the metric in the method or in a ctor)
 	private static final Metric cosine = new NormalizedDotProductMetric();
 	
 	public static Instance[] knn(int k, Instance instance, InstanceList instances) {

@@ -1,8 +1,8 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 
 
-public class FilterByRankedFisherUnitTest {
+public class FilterByRankedFisherTest {
 //	public static final void main(String[] args) {
 //		InstanceList instances = InstanceList.load(new File("instances_0-0_tests"));
 //		Alphabet features = instances.getDataAlphabet();

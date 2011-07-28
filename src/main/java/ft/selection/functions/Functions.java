@@ -256,31 +256,4 @@ public class Functions {
 		for(double d : m.getValues()) s+= d;
 		return s;
 	}
-	
-	//
-	// 
-	//
-	
-	// TODO:
-	// CTD (categorical descriptor term)
-	// SCIW (strong class information word)
-	// TS (term strength)
-	// CHI
-	// TC (term contribution)
-	
-	/*
-		f(ti, dj) = tf(ti,dj) * log(N / df(ti, dj))
-		sim(di, dj) = sum[i ... m] ( f(t, di) * f(t, dj) )
-		
-		TC(tk) = sum[i, j] ( f(tk, di) * f(tk, dj) )
-		
-		TVQ:
-		q(ti) = (sum[j=1 .. n] fij^2) - (1/n)(sum[j=1 .. n] fij)^2
-		n = number of documents in which t occurs at least once
-		fij >= 1
-		j=1 ... n
-		
-		TV:
-		v(ti) = sum[j=1 .. N] (fij - avg_fi)^2
-	 */
 }

@@ -1,7 +1,7 @@
-package unitary.fs.methods;
+package tests.fs.methods;
 
 
-public class FilterByRankedL0Norm2UnitTest {
+public class FilterByRankedL0Norm2Test {
 //	private static final InstanceList originalInstances = InstanceList.load(new File("ilBody.txt"));
 //	
 //	private int numFeaturesToKeep;
