@@ -1,5 +1,9 @@
-MSc Thesis. Under Development.
+MSc Thesis code (Learning methods for Automatic Email Message Tagging). 
+Under Development.
 
-A <strike>framework</strike> library built on top of Mallet (http://mallet.cs.umass.edu/) for automatic email tagging.
-
+A library (can be seen as an extension of) built with Mallet (http://mallet.cs.umass.edu/).
 It still has alot of garbage, tangled code and many things to be implemented.
+
+Currently: contains some feature weighting and feature selection methods, class balancing methods (basic) and some more miscellanous stuff
+Planned: keyword extraction methods, peoplefier, wrappers for some classifiers, etc yada yada
+
