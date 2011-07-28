@@ -7,6 +7,7 @@
   <!--++++++++++ Properties ++++++++++-->
   <property name="src-main" location="src/main/java"/>
   <property name="src-test" location="src/test/java"/>
+  <property name="structlearn" location="src/structlearn"/>
   <property name="target"  location="target"/>
   <property name="target-classes"  location="target/classes"/>
   <property name="target-test-classes"  location="target/test-classes"/>
@@ -55,6 +56,25 @@
     </javac>
     <copy todir="${target-classes}">
       <fileset dir="${src-main}">
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </target>
+
+
+  <target name="compile-structlearn" depends="init"
+        description="Compiles the main source" >
+
+    <javac debug="true"
+           srcdir="${structlearn}"
+		   destdir="${target-classes}"
+           includeantruntime="false">
+      <classpath>
+        <path refid="main.extlibs.class.path" />
+      </classpath>
+    </javac>
+    <copy todir="${target-classes}">
+      <fileset dir="${structlearn}">
         <include name="**/*.properties"/>
       </fileset>
     </copy>
