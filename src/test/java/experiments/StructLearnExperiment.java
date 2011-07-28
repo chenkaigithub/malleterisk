@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import main.SEAMCE;
+import struct.classification.KBestMiraClassifierTrainer;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import ft.selection.IFilter;
@@ -13,6 +14,7 @@ import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
 
 public class StructLearnExperiment {
+	// http://www.seas.upenn.edu/~strctlrn/StructLearn/StructLearn.html
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+bodies"));
@@ -24,7 +26,7 @@ public class StructLearnExperiment {
 		filters.add(new FilterByRankedIG());
 
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
-//		classifiers.add(new KBestMiraClassifierTrainer(5));
+		classifiers.add(new KBestMiraClassifierTrainer(5));
 
 		int step = 10;
 		int folds = 10;

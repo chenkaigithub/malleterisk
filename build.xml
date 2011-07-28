@@ -1,15 +1,16 @@
 <project name="seamce" default="test" basedir=".">
-
   <description>
     Ant build file for SEAMCE project.
   </description>
 
   <!--++++++++++ Properties ++++++++++-->
+  
   <property name="src-main" location="src/main/java"/>
   <property name="src-test" location="src/test/java"/>
-  <property name="structlearn" location="src/structlearn"/>
+  
   <property name="target"  location="target"/>
-  <property name="target-classes"  location="target/classes"/>
+  
+  <property name="target-main"  location="target/main"/>
   <property name="target-test-classes"  location="target/test-classes"/>
   <property name="target-test-reports"	location="target/test-reports"/>
 
@@ -29,76 +30,48 @@
   <!--++++++++++ Targets ++++++++++-->
 
   <target name="init" description ="Creates the target folders">
-    <mkdir dir="${target-classes}"/>
+    <mkdir dir="${target-main}"/>
     <mkdir dir="${target-test-classes}"/>
     <mkdir dir="${target-test-reports}"/>
   </target>
-
-
+  
+  
   <target name="clean" description="Removes the target folders" >
-    <!--delete dir="${target}" excludes="applications" verbose="true"/-->
   	<delete includeEmptyDirs="true" failonerror="false" verbose="true" >
   	    <fileset dir="${target}" defaultexcludes="false"/>
     </delete>
   </target>
-
-
-  <target name="compile-main" depends="init"
-        description="Compiles the main source" >
-
-    <javac debug="true"
-           srcdir="${src-main}"
-           destdir="${target-classes}"
-           includeantruntime="false">
+  
+  
+  <target name="compile-main" depends="init" description="Compiles the main source" >
+    <javac debug="true" srcdir="${src-main}" destdir="${target-main}" includeantruntime="false">
       <classpath>
         <path refid="main.extlibs.class.path" />
       </classpath>
     </javac>
-    <copy todir="${target-classes}">
+	
+    <copy todir="${target-main}">
       <fileset dir="${src-main}">
         <include name="**/*.properties"/>
       </fileset>
     </copy>
   </target>
-
-
-  <target name="compile-structlearn" depends="init"
-        description="Compiles the main source" >
-
-    <javac debug="true"
-           srcdir="${structlearn}"
-		   destdir="${target-classes}"
-           includeantruntime="false">
+  
+  
+  <target name="compile-test" depends="compile-main" description="Compiles the test source" >
+    <javac debug="true" debugLevel="source" srcdir="${src-test}" destdir="${target-test-classes}" includeantruntime="true">
       <classpath>
-        <path refid="main.extlibs.class.path" />
-      </classpath>
-    </javac>
-    <copy todir="${target-classes}">
-      <fileset dir="${structlearn}">
-        <include name="**/*.properties"/>
-      </fileset>
-    </copy>
-  </target>
-
-
-  <target name="compile-test" depends="compile-main"
-        description="Compiles the test source" >
-    <javac  debug="true"
-            debugLevel="source"
-            srcdir="${src-test}"
-            destdir="${target-test-classes}"
-            includeantruntime="true">
-      <classpath>
-        <pathelement location="${target-classes}"/>
+        <pathelement location="${target-main}"/>
         <path refid="test.extlibs.class.path" />
       </classpath>
     </javac>
   </target>
 
+
   <target name="test" depends="compile-test" description="Runs the tests">
     <junit printsummary="yes" haltonfailure="true" showoutput="true" >
       <classpath>
-        <pathelement location="${target-classes}"/>
+        <pathelement location="${target-main}"/>
         <pathelement location="${target-test-classes}"/>
         <path refid="test.extlibs.class.path" />
       </classpath>
@@ -113,5 +86,5 @@
         <formatter type="plain" usefile="false" />
       </batchtest>
     </junit>
-  </target>    
+  </target>
 </project>
