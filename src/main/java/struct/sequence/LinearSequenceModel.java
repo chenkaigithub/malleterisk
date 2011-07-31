@@ -63,19 +63,16 @@ public class LinearSequenceModel extends Transducer {
 
 	@Override
 	public int numStates() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
 	public State getState(int index) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public Iterator initialStateIterator() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

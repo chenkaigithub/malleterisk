@@ -151,7 +151,7 @@ public class KBestMiraClassifierTrainer extends ClassifierTrainer {
 	
 	private ClassificationInstance[] readData(InstanceList iList) throws IOException {
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<ClassificationInstance> lt = new LinkedList<ClassificationInstance>();
 		
 		logger.info("Creating feature vectors and/or forests ...");
 		
@@ -171,7 +171,7 @@ public class KBestMiraClassifierTrainer extends ClassifierTrainer {
 		}				
 		ClassificationInstance[] si = new ClassificationInstance[lt.size()];
 		for(int i = 0; i < si.length; i++) {
-			si[i] = (ClassificationInstance)lt.get(i);
+			si[i] = lt.get(i);
 		}
 		
 		return si;

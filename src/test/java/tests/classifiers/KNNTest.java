@@ -1,4 +1,4 @@
-package tests.unsorted;
+package tests.classifiers;
 
 
 import java.io.File;
