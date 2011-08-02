@@ -1,5 +1,7 @@
 package classifiers;
 
+import java.util.Arrays;
+
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.FeatureVector;
@@ -30,7 +32,7 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
 	private double cost = 1;
 	private double bias = 1;
     
-	private boolean normalize = false;
+	private boolean normalize = true;
 	private boolean estimateProbability = true;
 	
     private int[] weightLabel = new int[0];
@@ -104,8 +106,7 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
 
 	@Override
 	public Classifier train(InstanceList trainingSet) {
-		if(normalize)
-			; //normalizeInstances(trainingSet)
+		if(normalize) normalizeInstances(trainingSet);
 		
 		int nInsts = trainingSet.size();
 		
@@ -130,6 +131,31 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
 		this.classifier = new LibLinear(this);
 		
 		return this.classifier;
+	}
+
+	private void normalizeInstances(InstanceList trainingSet) {
+		int n = trainingSet.getDataAlphabet().size();
+		double[] mins = new double[n];
+		double[] maxs = new double[n];
+		Arrays.fill(mins, Double.NaN);
+		Arrays.fill(maxs, Double.NaN);
+		
+		for (Instance instance : trainingSet) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			for(int i : fv.getIndices()) {
+				double v = fv.value(i);
+				
+				if(Double.isNaN(mins[i])) mins[i] = maxs[i] = v;
+				else if(v < mins[i]) mins[i] = v;
+				else if(v > maxs[i]) maxs[i] = v;
+			}
+		}
+		
+		for (Instance instance : trainingSet) {
+			FeatureVector fv = (FeatureVector) instance.getData();
+			for(int i : fv.getIndices())
+				fv.setValue(i, (fv.value(i)-mins[i]) / (maxs[i]-mins[i]));
+		}
 	}
 
 	// helpers

@@ -19,7 +19,7 @@ import ft.weighting.methods.FeatureWeighting;
 public class LibLinearExperiment {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
-		files.add(new File("instances+1+2+bodies"));
+		files.add(new File("instances+1+1+bodies"));
 
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
@@ -33,7 +33,7 @@ public class LibLinearExperiment {
 		for (File file : files) {
 			System.out.println("+ processing " + file.getName());
 			InstanceList instances = InstanceList.load(file);
-			instances = instances.subList(0, 100);
+			instances = instances.subList(0, 10);
 			
 			for (IWeighter transformer : transformers) {
 				System.out.println("- transformer: " + transformer.getDescription());

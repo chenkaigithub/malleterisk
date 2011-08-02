@@ -1,22 +1,8 @@
 package experiments;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-import struct.classification.KBestMiraClassifierTrainer;
-import utils.IteratedExecution;
-import cc.mallet.classify.Classifier;
-import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.types.InstanceList;
-import execution.ExecutionResult;
-import execution.ExecutionRun;
-import ft.selection.IFilter;
-import ft.selection.methods.FilterByRankedIG;
-import ft.weighting.IWeighter;
-import ft.weighting.methods.FeatureWeighting;
 
 public class StructLearnExperiment {
+	/*
 	// http://www.seas.upenn.edu/~strctlrn/StructLearn/StructLearn.html
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
@@ -67,4 +53,5 @@ public class StructLearnExperiment {
 			}
 		}
 	}
+	*/
 }
