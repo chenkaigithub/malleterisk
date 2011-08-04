@@ -19,7 +19,7 @@ import struct.types.*;
 public class THJAUpdator implements OnlineUpdator {
 	
 	private int K = 2;
-	private ArrayList distances;
+	private ArrayList<SLFeatureVector> distances;
 	private ArrayList margins;
 	
 	public THJAUpdator() {

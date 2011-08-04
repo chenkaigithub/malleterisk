@@ -1,6 +1,6 @@
-<project name="seamce" default="test" basedir=".">
+<project name="malleterisk" default="test" basedir=".">
   <description>
-    Ant build file for SEAMCE project.
+    Ant build file for malleterisk project.
   </description>
 
   <!--++++++++++ Properties ++++++++++-->

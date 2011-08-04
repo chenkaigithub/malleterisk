@@ -8,6 +8,7 @@ import cc.mallet.types.InstanceList;
 import cc.mallet.types.Metric;
 import cc.mallet.types.NormalizedDotProductMetric;
 
+// TODO: KNNTrainer and KNN, extends Trainer, etc
 public class KNN {
 	// TODO: extract cosine (either receive the metric in the method or in a ctor)
 	private static final Metric cosine = new NormalizedDotProductMetric();

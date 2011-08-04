@@ -32,7 +32,7 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
 	private double cost = 1;
 	private double bias = 1;
     
-	private boolean normalize = true;
+	private boolean normalize = false;
 	private boolean estimateProbability = true;
 	
     private int[] weightLabel = new int[0];

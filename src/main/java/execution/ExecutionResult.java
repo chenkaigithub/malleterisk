@@ -103,10 +103,13 @@ public class ExecutionResult {
 		for (Integer n : this.trials.keySet()) {
 			pw.write(n.toString());
 			pw.write(", ");
+			
+			Collection<ExtendedTrial> trialsN = this.trials.get(n);
 			int i = 0;
-			for (Trial trial : this.trials.get(n)) {
+			int ts = trialsN.size();
+			for (Trial trial : trialsN) {
 				pw.write(String.valueOf(trial.getAccuracy()));
-				if(++i < trials.size()) pw.write(", ");
+				if(++i < ts) pw.write(", ");
 			}
 			pw.write('\n');
 		}
