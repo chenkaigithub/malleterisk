@@ -77,7 +77,7 @@ public class HandWritDataManager implements DataManager {
 		String line = in.readLine();
 		String tags_line = in.readLine();
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<SequenceInstance> lt = new LinkedList<SequenceInstance>();
 		
 		ObjectOutputStream out = 
 			createFeatureFile ? new ObjectOutputStream(new FileOutputStream(file+".feats")) : null;
@@ -105,7 +105,7 @@ public class HandWritDataManager implements DataManager {
 				toks = toks_new;
 				tags = tags_new;
 				
-				LinkedList[] predicates = getPredicates(toks);
+				LinkedList<?>[] predicates = getPredicates(toks);
 				SLFeatureVector fv = 
 					createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));	
 				fv.sort();
@@ -184,7 +184,7 @@ public class HandWritDataManager implements DataManager {
 		tagAlphabet.lookupIndex("O");
 	}	
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String prev, String next,
 			SLFeatureVector fv) {
 		
@@ -194,7 +194,7 @@ public class HandWritDataManager implements DataManager {
 		return fv;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String next,
 			SLFeatureVector fv) {
 		
@@ -211,7 +211,7 @@ public class HandWritDataManager implements DataManager {
 		return fv;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList[] predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?>[] predicates,
 			String[] tags,
 			SLFeatureVector fv) {
 		
@@ -223,10 +223,11 @@ public class HandWritDataManager implements DataManager {
 		return fv;
 	}
 	
-	public  LinkedList[] getPredicates(String[] toks) {
-		LinkedList[] predicates = new LinkedList[toks.length];
+	public  LinkedList<?>[] getPredicates(String[] toks) {
+		@SuppressWarnings("unchecked")
+		LinkedList<String>[] predicates = new LinkedList[toks.length];
 		for(int i = 0; i < toks.length; i++) {
-			predicates[i] = new LinkedList();
+			predicates[i] = new LinkedList<String>();
 			String[] ts = toks[i].split(" ");
 			for(int j = 0; j < ts.length; j++)
 				predicates[i].add(ts[j]);
@@ -249,7 +250,8 @@ public class HandWritDataManager implements DataManager {
 		SequenceInstance.setDataAlphabet(dataAlphabet);
 	}
 	
-	private void createForest(SequenceInstance inst, LinkedList[] predicates, ObjectOutputStream out) {
+	private void createForest(SequenceInstance inst, LinkedList<?>[] predicates, ObjectOutputStream out) {
+		@SuppressWarnings("unused")
 		String[] toks = inst.getInput().sentence;
 		
 		try {

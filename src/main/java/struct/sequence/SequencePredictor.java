@@ -167,33 +167,33 @@ public class SequencePredictor extends Predictor {
 			return -1;
 		}
 		
-		private double getProb(int n, int e) {
-			return getProb(n,e,0);
-		}
+//		private double getProb(int n, int e) {
+//			return getProb(n,e,0);
+//		}
 		
-		private double getProb(int n, int e, int i) {
-			if(chart[n][e][i] != null)
-				return chart[n][e][i].prob;
-			return Double.NEGATIVE_INFINITY;
-		}
+//		private double getProb(int n, int e, int i) {
+//			if(chart[n][e][i] != null)
+//				return chart[n][e][i].prob;
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
-		private double[] getProbs(int n, int e) {
-			double[] result = new double[K];
-			for(int i = 0; i < K; i++)
-				result[i] =
-					chart[n][e][i] != null ? chart[n][e][i].prob : Double.NEGATIVE_INFINITY;
-					return result;
-		}
+//		private double[] getProbs(int n, int e) {
+//			double[] result = new double[K];
+//			for(int i = 0; i < K; i++)
+//				result[i] =
+//					chart[n][e][i] != null ? chart[n][e][i].prob : Double.NEGATIVE_INFINITY;
+//					return result;
+//		}
 		
-		private SequenceItem getItem(int n, int e) {
-			return getItem(n,e,0);
-		}
+//		private SequenceItem getItem(int n, int e) {
+//			return getItem(n,e,0);
+//		}
 		
-		private SequenceItem getItem(int n, int e, int i) {
-			if(chart[n][e][i] != null)
-				return chart[n][e][i];
-			return null;
-		}
+//		private SequenceItem getItem(int n, int e, int i) {
+//			if(chart[n][e][i] != null)
+//				return chart[n][e][i];
+//			return null;
+//		}
 		
 		private SequenceItem[] getItems(int n, int e) {
 			if(chart[n][e][0] != null)
@@ -261,7 +261,8 @@ public class SequencePredictor extends Predictor {
 	 */
 	private class SequenceItem {
 		
-		private int n,e;
+//		private int n;
+		private int e;
 		private double prob;
 		private SLFeatureVector fv;
 		private SequenceItem prev;
@@ -270,7 +271,7 @@ public class SequencePredictor extends Predictor {
 				double prob, SLFeatureVector fv,
 				SequenceItem prev) {
 			
-			this.n = n;
+//			this.n = n;
 			this.e = e;
 			this.prob = prob;
 			this.fv = fv;

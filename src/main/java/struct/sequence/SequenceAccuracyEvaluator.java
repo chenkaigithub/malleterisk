@@ -60,6 +60,7 @@ public class SequenceAccuracyEvaluator implements SLEvaluator {
 			int nP = 5;
 			SequencePrediction prediction = (SequencePrediction)predictor.decode(inst,feats,nP);
 			
+			@SuppressWarnings("unused")
 			String res = "";
 			int nC = -1;
 			int nT = 0;

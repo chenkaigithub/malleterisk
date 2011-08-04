@@ -1,7 +1,5 @@
 package imbalance;
 
-
-
 /**
  * Implements the One vs All strategy for classification.
  * The collection is iterated and each iteration, a different class is picked as the "One",

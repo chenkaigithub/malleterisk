@@ -45,8 +45,8 @@ public class SequenceEvaluator implements SLEvaluator {
 	 * @see struct.types.Evaluator#evaluate(struct.types.Instance[], struct.alg.Predictor)
 	 */
 	public void evaluate(SLInstance[] data, Predictor predictor) {
-		TObjectIntHashMap sufMap = new TObjectIntHashMap();
-		TIntObjectHashMap revSufMap = new TIntObjectHashMap();
+		TObjectIntHashMap<String> sufMap = new TObjectIntHashMap<String>();
+		TIntObjectHashMap<String> revSufMap = new TIntObjectHashMap<String>();
 		
 		int nn = 0;
 		for(int i = 0; i < tagAlphabet.size(); i++) {
@@ -194,8 +194,8 @@ public class SequenceEvaluator implements SLEvaluator {
 	 * @see struct.types.Evaluator#evaluate(struct.types.Instance[], struct.alg.Predictor, java.lang.String)
 	 */
 	public void evaluate(SLInstance[] data, Predictor predictor, String featureFile) throws IOException {
-		TObjectIntHashMap sufMap = new TObjectIntHashMap();
-		TIntObjectHashMap revSufMap = new TIntObjectHashMap();
+		TObjectIntHashMap<String> sufMap = new TObjectIntHashMap<String>();
+		TIntObjectHashMap<String> revSufMap = new TIntObjectHashMap<String>();
 		
 		int nn = 0;
 		for(int i = 0; i < tagAlphabet.size(); i++) {

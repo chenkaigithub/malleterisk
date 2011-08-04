@@ -72,7 +72,7 @@ public class LinearSequenceModel extends Transducer {
 	}
 	
 	@Override
-	public Iterator initialStateIterator() {
+	public Iterator<?> initialStateIterator() {
 		return null;
 	}
 	
@@ -95,9 +95,8 @@ public class LinearSequenceModel extends Transducer {
 	 * @param input - Input sequence
 	 * @return Sequence - output by this transudcer 
 	 */
-	@SuppressWarnings("unchecked")
-	public Sequence transduce (Sequence input) {
-		ArrayListSequence seq = new ArrayListSequence ();
+	public Sequence<String> transduce (@SuppressWarnings("rawtypes") Sequence input) {
+		ArrayListSequence<String> seq = new ArrayListSequence<String>();
 		if(!(input instanceof FeatureVectorSequence)) {
 			//throw new BadInstanceException(); //unsupported
 			return null;
@@ -122,7 +121,7 @@ public class LinearSequenceModel extends Transducer {
 	/** Converts a FeatureVectorSequence into a SequenceInstance.
 	 */
 	private SequenceInstance getInstance(FeatureVectorSequence fvs) {
-		LinkedList[] predicates = getPredicates(fvs);
+		LinkedList<?>[] predicates = getPredicates(fvs);
 		
 		String[] tags = new String[fvs.size()+1];		
 		
@@ -137,7 +136,7 @@ public class LinearSequenceModel extends Transducer {
 	 */
 	private SequenceInstance[] convert(InstanceList iList) throws IOException {
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<SequenceInstance> lt = new LinkedList<SequenceInstance>();
 		
 		logger.info("Creating feature vectors and/or forests ...");
 		
@@ -155,7 +154,7 @@ public class LinearSequenceModel extends Transducer {
 			for(int j = 0; j < ls.size(); j++)
 				tags[j+1] = (String)ls.get(j);
 			
-			LinkedList[] predicates = getPredicates(fvs);
+			LinkedList<?>[] predicates = getPredicates(fvs);
 			
 			SLFeatureVector fv = createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			fv.sort();
@@ -167,19 +166,20 @@ public class LinearSequenceModel extends Transducer {
 		
 		SequenceInstance[] si = new SequenceInstance[lt.size()];
 		for(int i = 0; i < si.length; i++) {
-			si[i] = (SequenceInstance)lt.get(i);
+			si[i] = lt.get(i);
 		}
 		
 		return si;
 	}
 			
-	private LinkedList[] getPredicates(FeatureVectorSequence fvs) {
-		LinkedList[] predicates = new LinkedList[fvs.size()+1];
+	private LinkedList<?>[] getPredicates(FeatureVectorSequence fvs) {
+		@SuppressWarnings("unchecked")
+		LinkedList<String>[] predicates = new LinkedList[fvs.size()+1];
 		
-		predicates[0] = new LinkedList();
+		predicates[0] = new LinkedList<String>();
 		
 		for(int i = 0; i < fvs.size(); i++) {
-			predicates[i+1] = new LinkedList();
+			predicates[i+1] = new LinkedList<String>();
 			FeatureVector fv = fvs.getFeatureVector(i);
 			int[] nonZeroIndices = fv.getIndices();
 			String[] list = new String[nonZeroIndices.length];
@@ -191,7 +191,7 @@ public class LinearSequenceModel extends Transducer {
 		return predicates;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String prev, String next,
 			SLFeatureVector fv) {
 		
@@ -201,7 +201,7 @@ public class LinearSequenceModel extends Transducer {
 		return fv;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String next,
 			SLFeatureVector fv) {
 		
@@ -214,7 +214,7 @@ public class LinearSequenceModel extends Transducer {
 		return fv;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList[] predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?>[] predicates,
 			String[] tags,
 			SLFeatureVector fv) {
 		

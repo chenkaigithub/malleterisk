@@ -9,6 +9,7 @@ import cc.mallet.types.InstanceList;
 
 /**
  * Performs class balancing using random under and oversampling.
+ * TODO: give a reference?
  * 
  * - Classes with more instances than given N are undersampled (a subset of the 
  * instances is randomly selected).
@@ -19,7 +20,7 @@ import cc.mallet.types.InstanceList;
  * 
  * @author tt
  */
-public class RandomSampler extends Balancer {
+public class RandomSampler extends DataBalancer {
 	public static final Random r = new Random();
 	
 	public RandomSampler(int minThreshold) {

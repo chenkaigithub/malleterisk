@@ -16,6 +16,7 @@ import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
 import cc.mallet.types.Labeling;
 
+// TODO: rethink this
 public class ExecutionResult {
 	public final String name;
 	private final Date datetime;

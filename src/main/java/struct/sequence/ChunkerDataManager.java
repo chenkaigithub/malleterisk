@@ -19,18 +19,19 @@ public class ChunkerDataManager extends SequenceDataManager {
 	 *  (non-Javadoc)
 	 * @see struct.sequence.SequenceDataManager#getPredicates(java.lang.String[], java.lang.String[])
 	 */
-	public LinkedList[] getPredicates(String[] toks, String[] pos) {
-		String CAPS = "[A-Z]";
-		String LOW = "[a-z]";
-		String CAPSNUM = "[A-Z0-9]";
-		String ALPHA = "[A-Za-z]";
-		String ALPHANUM = "[A-Za-z0-9]";
-		String PUNT = "[,\\.;:?!]";
+	public LinkedList<?>[] getPredicates(String[] toks, String[] pos) {
+//		String CAPS = "[A-Z]";
+//		String LOW = "[a-z]";
+//		String CAPSNUM = "[A-Z0-9]";
+//		String ALPHA = "[A-Za-z]";
+//		String ALPHANUM = "[A-Za-z0-9]";
+//		String PUNT = "[,\\.;:?!]";
 		
-		LinkedList[] predicates = new LinkedList[toks.length];
+		@SuppressWarnings("unchecked")
+		LinkedList<String>[] predicates = new LinkedList[toks.length];
 		
 		for(int i = 0; i < toks.length; i++) {
-			predicates[i] = new LinkedList();
+			predicates[i] = new LinkedList<String>();
 			
 			// tag triples
 			String tm2 = i >= 2 ? pos[i-2] : "<SP>";

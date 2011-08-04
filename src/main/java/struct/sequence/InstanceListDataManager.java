@@ -40,19 +40,20 @@ public class InstanceListDataManager extends SequenceDataManager {
 	 *  (non-Javadoc)
 	 * @see struct.sequence.SequenceDataManager#getPredicates(java.lang.String[], java.lang.String[])
 	 */
-	public LinkedList[] getPredicates(String[] toks, String[] pos) {
+	public LinkedList<?>[] getPredicates(String[] toks, String[] pos) {
 		return null;
 	}
 	
 	/** Creates the predicates from a Mallet FeatureVectorSequence.
 	 */
-	private LinkedList[] getPredicates(FeatureVectorSequence fvs) {
-		LinkedList[] predicates = new LinkedList[fvs.size()+1];
+	private LinkedList<?>[] getPredicates(FeatureVectorSequence fvs) {
+		@SuppressWarnings("unchecked")
+		LinkedList<String>[] predicates = new LinkedList[fvs.size()+1];
 		
-		predicates[0] = new LinkedList();
+		predicates[0] = new LinkedList<String>();
 		
 		for(int i = 0; i < fvs.size(); i++) {
-			predicates[i+1] = new LinkedList();
+			predicates[i+1] = new LinkedList<String>();
 			FeatureVector fv = fvs.getFeatureVector(i);
 			int[] nonZeroIndices = fv.getIndices();
 			String[] list = new String[nonZeroIndices.length];
@@ -89,7 +90,7 @@ public class InstanceListDataManager extends SequenceDataManager {
 			for(int j = 0; j < ls.size(); j++)
 				tags[j+1] = (String)ls.get(j);
 			
-			LinkedList[] predicates = getPredicates(fvs);
+			LinkedList<?>[] predicates = getPredicates(fvs);
 			createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			
 			if(createUnsupported) {
@@ -118,8 +119,8 @@ public class InstanceListDataManager extends SequenceDataManager {
 			for(int j = 0; j < ls.size(); j++)
 				tags[j+1] = (String)ls.get(j);
 			
-			LinkedList[] predicates = getPredicates(fvs);
-			SLFeatureVector fv = createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
+			LinkedList<?>[] predicates = getPredicates(fvs);
+			/*SLFeatureVector fv = */createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			
 			if(createUnsupported)
 				createU(predicates);			
@@ -139,7 +140,7 @@ public class InstanceListDataManager extends SequenceDataManager {
 	 */
 	public SequenceInstance[] readData(InstanceList iList) throws IOException {
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<SequenceInstance> lt = new LinkedList<SequenceInstance>();
 		
 		Instance inst;
 		FeatureVectorSequence fvs;
@@ -155,7 +156,7 @@ public class InstanceListDataManager extends SequenceDataManager {
 			for(int j = 0; j < ls.size(); j++)
 				tags[j+1] = (String)ls.get(j);
 			
-			LinkedList[] predicates = getPredicates(fvs);
+			LinkedList<?>[] predicates = getPredicates(fvs);
 			SLFeatureVector fv = createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			fv.sort();
 			
@@ -175,7 +176,8 @@ public class InstanceListDataManager extends SequenceDataManager {
 	 *  (non-Javadoc)
 	 * @see struct.sequence.SequenceDataManager#createForest(struct.sequence.SequenceInstance, java.util.LinkedList[], java.io.ObjectOutputStream)
 	 */
-	public void createForest(SequenceInstance inst, LinkedList[] predicates, ObjectOutputStream out) {
+	public void createForest(SequenceInstance inst, LinkedList<?>[] predicates, ObjectOutputStream out) {
+		@SuppressWarnings("unused")
 		String[] toks = inst.getInput().sentence;
 		
 		try {

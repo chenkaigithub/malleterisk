@@ -5,6 +5,13 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.Trial;
 import cc.mallet.types.InstanceList;
 
+/**
+ * Extension of Mallet's Trial class, adding cross validation information.
+ * Holds the fold number plus the train and test instances.
+ * 
+ * @author tt
+ *
+ */
 public class ExtendedTrial extends Trial {
 	private static final long serialVersionUID = 1L;
 	

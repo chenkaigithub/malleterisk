@@ -1,13 +1,10 @@
 package struct.tests;
 
-import java.util.Random;
-
 import junit.framework.TestCase;
 import struct.classification.KBestMiraClassifierTrainer;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.Trial;
-import cc.mallet.pipe.iterator.PipeInputIterator;
 import cc.mallet.pipe.iterator.RandomTokenSequenceIterator;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.Dirichlet;
@@ -46,7 +43,7 @@ public class TestClassification extends TestCase {
 		InstanceList ilist = new InstanceList (new Randoms(1), fd, classNames, 200);
 		InstanceList lists[] = ilist.split (new java.util.Random(2), new double[] {.5, .5});
 		
-		ClassifierTrainer trainer = new KBestMiraClassifierTrainer(1);
+		ClassifierTrainer<Classifier> trainer = new KBestMiraClassifierTrainer(1);
 		
 		Classifier classifier = trainer.train (lists[0]);
 		
@@ -60,7 +57,7 @@ public class TestClassification extends TestCase {
 	}
 	
 	public void testNewFeatures () {
-	    ClassifierTrainer trainer = new KBestMiraClassifierTrainer(1);
+	    ClassifierTrainer<Classifier> trainer = new KBestMiraClassifierTrainer(1);
 
 	    Alphabet fd = dictOfSize (3);
 	    String[] classNames = new String[] {"class0", "class1", "class2"};

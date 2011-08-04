@@ -20,11 +20,11 @@ public class THJAUpdator implements OnlineUpdator {
 	
 	private int K = 2;
 	private ArrayList<SLFeatureVector> distances;
-	private ArrayList margins;
+	private ArrayList<Double> margins;
 	
 	public THJAUpdator() {
-		this.distances = new ArrayList();
-		this.margins = new ArrayList();
+		this.distances = new ArrayList<SLFeatureVector>();
+		this.margins = new ArrayList<Double>();
 	}
 	
 	/*

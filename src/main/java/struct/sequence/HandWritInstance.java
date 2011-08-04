@@ -22,13 +22,13 @@ public class HandWritInstance extends SequenceInstance {
 	private static Logger logger = Logger.getLogger(HandWritInstance.class.getName());
 	
 	public HandWritInstance(String[] sentence, String[] pos,
-			String[] tags, SLFeatureVector fv, LinkedList[] predicates) {
+			String[] tags, SLFeatureVector fv, LinkedList<?>[] predicates) {
 		
 		super(sentence,pos,tags,fv, predicates);
 	}
 	
 	public HandWritInstance(String[] sentence,
-			String[] tags, SLFeatureVector fv, LinkedList[] predicates) {
+			String[] tags, SLFeatureVector fv, LinkedList<?>[] predicates) {
 		super(sentence,tags,fv,predicates);
 	}
 	

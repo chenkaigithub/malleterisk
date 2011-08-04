@@ -91,8 +91,8 @@ public class QPSolver {
 		logger.info("In hildreth sequential fast");
 		int iter = 0;
 		double diff_alpha;
-		double try_alpha;
-		double add_alpha;
+//		double try_alpha;
+//		double add_alpha;
 		double kkt;
 		int max_kkt_i = 0;
 		double inner;
@@ -197,8 +197,8 @@ public class QPSolver {
 		
 		int iter = 0;
 		double diff_alpha;
-		double try_alpha;
-		double add_alpha;
+//		double try_alpha;
+//		double add_alpha;
 		double kkt;
 		int max_kkt_i = 0;
 		double inner1,inner2;
@@ -363,8 +363,8 @@ public class QPSolver {
 		
 		int iter = 0;
 		double diff_alpha;
-		double try_alpha;
-		double add_alpha;
+//		double try_alpha;
+//		double add_alpha;
 		double kkt;
 		int max_kkt_i = 0;
 		double inner1,inner2;
@@ -563,8 +563,8 @@ public class QPSolver {
 		
 		int iter = 0;
 		double diff_alpha;
-		double try_alpha;
-		double add_alpha;
+//		double try_alpha;
+//		double add_alpha;
 		double kkt;
 		int max_kkt_i = 0;
 		double inner1,inner2;
@@ -833,8 +833,8 @@ public class QPSolver {
 		
 		int iter = 0;
 		double diff_alpha;
-		double try_alpha;
-		double add_alpha;
+//		double try_alpha;
+//		double add_alpha;
 		double kkt;
 		int max_kkt_i = 0;
 		double inner1,inner2;

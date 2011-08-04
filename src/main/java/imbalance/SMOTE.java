@@ -14,7 +14,8 @@ import cc.mallet.types.SparseVector;
 import classifiers.KNN;
 
 /**
- * Implements SMOTE algorithm for class imbalance learning.
+ * Implements the SMOTE algorithm for class imbalance learning.
+ * 
  * Chawla, Bowyer, Hall, Kegelmeyer - SMOTE : Synthetic Minority Over-sampling Technique
  * 
  * SMOTE is an oversampling technique that generates synthetic samples based on 
@@ -24,7 +25,7 @@ import classifiers.KNN;
  * 
  * @author tt
  */
-public class SMOTE extends Balancer {
+public class SMOTE extends DataBalancer {
 	private static final Random random = new Random();
 	private final int k; // number of nearest neighbours to be used
 	

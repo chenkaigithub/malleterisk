@@ -9,6 +9,7 @@ import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 
+//TODO: rethink this (move the methods to somewhere else)
 public class ExecutionRun {
 	/**
 	 * Performs cross validation to an instance list.

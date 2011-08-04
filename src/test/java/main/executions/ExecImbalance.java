@@ -5,7 +5,7 @@ import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedVariance;
 import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
-import imbalance.Balancer;
+import imbalance.DataBalancer;
 import imbalance.RandomSampler;
 import imbalance.SMOTE;
 
@@ -33,7 +33,7 @@ public class ExecImbalance {
 		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
-		ArrayList<Balancer> balancers = new ArrayList<Balancer>();
+		ArrayList<DataBalancer> balancers = new ArrayList<DataBalancer>();
 		balancers.add(new RandomSampler(1)); // minimum threshold = 1
 		balancers.add(new SMOTE(5, 1)); // k-nn = 5, minimum threshold = 1
 		
@@ -59,7 +59,7 @@ public class ExecImbalance {
 			InstanceList instances = InstanceList.load(file);
 
 			// iterate all balancers
-			for (Balancer balancer : balancers) {
+			for (DataBalancer balancer : balancers) {
 				balancer.setInstances(instances);
 				final String name2 = name + "+" + balancer.getClass().getSimpleName();
 				

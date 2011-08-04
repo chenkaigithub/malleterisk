@@ -25,7 +25,7 @@ import cc.mallet.types.Label;
  *
  * @version 08/22/2006
  */
-public class KBestMiraClassifierTrainer extends ClassifierTrainer {
+public class KBestMiraClassifierTrainer extends ClassifierTrainer<Classifier> {
 	private static Logger logger = Logger.getLogger(KBestMiraClassifierTrainer.class.getName());
 	private int K;
 	private double C = Double.POSITIVE_INFINITY;

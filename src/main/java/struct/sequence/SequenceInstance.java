@@ -23,7 +23,7 @@ import cc.mallet.types.Alphabet;
 public class SequenceInstance implements SLInstance {
 	private static Logger logger = Logger.getLogger(SequenceInstance.class.getName());
 
-	protected LinkedList[] predicates;
+	protected LinkedList<?>[] predicates;
 	protected SequenceInput input;
 	protected SequenceLabel label;
 	
@@ -34,7 +34,7 @@ public class SequenceInstance implements SLInstance {
 	}
 	
 	public SequenceInstance(String[] sentence, String[] pos,
-			String[] tags, SLFeatureVector fv, LinkedList[] predicates) {
+			String[] tags, SLFeatureVector fv, LinkedList<?>[] predicates) {
 		
 		input = new SequenceInput(sentence,pos);
 		
@@ -45,7 +45,7 @@ public class SequenceInstance implements SLInstance {
 	}
 	
 	public SequenceInstance(String[] sentence,
-			String[] tags, SLFeatureVector fv, LinkedList[] predicates) {
+			String[] tags, SLFeatureVector fv, LinkedList<?>[] predicates) {
 		
 		input = new SequenceInput(sentence);
 		
@@ -120,7 +120,7 @@ public class SequenceInstance implements SLInstance {
 		
 	}    
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String prev, String next,
 			SLFeatureVector fv) {
 		
@@ -129,7 +129,7 @@ public class SequenceInstance implements SLInstance {
 		return fv;
 	}
 	
-	private SLFeatureVector createFeatureVector(LinkedList predicates,
+	private SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String next,
 			SLFeatureVector fv) {
 		

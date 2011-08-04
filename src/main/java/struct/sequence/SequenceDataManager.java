@@ -68,7 +68,7 @@ public abstract class SequenceDataManager implements DataManager {
 		String pos_line = in.readLine();
 		String tags_line = in.readLine();
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<SequenceInstance> lt = new LinkedList<SequenceInstance>();
 		
 		ObjectOutputStream out = createFeatureFile ? new ObjectOutputStream(new FileOutputStream(file+".feats")) : null;
 		
@@ -100,7 +100,7 @@ public abstract class SequenceDataManager implements DataManager {
 			pos = pos_new;
 			tags = tags_new;
 			
-			LinkedList[] predicates = getPredicates(toks,pos);
+			LinkedList<?>[] predicates = getPredicates(toks,pos);
 			SLFeatureVector fv = 
 				createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));	
 			fv.sort();
@@ -182,8 +182,9 @@ public abstract class SequenceDataManager implements DataManager {
 			pos = pos_new;
 			tags = tags_new;
 			
-			LinkedList[] predicates = getPredicates(toks,pos);
-			SLFeatureVector fv = createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
+			LinkedList<?>[] predicates = getPredicates(toks,pos);
+//			SLFeatureVector fv = 
+				createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			
 			if(createUnsupported)
 				createU(predicates);
@@ -198,7 +199,7 @@ public abstract class SequenceDataManager implements DataManager {
 		logger.info("done.");
 	}
 	
-	protected void createU(LinkedList[] predicates) {
+	protected void createU(LinkedList<?>[] predicates) {
 		//why the predicates loop?
 		for(int k = 0; k < predicates.length; k++) {
 			for(int i = 0; i < tagAlphabet.size(); i++) {
@@ -225,11 +226,11 @@ public abstract class SequenceDataManager implements DataManager {
 	 * 
 	 * @throws IOException
 	 */
-	public void createCRF(LinkedList[] predicates, String[] tags,
+	public void createCRF(LinkedList<?>[] predicates, String[] tags,
 			BufferedWriter out) throws IOException {
 		
 		for(int k = 1; k < predicates.length; k++) {
-			LinkedList preds = predicates[k];
+			LinkedList<?> preds = predicates[k];
 			String res = "";
 			for(int i = 0; i < preds.size(); i++)
 				res += (String)preds.get(i) + " ";
@@ -248,7 +249,7 @@ public abstract class SequenceDataManager implements DataManager {
 		BufferedReader in = 
 			new BufferedReader(new InputStreamReader(new FileInputStream(file),"8859_2"));
 		String line = in.readLine();
-		String pos_line = in.readLine();
+		/*String pos_line = */in.readLine();
 		String tags_line = in.readLine();
 		
 		while(line != null) {
@@ -261,13 +262,13 @@ public abstract class SequenceDataManager implements DataManager {
 			}
 			
 			line = in.readLine();
-			pos_line = in.readLine();
+			/*pos_line = */in.readLine();
 			tags_line = in.readLine();
 		}
 		
 	}
 	
-	public SLFeatureVector createFeatureVector(LinkedList predicates,
+	public SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String prev, String next,
 			SLFeatureVector fv) {
 		
@@ -281,7 +282,7 @@ public abstract class SequenceDataManager implements DataManager {
 		return fv;
 	}
 	
-	public SLFeatureVector createFeatureVector(LinkedList predicates,
+	public SLFeatureVector createFeatureVector(LinkedList<?> predicates,
 			String next,
 			SLFeatureVector fv) {		
 		String s2 = next;
@@ -292,7 +293,7 @@ public abstract class SequenceDataManager implements DataManager {
 		return fv;
 	}
 	
-	public SLFeatureVector createFeatureVector(LinkedList[] predicates,
+	public SLFeatureVector createFeatureVector(LinkedList<?>[] predicates,
 			String[] tags,
 			SLFeatureVector fv) {
 		
@@ -304,7 +305,7 @@ public abstract class SequenceDataManager implements DataManager {
 		return fv;
 	}
 	
-	public abstract LinkedList[] getPredicates(String[] toks, String[] pos);
+	public abstract LinkedList<?>[] getPredicates(String[] toks, String[] pos);
 	
 	/*
 	 *  (non-Javadoc)
@@ -317,7 +318,8 @@ public abstract class SequenceDataManager implements DataManager {
 		SequenceInstance.setDataAlphabet(dataAlphabet);
 	}
 	
-	public void createForest(SequenceInstance inst, LinkedList[] predicates, ObjectOutputStream out) {
+	public void createForest(SequenceInstance inst, LinkedList<?>[] predicates, ObjectOutputStream out) {
+		@SuppressWarnings("unused")
 		String[] toks = inst.getInput().sentence;
 		
 		try {

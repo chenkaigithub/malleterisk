@@ -32,7 +32,7 @@ public class POSDataManager extends SequenceDataManager {
 		//String pos_line = in.readLine();
 		String tags_line = in.readLine();
 		
-		LinkedList lt = new LinkedList();
+		LinkedList<SequenceInstance> lt = new LinkedList<SequenceInstance>();
 		
 		ObjectOutputStream out = 
 			createFeatureFile ? new ObjectOutputStream(new FileOutputStream(file+".feats")) : null;
@@ -65,7 +65,7 @@ public class POSDataManager extends SequenceDataManager {
 				//pos = pos_new;
 				tags = tags_new;
 				
-				LinkedList[] predicates = getPredicates(toks);
+				LinkedList<?>[] predicates = getPredicates(toks);
 				SLFeatureVector fv = 
 					createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));	
 				fv.sort();
@@ -87,7 +87,7 @@ public class POSDataManager extends SequenceDataManager {
 			
 			SequenceInstance[] si = new SequenceInstance[lt.size()];
 			for(int i = 0; i < si.length; i++) {
-				si[i] = (SequenceInstance)lt.get(i);
+				si[i] = lt.get(i);
 			}
 			
 			if(createFeatureFile)
@@ -140,8 +140,8 @@ public class POSDataManager extends SequenceDataManager {
 			//pos = pos_new;
 			tags = tags_new;
 			
-			LinkedList[] predicates = getPredicates(toks);
-			SLFeatureVector fv =
+			LinkedList<?>[] predicates = getPredicates(toks);
+//			SLFeatureVector fv =
 				createFeatureVector(predicates,tags,new SLFeatureVector(-1,-1.0,null));
 			
 			if(createUnsupported)
@@ -185,19 +185,20 @@ public class POSDataManager extends SequenceDataManager {
 	 *  (non-Javadoc)
 	 * @see struct.sequence.SequenceDataManager#getPredicates(java.lang.String[], java.lang.String[])
 	 */
-	public LinkedList[] getPredicates(String[] toks, String[] pos) {
+	public LinkedList<?>[] getPredicates(String[] toks, String[] pos) {
 		return getPredicates(toks);
 	}
 	
-	public LinkedList[] getPredicates(String[] toks) {
+	public LinkedList<?>[] getPredicates(String[] toks) {
 		String ALPHA = "[A-Za-z]";
 		String ALPHANUM = "[A-Za-z0-9]";
 		String PUNT = "[,\\.;:?!]";
 		
-		LinkedList[] predicates = new LinkedList[toks.length];
+		@SuppressWarnings("unchecked")
+		LinkedList<String>[] predicates = new LinkedList[toks.length];
 		
 		for(int i = 0; i < toks.length; i++) {
-			predicates[i] = new LinkedList();
+			predicates[i] = new LinkedList<String>();
 			
 			String word = toks[i];
 			

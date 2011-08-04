@@ -18,7 +18,7 @@ import cc.mallet.types.Alphabet;
  * 
  * @version 08/15/2006
  */
-public class SLFeatureVector implements Comparable {
+public class SLFeatureVector implements Comparable<Object> {
 	
 	public int index;
 	public double value;
@@ -194,7 +194,7 @@ public class SLFeatureVector implements Comparable {
 	}
 		
 	public void sort() {
-		ArrayList features = new ArrayList();
+		ArrayList<SLFeatureVector> features = new ArrayList<SLFeatureVector>();
 		
 		for(SLFeatureVector curr = this; curr != null; curr = curr.next)
 			if(curr.index >= 0)
