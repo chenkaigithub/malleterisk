@@ -8,7 +8,7 @@ import utils.IteratedExecution;
 import cc.mallet.types.InstanceList;
 import classifiers.LibLinearTrainer;
 import execution.ExecutionResult;
-import execution.ExecutionRun;
+import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
 import ft.weighting.IWeighter;
@@ -53,14 +53,12 @@ public class LibLinearExperiment {
 						
 						// classifier trainer must be a new instance since it might accumulate the previous alphabet
 						// associate the trials to the run with 'n' features
-						r.trials.put(n, ExecutionRun.crossValidate(filteredInstances, folds, new LibLinearTrainer()));
+						r.trials.put(n, ExecutionUtils.crossValidate(filteredInstances, folds, new LibLinearTrainer()));
 					}
 					
 					// write results
-					r.trial2out();
-					r.accuracies2out();
-					
-					Runtime.getRuntime().gc();
+					r.outputTrials();
+					r.outputAccuracies();
 				}
 			}
 		}

@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import main.SEAMCE;
-import utils.IteratedExecution2;
+import utils.ParametrizedIteratedExecution;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
@@ -46,7 +45,7 @@ public class ExecImbalance {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());
 		
-		int folds = 10;
+//		int folds = 10;
 		
 		// iterate all collections
 		for (File file : files) {
@@ -62,27 +61,27 @@ public class ExecImbalance {
 				final String name2 = name + "+" + balancer.getClass().getSimpleName();
 				
 				// prepare the number of samples to be used in the balancing
-				int[] samplePcts = IteratedExecution2.generatePercentages(10);
+				int[] samplePcts = ParametrizedIteratedExecution.generatePercentages(10);
 				samplePcts = new int[] { samplePcts[1], samplePcts[5], samplePcts[7], samplePcts[9] };
 				for (int sp : samplePcts) System.out.println("sample %: " + sp);
 
 				// setup number of features to be used in feature selection
-				int[] featurePcts = IteratedExecution2.generatePercentages(10);
+				int[] featurePcts = ParametrizedIteratedExecution.generatePercentages(10);
 				featurePcts = Arrays.copyOfRange(featurePcts, 0, 3); // 10%, 20%, 30%
 				for (int fp : featurePcts) System.out.println("feature %: " + fp);
 				
-				for (int ns : new IteratedExecution2(balancer.labeledInstances.getMaxNumInstances(), samplePcts)) {
+				for (int ns : new ParametrizedIteratedExecution(balancer.labeledInstances.getMaxNumInstances(), samplePcts)) {
 					System.out.println("- balancing with " + name2 + ": " + ns);
 					
-					SEAMCE.z(
-						name2 + "+" + ns, 
-						balancer.balance(ns), 
-						transformers, 
-						filters, 
-						classifiers,
-						featurePcts, 
-						folds
-					);
+//					SEAMCE.z(
+//						name2 + "+" + ns, 
+//						balancer.balance(ns), 
+//						transformers, 
+//						filters, 
+//						classifiers,
+//						featurePcts, 
+//						folds
+//					);
 				}
 			}
 		}

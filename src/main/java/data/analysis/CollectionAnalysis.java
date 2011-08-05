@@ -1,4 +1,4 @@
-package analysis;
+package data.analysis;
 
 import types.mallet.LabeledInstancesList;
 import cc.mallet.types.Alphabet;
@@ -7,6 +7,7 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.SparseVector;
 
+// TODO: organize etc
 public class CollectionAnalysis {
 	private final InstanceList instances;
 	private final LabeledInstancesList labeledInstances;

@@ -15,9 +15,9 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import types.EmailParticipant;
-import types.IEmailParticipant;
-import types.ParticipantType;
+import types.email.EmailParticipant;
+import types.email.IEmailParticipant;
+import types.email.ParticipantType;
 import utils.JavaMailUtils;
 
 // TODO: general jdbc cleanup & refactor; alot of duplicated code

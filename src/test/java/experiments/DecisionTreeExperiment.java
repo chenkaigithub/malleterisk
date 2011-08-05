@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import main.SEAMCE;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.DecisionTreeTrainer;
@@ -27,9 +26,9 @@ public class DecisionTreeExperiment {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new DecisionTreeTrainer());
 
-		int step = 1;
-		int folds = 2;
-
-		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
+//		int step = 1;
+//		int folds = 2;
+//
+//		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
 	}
 }

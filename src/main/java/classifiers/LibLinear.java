@@ -34,6 +34,7 @@ public class LibLinear extends Classifier {
             Linear.predictProbability(m, x, values);
 		}
 		else {
+			// TODO: verificar se o indice que o predict devolve Ž o correcto ou se deveria ser -1
 			int r = Linear.predict(m, x);
 			values[r] = 1;
 		}

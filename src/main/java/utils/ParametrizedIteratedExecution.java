@@ -8,7 +8,7 @@ import java.util.Iterator;
  * Order of iteration is the same as the array.
  * 
  * Usage:
- * int[] percentages = IteratedExecution2.generatePercentages(step);
+ * int[] percentages = ParametrizedIteratedExecution.generatePercentages(step);
  * IteratedExecution2 ie = new IteratedExecution2(alphabetSize, percentages);
  * while(ie.hasNext()) {
  * 		int n = ie.next();
@@ -18,7 +18,7 @@ import java.util.Iterator;
  * @author tt
  *
  */
-public class IteratedExecution2 implements Iterator<Integer>, Iterable<Integer> {
+public class ParametrizedIteratedExecution implements Iterator<Integer>, Iterable<Integer> {
 	// generates values in ascending mode
 	public static final int[] generatePercentages(int step) {
 		if(step > 100) throw new InvalidParameterException("Step cannot be over 100.");
@@ -37,7 +37,7 @@ public class IteratedExecution2 implements Iterator<Integer>, Iterable<Integer> 
 	private final int[] percentages;
 	private int currentPercentageIndex;
 	
-	public IteratedExecution2(int alphabetSize, int[] percentages) {
+	public ParametrizedIteratedExecution(int alphabetSize, int[] percentages) {
 		this.alphabetSize = alphabetSize;
 		this.percentages = percentages;
 		this.currentPercentageIndex = 0;

@@ -2,7 +2,7 @@ package types.mallet.pipe;
 
 import java.io.Serializable;
 
-import types.IEmailMessage;
+import types.email.IEmailMessage;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 

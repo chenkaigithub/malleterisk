@@ -1,4 +1,4 @@
-package types;
+package types.email;
 
 import java.util.Collection;
 import java.util.Date;

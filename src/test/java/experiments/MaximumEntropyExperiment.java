@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import main.SEAMCE;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.MaxEntTrainer;
@@ -27,9 +26,9 @@ public class MaximumEntropyExperiment {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new MaxEntTrainer());
 
-		int step = 10;
-		int folds = 10;
-
-		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
+//		int step = 10;
+//		int folds = 10;
+//
+//		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
 	}
 }

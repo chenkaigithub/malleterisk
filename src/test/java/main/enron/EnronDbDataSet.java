@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import types.EmailMessage;
+import types.email.EmailMessage;
 import utils.JavaMailUtils;
 import cc.mallet.types.Instance;
 import data.loader.IDataSetLoader;

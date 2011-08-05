@@ -10,6 +10,7 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import cc.mallet.types.NormalizedDotProductMetric;
 import cc.mallet.types.SparseVector;
 import classifiers.KNN;
 
@@ -67,7 +68,7 @@ public class SMOTE extends DataBalancer {
 		// smote every instance of the given instancelist
 		for (Instance instance : instances) {
 			// find the k nearest neighbours of instance
-			Instance[] knn = KNN.knn(k, instance, instances);
+			Instance[] knn = KNN.knn(new NormalizedDotProductMetric(), k, instance, instances);
 			// create n synthetic instances based on the neighbours and add to new instancelist
 			newInstances.addAll(populate(dataAlphabet, targetAlphabet, n, instance, knn));
 		}

@@ -1,4 +1,4 @@
-package types;
+package types.email;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

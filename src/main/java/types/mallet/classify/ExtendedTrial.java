@@ -7,7 +7,7 @@ import cc.mallet.types.InstanceList;
 
 /**
  * Extension of Mallet's Trial class, adding cross validation information.
- * Holds the fold number plus the train and test instances.
+ * Holds the fold number plus references to the train and test instances.
  * 
  * @author tt
  *

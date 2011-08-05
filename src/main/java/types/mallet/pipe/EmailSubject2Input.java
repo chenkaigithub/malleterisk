@@ -1,6 +1,6 @@
 package types.mallet.pipe;
 
-import types.IEmailMessage;
+import types.email.IEmailMessage;
 
 public class EmailSubject2Input extends EmailField2Input {
 	private static final long serialVersionUID = 1L;

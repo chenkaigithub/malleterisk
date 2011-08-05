@@ -16,7 +16,11 @@ import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
 import cc.mallet.types.Labeling;
 
-// TODO: rethink this
+/**
+ * 
+ * 
+ * @author tt
+ */
 public class ExecutionResult {
 	public final String name;
 	private final Date datetime;
@@ -40,7 +44,7 @@ public class ExecutionResult {
 	 * Writes the results of the classification into the output stream in a formatted manner.
 	 * (instance, real_class_idx, real_class, class_n1_idx, class_n1, class_n1_val, ..., class_nK_idx, class_nK, class_nK_val)
 	 */
-	public void trial2out() throws FileNotFoundException {
+	public void outputTrials() throws FileNotFoundException {
 		Instance instance;
 		Labeling labeling; // ATTN: same variable used in 2 different contexts (why? cause i'm a cheap bastard)
 		
@@ -97,7 +101,7 @@ public class ExecutionResult {
 	 * Used to plot feature selection/classification accuracy graph.
 	 * 
 	 */
-	public void accuracies2out() throws FileNotFoundException {
+	public void outputAccuracies() throws FileNotFoundException {
 		FileOutputStream out = new FileOutputStream(getAccuraciesOutName());
 		PrintWriter pw = new PrintWriter(out);
 		

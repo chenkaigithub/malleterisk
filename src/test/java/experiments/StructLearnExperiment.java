@@ -46,8 +46,6 @@ public class StructLearnExperiment {
 						// write results
 						r.trial2out();
 						r.accuracies2out();
-						
-						Runtime.getRuntime().gc();
 					}
 				}
 			}
