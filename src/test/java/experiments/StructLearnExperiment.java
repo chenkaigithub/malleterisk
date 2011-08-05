@@ -18,7 +18,7 @@ public class StructLearnExperiment {
 	// http://www.seas.upenn.edu/~strctlrn/StructLearn/StructLearn.html
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
-		files.add(new File("instances+1+1+tests"));
+		files.add(new File("instances+1+1+bodies"));
 
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
