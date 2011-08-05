@@ -204,5 +204,4 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
 
         return nodes;
     }
-
 }
