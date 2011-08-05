@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
+import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedDF;
 import ft.selection.methods.FilterByRankedFisher;
@@ -49,9 +50,9 @@ public class ExecFeatureSelection {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());
 		
-//		int step = 10;
-//		int folds = 10;
-//		
-//		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
+		int step = 10;
+		int folds = 10;
+		
+		ExecutionUtils.runWeightersFiltersClassifiers(files, transformers, filters, classifiers, step, folds);
 	}
 }

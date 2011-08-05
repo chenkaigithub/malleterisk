@@ -17,7 +17,9 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.Labeling;
 
 /**
- * 
+ * Holds the results of an executon run (several cross validation runs).
+ * Results are kept in the form of extended trials with respect to the 
+ * corresponding fold.
  * 
  * @author tt
  */
@@ -50,7 +52,7 @@ public class ExecutionResult {
 		
 		for (Integer n : this.trials.keySet()) {
 			for (ExtendedTrial trial : this.trials.get(n)) {
-				FileOutputStream out = new FileOutputStream(getTrialOutName(trial, n));
+				FileOutputStream out = new FileOutputStream(getTrialOutputName(trial, n));
 				PrintWriter pw = new PrintWriter(out);
 				
 				LabeledInstancesList trainLabeledInstances = trial.getTrainLabeledInstances();
@@ -102,7 +104,7 @@ public class ExecutionResult {
 	 * 
 	 */
 	public void outputAccuracies() throws FileNotFoundException {
-		FileOutputStream out = new FileOutputStream(getAccuraciesOutName());
+		FileOutputStream out = new FileOutputStream(getAccuraciesOutputName());
 		PrintWriter pw = new PrintWriter(out);
 		
 		for (Integer n : this.trials.keySet()) {
@@ -123,7 +125,7 @@ public class ExecutionResult {
 		pw.close();
 	}
 	
-	private String getTrialOutName(ExtendedTrial trial, int n) {
+	private String getTrialOutputName(ExtendedTrial trial, int n) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("trial");
 		sb.append("+");
@@ -148,7 +150,7 @@ public class ExecutionResult {
 	
 	private int accuracyCounter = 0;
 	
-	private String getAccuraciesOutName() {
+	private String getAccuraciesOutputName() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("accuracies");
 		sb.append("+");

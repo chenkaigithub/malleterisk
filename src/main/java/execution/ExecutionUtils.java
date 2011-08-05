@@ -19,12 +19,18 @@ import data.loader.IDataSetLoader;
 import ft.selection.IFilter;
 import ft.weighting.IWeighter;
 
+/**
+ * Helper class with several functions for processing the data.
+ * 
+ * @author tt
+ */
 public class ExecutionUtils {
 	//
 	// Preprocessing
 	//
-	/*
+	
 	// stores email data from database to preprocessed files
+	/*
 	public static final void db2file() throws SQLException {
 		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
@@ -60,7 +66,6 @@ public class ExecutionUtils {
 		
 		return preprocessors;
 	}
-
 	
 	//
 	// Processing
@@ -86,7 +91,7 @@ public class ExecutionUtils {
 				for (IFilter filter : filters) {
 					System.out.println("- filter: " + filter.getDescription());
 					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-						sequentialRun(filename, instances, transformer, filter, trainer, step, folds);
+						run(filename, instances, transformer, filter, trainer, step, folds);
 					}
 				}
 			}
@@ -108,7 +113,7 @@ public class ExecutionUtils {
 			for (IFilter filter : filters) {
 				System.out.println("- filter: " + filter.getDescription());
 				for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
-					sequentialRunCustomFiltering(runName, instances, transformer, filter, trainer, ns, folds);
+					runWithCustomStep(runName, instances, transformer, filter, trainer, ns, folds);
 				}
 			}
 		}
@@ -116,7 +121,7 @@ public class ExecutionUtils {
 	
 	// transforms, filters (with several feature selection levels) and classifies with cross-validation the given instances
 	// results are written out to pre-specified files
-	public static final void sequentialRun(
+	public static final void run(
 		String name, 
 		InstanceList instances, 
 		IWeighter transformer, 
@@ -143,7 +148,7 @@ public class ExecutionUtils {
 	
 	// Used when custom steps (int[] ns) are needed in the feature selection stage.
 	// Everything else is identical to sequentialRun.
-	public static final void sequentialRunCustomFiltering(
+	public static final void runWithCustomStep(
 		String name, 
 		InstanceList instances, 
 		IWeighter transformer, 
@@ -167,13 +172,6 @@ public class ExecutionUtils {
 		r.outputTrials();
 		r.outputAccuracies();
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	//
 	// Cross Validation

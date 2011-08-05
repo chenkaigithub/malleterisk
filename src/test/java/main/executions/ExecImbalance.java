@@ -12,6 +12,7 @@ import cc.mallet.types.InstanceList;
 import data.balancing.DataBalancer;
 import data.balancing.RandomSampler;
 import data.balancing.SMOTE;
+import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
 import ft.selection.methods.FilterByRankedVariance;
@@ -31,8 +32,8 @@ public class ExecImbalance {
 		files.add(new File("instances+2+1+bodies"));
 		
 		ArrayList<DataBalancer> balancers = new ArrayList<DataBalancer>();
-		balancers.add(new RandomSampler(1)); // minimum threshold = 1
-		balancers.add(new SMOTE(5, 1)); // k-nn = 5, minimum threshold = 1
+		balancers.add(new RandomSampler(1));	//			minimum threshold = 1
+		balancers.add(new SMOTE(5, 1));			// knn = 5,	minimum threshold = 1
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
@@ -45,7 +46,7 @@ public class ExecImbalance {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());
 		
-//		int folds = 10;
+		int folds = 10;
 		
 		// iterate all collections
 		for (File file : files) {
@@ -73,15 +74,15 @@ public class ExecImbalance {
 				for (int ns : new ParametrizedIteratedExecution(balancer.labeledInstances.getMaxNumInstances(), samplePcts)) {
 					System.out.println("- balancing with " + name2 + ": " + ns);
 					
-//					SEAMCE.z(
-//						name2 + "+" + ns, 
-//						balancer.balance(ns), 
-//						transformers, 
-//						filters, 
-//						classifiers,
-//						featurePcts, 
-//						folds
-//					);
+					ExecutionUtils.runWeightersFiltersWithCustomStepClassifiers(
+						name2 + "+" + ns, 
+						balancer.balance(ns), 
+						transformers, 
+						filters, 
+						classifiers,
+						featurePcts, 
+						folds
+					);
 				}
 			}
 		}
