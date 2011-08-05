@@ -1,4 +1,4 @@
-package data.enron;
+package data.source.enron;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,12 +6,13 @@ import java.sql.SQLException;
 
 import javax.mail.MessagingException;
 
-import data.db.DbDataAccess;
+import data.loader.db.DbDataAccess;
 
-public class Enron2Db {
+//TODO: organize this
+public class EnronConverter {
 	private final DbDataAccess dal;
 	
-	public Enron2Db(DbDataAccess dal) {
+	public EnronConverter(DbDataAccess dal) {
 		this.dal = dal;
 	}
 

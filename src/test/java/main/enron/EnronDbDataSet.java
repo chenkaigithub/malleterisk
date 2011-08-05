@@ -1,4 +1,4 @@
-package data.enron;
+package main.enron;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,10 +8,12 @@ import java.util.Iterator;
 import types.EmailMessage;
 import utils.JavaMailUtils;
 import cc.mallet.types.Instance;
-import data.IDataSet;
-import data.db.DbDataAccess;
+import data.loader.IDataSetLoader;
+import data.loader.db.DbDataAccess;
 
-public class EnronDbDataSet implements IDataSet, Iterator<Instance> {
+@Deprecated
+//TODO: organize this
+public class EnronDbDataSet implements IDataSetLoader, Iterator<Instance> {
 	private final DbDataAccess dal;
 	private final ResultSet messagesRS;
 	

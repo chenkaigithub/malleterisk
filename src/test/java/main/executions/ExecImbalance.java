@@ -1,16 +1,6 @@
 package main.executions;
 
-import ft.selection.IFilter;
-import ft.selection.methods.FilterByRankedIG;
-import ft.selection.methods.FilterByRankedVariance;
-import ft.weighting.IWeighter;
-import ft.weighting.methods.FeatureWeighting;
-import imbalance.DataBalancer;
-import imbalance.RandomSampler;
-import imbalance.SMOTE;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -20,9 +10,17 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
+import data.balancing.DataBalancer;
+import data.balancing.RandomSampler;
+import data.balancing.SMOTE;
+import ft.selection.IFilter;
+import ft.selection.methods.FilterByRankedIG;
+import ft.selection.methods.FilterByRankedVariance;
+import ft.weighting.IWeighter;
+import ft.weighting.methods.FeatureWeighting;
 
 public class ExecImbalance {
-	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+	public static void main(String[] args) throws Exception {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+bodies"));
 		files.add(new File("instances+1+2+bodies"));

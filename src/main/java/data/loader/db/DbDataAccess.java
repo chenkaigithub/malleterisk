@@ -1,4 +1,4 @@
-package data.db;
+package data.loader.db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,6 +21,11 @@ import types.ParticipantType;
 import utils.JavaMailUtils;
 
 // TODO: general jdbc cleanup & refactor; alot of duplicated code
+/**
+ * Helper class for storing and retrieving messages from the database.
+ * Used by datasets that are kept in the database.
+ * 
+ */
 public class DbDataAccess {
 	// db columns
 	
@@ -34,8 +39,6 @@ public class DbDataAccess {
 	public static final String DB_EMAIL_SUBJECT = "subject";
 	public static final String DB_EMAIL_BODY = "body";
 
-	// EnronDbDataAccess
-	
 	public final DbConnector db;
 	
 	public DbDataAccess(DbConnector db) {

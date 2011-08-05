@@ -1,8 +1,8 @@
 package main.enron.pre;
 import java.util.LinkedList;
 
-import data.enron.file.EnronFileCleaning;
-import data.enron.utils.EnronConstants;
+import data.source.enron.EnronConstants;
+import data.source.enron.EnronFileCleaning;
 
 public class EnronPrepareCleanNonTopical {
 	public static void main(String[] args) throws Exception {

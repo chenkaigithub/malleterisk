@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 import cc.mallet.types.Instance;
-import data.IDataSet;
-import data.db.DbDataAccess;
+import data.loader.IDataSetLoader;
+import data.loader.db.DbDataAccess;
 
-public class INSTICCDataSet implements IDataSet, Iterator<Instance> {
+@Deprecated
+public class INSTICCDataSet implements IDataSetLoader, Iterator<Instance> {
 	private final ResultSet messagesRS;
 	
 	public INSTICCDataSet(DbDataAccess dal) throws SQLException {

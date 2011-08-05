@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.SerialPipes;
 import cc.mallet.types.InstanceList;
-import data.IDataSet;
+import data.loader.IDataSetLoader;
 
 /*
  * Defines a sequence of pre-processing operations that a message goes through.
@@ -18,7 +18,7 @@ public abstract class PreProcessor extends InstanceList {
 		this.setPipe(new SerialPipes(getPipes()));
 	}
 
-	public PreProcessor(IDataSet ds) {
+	public PreProcessor(IDataSetLoader ds) {
 		this();
 		this.addThruPipe(ds);
 	}

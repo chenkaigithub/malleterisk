@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import pp.PreProcessor;
 import types.mallet.pipe.EmailDate2Input;
 import cc.mallet.pipe.Pipe;
-import data.IDataSet;
+import data.loader.IDataSetLoader;
 
 public class DatePreProcessor1 extends PreProcessor {
 	private static final long serialVersionUID = -3365120647901882307L;
@@ -13,7 +13,7 @@ public class DatePreProcessor1 extends PreProcessor {
 	public DatePreProcessor1() {
 	}
 	
-	public DatePreProcessor1(IDataSet ds) {
+	public DatePreProcessor1(IDataSetLoader ds) {
 		super(ds);
 	}
 	

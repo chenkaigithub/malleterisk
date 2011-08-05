@@ -1,8 +1,9 @@
-package data.enron.file;
+package data.source.enron;
 
 import java.io.File;
 import java.util.Collection;
 
+//TODO: organize this
 public class EnronFileCleaning {
 	private final String srcFolder;
 	private final String dstFolder;

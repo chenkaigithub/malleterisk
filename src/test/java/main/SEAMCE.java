@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import main.enron.EnronDbDataSet;
+
 import pp.PreProcessor;
 import pp.email.body.BodyPreProcessor1;
 import pp.email.date.DatePreProcessor1;
@@ -18,10 +20,9 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import data.IDataSet;
-import data.db.DbConnector;
-import data.db.DbDataAccess;
-import data.enron.EnronDbDataSet;
+import data.loader.IDataSetLoader;
+import data.loader.db.DbConnector;
+import data.loader.db.DbDataAccess;
 import execution.ExecutionResult;
 import execution.ExecutionRun;
 import ft.selection.IFilter;
@@ -223,7 +224,7 @@ public class SEAMCE {
 		for (int collectionId : dal.getCollections()) {
 			for (int userId : dal.getUsers(collectionId)) {
 				// get dataset of specified collection and user
-				IDataSet ds = new EnronDbDataSet(dal, collectionId, userId);
+				IDataSetLoader ds = new EnronDbDataSet(dal, collectionId, userId);
 				
 				// preprocess data from the dataset into instance lists (aka preprocessors)
 				ArrayList<PreProcessor> preprocessors = new ArrayList<PreProcessor>();
@@ -241,7 +242,7 @@ public class SEAMCE {
 	}
 	
 	// preprocess the instances of the given dataset through the given preprocessors
-	public static final Collection<PreProcessor> preprocess(IDataSet ds, Collection<PreProcessor> preprocessors) {
+	public static final Collection<PreProcessor> preprocess(IDataSetLoader ds, Collection<PreProcessor> preprocessors) {
 		Instance instance;
 		while(ds.hasNext()) {
 			instance = ds.next();

@@ -1,11 +1,14 @@
-package data.enron;
+package main.enron;
 
 import java.util.Iterator;
 
 import cc.mallet.types.Instance;
-import data.IDataSet;
+import data.loader.IDataSetLoader;
 
-public class EnronFileDataSet implements IDataSet, Iterator<Instance> {
+@Deprecated
+// TODO: organize this
+// or delete it, since it might be better to have everything centralized in the db
+public class EnronFileDataSet implements IDataSetLoader, Iterator<Instance> {
 
 	@Override
 	public Iterator<Instance> iterator() {

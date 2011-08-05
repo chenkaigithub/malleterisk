@@ -13,7 +13,7 @@ import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-import data.IDataSet;
+import data.loader.IDataSetLoader;
 
 
 public class BodyPreProcessor extends PreProcessor {
@@ -22,7 +22,7 @@ public class BodyPreProcessor extends PreProcessor {
 	public BodyPreProcessor() {
 	}
 
-	public BodyPreProcessor(IDataSet ds) {
+	public BodyPreProcessor(IDataSetLoader ds) {
 		super(ds);
 	}
 	

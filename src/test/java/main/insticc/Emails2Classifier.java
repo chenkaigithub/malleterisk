@@ -11,8 +11,8 @@ import pp.PreProcessor;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
-import data.db.DbConnector;
-import data.db.DbDataAccess;
+import data.loader.db.DbConnector;
+import data.loader.db.DbDataAccess;
 import ft.selection.methods.FilterByRankedIG;
 import ft.weighting.methods.FeatureWeighting;
 

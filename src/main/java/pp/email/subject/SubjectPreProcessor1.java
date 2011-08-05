@@ -14,7 +14,7 @@ import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-import data.IDataSet;
+import data.loader.IDataSetLoader;
 
 public class SubjectPreProcessor1 extends PreProcessor {
 	private static final long serialVersionUID = -3365120647901882307L;
@@ -22,7 +22,7 @@ public class SubjectPreProcessor1 extends PreProcessor {
 	public SubjectPreProcessor1() {
 	}
 	
-	public SubjectPreProcessor1(IDataSet ds) {
+	public SubjectPreProcessor1(IDataSetLoader ds) {
 		super(ds);
 	}
 	
