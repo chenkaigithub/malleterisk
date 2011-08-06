@@ -64,7 +64,7 @@ public class LinearClassifier extends Classifier implements Serializable {
 		double predictedScores[] = prediction.getScores();
 		
 		for(int i=0; i<la.size(); i++) {
-			String tag = prediction.getLabelByRank(i).getTag();			
+			Object tag = prediction.getLabelByRank(i).getTag();			
 			int index = la.lookupIndex(tag);
 			scores[index] = predictedScores[i];
 		}
@@ -81,7 +81,7 @@ public class LinearClassifier extends Classifier implements Serializable {
 			fv = (FeatureVector) inst.getData();
 			label = (Label) inst.getTarget();
 			
-			String tag = (String)label.getEntry();
+			Object tag = label.getEntry();
 			
 			createFeatureVector(fv,tag, new SLFeatureVector(-1,-1.0,null));
 			
@@ -93,10 +93,10 @@ public class LinearClassifier extends Classifier implements Serializable {
 	}
 	
 	private SLFeatureVector createFeatureVector(FeatureVector featureVector,
-    		String next, SLFeatureVector fv) {
+    		Object next, SLFeatureVector fv) {
     	
 		int[] indices = featureVector.getIndices();
-		String s2 = next;
+		Object s2 = next;
 		for(int j=0; j<indices.length; j++) {
 		    String pred = "feat"+indices[j];
 		    fv = fv.add(s2+"_"+pred,1.0,phiAlphabet);
@@ -107,7 +107,7 @@ public class LinearClassifier extends Classifier implements Serializable {
 	private void createU(FeatureVector featureVector) {    		
 	    for(int j = 0; j < tagAlphabet.size(); j++) {
 	    	createFeatureVector(featureVector,
-					(String)tagAlphabet.lookupObject(j),
+					tagAlphabet.lookupObject(j),
 					new SLFeatureVector(-1,-1.0,null));		
 	    }	
     }
@@ -147,7 +147,7 @@ public class LinearClassifier extends Classifier implements Serializable {
 			fv = (FeatureVector) inst.getData();
 			label = (Label) inst.getTarget();
 			
-			String tag = (String)label.getEntry();
+			Object tag = label.getEntry();
 			
 			createFeatureVector(fv,tag, new SLFeatureVector(-1,-1.0,null));
 			

@@ -163,7 +163,7 @@ public class KBestMiraClassifierTrainer extends ClassifierTrainer<Classifier> {
 			fv = (FeatureVector) inst.getData();
 			label = (Label) inst.getTarget();
 			
-			String tag = (String)label.getEntry();
+			Object tag = label.getEntry();
 						
 			ClassificationInstance si = new ClassificationInstance(tag, fv);
 			

@@ -1,4 +1,4 @@
-package main.enron;
+package main.old.enron;
 import java.sql.SQLException;
 
 public class EnronMain {

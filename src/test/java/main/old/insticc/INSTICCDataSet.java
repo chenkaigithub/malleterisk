@@ -1,4 +1,4 @@
-package main.insticc;
+package main.old.insticc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -18,7 +18,7 @@ import struct.types.SLFeatureVector;
  */
 public class ClassificationLabel implements SLLabel {
 	//The string representing this label
-    private String tag;
+    private Object tag;
     //The SLFeatureVector specific to this label
     private SLFeatureVector fv;
 
@@ -27,7 +27,7 @@ public class ClassificationLabel implements SLLabel {
      * @param fv - The SLFeatureVector containing all the features
      * 				specific to this label. 
      */
-    public ClassificationLabel(String tag, SLFeatureVector fv) {
+    public ClassificationLabel(Object tag, SLFeatureVector fv) {
     	this.tag = tag;
     	this.fv = fv;
     }
@@ -45,13 +45,13 @@ public class ClassificationLabel implements SLLabel {
     private int hammingDistance(SLLabel pred) {
     	ClassificationLabel spred = (ClassificationLabel)pred;
     	
-    	String pred_tag = spred.tag;
+    	Object pred_tag = spred.tag;
     	
     	if(!tag.equals(pred_tag)) return 1;
     	else return 0;    	
     }
     
-    public String getTag() {
+    public Object getTag() {
     	return tag;
     }    
 }

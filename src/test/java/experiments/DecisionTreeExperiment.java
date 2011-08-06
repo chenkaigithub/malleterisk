@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.DecisionTreeTrainer;
+import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
 import ft.weighting.IWeighter;
@@ -26,9 +27,9 @@ public class DecisionTreeExperiment {
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new DecisionTreeTrainer());
 
-//		int step = 1;
-//		int folds = 2;
-//
-//		SEAMCE.x(files, transformers, filters, classifiers, step, folds);
+		int step = 5;
+		int folds = 10;
+
+		ExecutionUtils.runWeightersFiltersClassifiers(files, transformers, filters, classifiers, step, folds);
 	}
 }

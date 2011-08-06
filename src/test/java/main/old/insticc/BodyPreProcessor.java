@@ -1,4 +1,4 @@
-package main.insticc;
+package main.old.insticc;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;

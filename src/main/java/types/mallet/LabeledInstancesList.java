@@ -64,6 +64,8 @@ public class LabeledInstancesList {
 	}
 	
 	public int getNumLabelInstances(int labelIdx) {
+		if(instancelists[labelIdx] == null) return 0;
+		
 		return instancelists[labelIdx].size();
 	}
 	

@@ -68,7 +68,7 @@ public class ClassificationPredictor extends Predictor {
 		
 		int min = Math.min(K, tagAlphabet.size());
 		for(int i=0; i<min; i++) 
-			labels[i] = new ClassificationLabel((String)(tagAlphabet.lookupObject(indices[i])), ((ClassificationFeatures) sf).getFeatureVector(indices[i]));
+			labels[i] = new ClassificationLabel((tagAlphabet.lookupObject(indices[i])), ((ClassificationFeatures) sf).getFeatureVector(indices[i]));
 		
 		return new ClassificationPrediction(labels, scores);
 	}

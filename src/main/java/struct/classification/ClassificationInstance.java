@@ -36,7 +36,7 @@ public class ClassificationInstance implements SLInstance {
 	 * @param tag - The target label for this instance.
 	 * @param featureVector - The Mallet FeatureVector of this instance.
 	 */
-	public ClassificationInstance(String tag, FeatureVector featureVector) {		
+	public ClassificationInstance(Object tag, FeatureVector featureVector) {		
 		SLFeatureVector prodFV = new SLFeatureVector(-1,-1.0,null);
 		
 		SLFeatureVector nfv = createFeatureVector(featureVector, tag, new SLFeatureVector(-1,-1.0,null));
@@ -62,7 +62,7 @@ public class ClassificationInstance implements SLInstance {
 			
 			SLFeatureVector nfv = 
 				createFeatureVector(featureVector,
-						(String)tagAlphabet.lookupObject(i),
+						tagAlphabet.lookupObject(i),
 						new SLFeatureVector(-1,-1.0,null));
 			
 			nfv.sort();
@@ -78,11 +78,11 @@ public class ClassificationInstance implements SLInstance {
 		
 	
 	private SLFeatureVector createFeatureVector(FeatureVector featureVector,
-			String next,
+			Object next,
 			SLFeatureVector fv) {
 		
 		int[] indices = featureVector.getIndices();
-		String s2 = next;
+		Object s2 = next;
 		for(int j=0; j<indices.length; j++) {
 			String pred = "feat"+indices[j];
 			fv = fv.add(s2+"_"+pred,1.0,dataAlphabet);
