@@ -46,4 +46,11 @@ public class EmailParticipant implements IEmailParticipant, Serializable {
 		participantId = in.readInt();
 		type = (ParticipantType)in.readObject();
 	}
+	
+	// toString
+	
+	@Override
+	public String toString() {
+		return String.valueOf(participantId);
+	}
 }
