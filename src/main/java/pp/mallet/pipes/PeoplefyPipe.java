@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import sun.misc.GC;
 import types.email.IEmailMessage;
 import types.email.IEmailParticipant;
 import cc.mallet.pipe.Pipe;
@@ -32,7 +33,9 @@ public class PeoplefyPipe extends Pipe implements Serializable {
 		Set<Set<IEmailParticipant>> powerset = powerset(participants);
 		powerset = removeEmptyOrSingleSets(powerset);
 		
-		return new TokenSequence(toTokens(powerset));
+		TokenSequence ts = new TokenSequence(toTokens(powerset));
+		System.gc();
+		return ts;
 	}
 	
 	public static Set<Set<IEmailParticipant>> powerset(Collection<IEmailParticipant> participants) {
