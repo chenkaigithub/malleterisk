@@ -3,9 +3,13 @@ package experiments;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Random;
 
+import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
+import cc.mallet.classify.Trial;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import classifiers.PeoplefierTrainer;
 import execution.ExecutionResult;
@@ -28,11 +32,17 @@ public class PeoplefierExperiment2 {
 		InstanceList instances = InstanceList.load(new File(filename));
 		ClassifierTrainer<? extends Classifier> ct = new PeoplefierTrainer();
 		
-		run("participants", instances, ct, 10);
+//		run("participants", instances, ct, 10);
 		
-//		InstanceList[] folds = instances.split(new Random(), new double[] { 0.5, 0.5 });
-//		Trial t = new Trial(ct.train(folds[0]), folds[1]);
-//		System.out.println(t.getAccuracy());
+		InstanceList[] folds = instances.split(new Random(), new double[] { 0.5, 0.5 });
+		Trial t = new Trial(ct.train(folds[0]), folds[1]);
+		System.out.println(t.getAccuracy());
+
+		Classifier classifier = ct.train(folds[0]);
+		for (Instance instance : folds[1]) {
+			Classification c = classifier.classify(instance);
+			System.out.println("REAL: " + instance.getTarget() + "\tBEST: " + c.toString());
+		}
 	}
 	
 	public static final void run(
