@@ -8,14 +8,14 @@ import main.old.enron.EnronDbDataSet;
 import pp.email.participants.ParticipantsPreProcessor1;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
+import classifiers.PeoplefierTrainer;
 import data.loader.db.DbConnector;
 import data.loader.db.DbDataAccess;
 import execution.ExecutionResult;
 import execution.ExecutionUtils;
 
-public class PeoplefierExperiment {
+public class PeoplefierExperiment2 {
 	public static void main(String[] args) throws SQLException, FileNotFoundException, InstantiationException, IllegalAccessException {
 		int collectionId = 1;
 		int userId = 6;
@@ -29,10 +29,10 @@ public class PeoplefierExperiment {
 		
 		System.out.println("-------------------------------------------------");
 		
-		InstanceList instances = InstanceList.load(new File(filename));
-		ClassifierTrainer<? extends Classifier> ct = new NaiveBayesTrainer();
-		
-		run("participants", instances, ct, 10);
+//		InstanceList instances = InstanceList.load(new File(filename));
+//		ClassifierTrainer<? extends Classifier> ct = new PeoplefierTrainer();
+//		
+//		run("participants", instances, ct, 10);
 		
 //		InstanceList[] folds = instances.split(new Random(), new double[] { 0.5, 0.5 });
 //		Trial t = new Trial(ct.train(folds[0]), folds[1]);

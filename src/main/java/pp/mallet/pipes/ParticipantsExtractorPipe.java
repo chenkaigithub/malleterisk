@@ -23,9 +23,7 @@ public class ParticipantsExtractorPipe extends Pipe implements Serializable {
 	
 	public static TokenSequence toTokens(Collection<IEmailParticipant> participants) {
 		LinkedList<Token> tokens = new LinkedList<Token>();
-		
-		for (IEmailParticipant p : participants)
-			tokens.add(new Token(p.toString()));
+		for (IEmailParticipant p : participants) tokens.add(new Token(p.toString()));
 				
 		return new TokenSequence(tokens);
 	}

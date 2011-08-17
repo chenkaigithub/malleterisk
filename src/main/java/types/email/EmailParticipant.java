@@ -3,9 +3,8 @@ package types.email;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-public class EmailParticipant implements IEmailParticipant, Serializable {
+public class EmailParticipant implements IEmailParticipant {
 	private static final long serialVersionUID = 1;
 
 	private int emailId;

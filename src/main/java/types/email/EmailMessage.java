@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class EmailMessage implements IEmailMessage {
+	private static final long serialVersionUID = 1L;
+	
 	private final int emailId;
 	private final int collectionId;
 	private final int userId;

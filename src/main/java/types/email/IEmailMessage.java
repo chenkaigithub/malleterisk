@@ -1,9 +1,10 @@
 package types.email;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-public interface IEmailMessage {
+public interface IEmailMessage extends Serializable {
 	int getCollectionId();
 	int getUserId();
 	int getEmailId();
