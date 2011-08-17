@@ -39,6 +39,7 @@ public class LibLinear extends Classifier {
 			values[r] = 1;
 		}
 		
+		// TODO: make sure ta and values are ordered!
 		return new Classification(instance, this, new LabelVector(ta, values));
 	}
 

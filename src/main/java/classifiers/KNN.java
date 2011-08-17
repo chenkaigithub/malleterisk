@@ -53,7 +53,7 @@ public class KNN extends Classifier {
 			
 			i++;
 		}
-		
+		// TODO: make sure labels & counts are ordered!
 		return new Classification(instance, this, new LabelVector(labels, counts));
 	}
 	
