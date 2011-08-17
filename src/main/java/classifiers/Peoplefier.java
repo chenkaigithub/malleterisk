@@ -48,7 +48,7 @@ public class Peoplefier extends Classifier {
 		
 		int i = 0;
 		if(labelsScores.size() > 0) {
-			CollectionsUtils.asSortedList(labelsScores.entrySet(), new Comparator<Entry<Label, Double>>() {
+			List<Entry<Label, Double>> ls = CollectionsUtils.asSortedList(labelsScores.entrySet(), new Comparator<Entry<Label, Double>>() {
 				@Override
 				public int compare(Entry<Label, Double> o1, Entry<Label, Double> o2) {
 					Double d1 = o1.getValue();
@@ -58,9 +58,9 @@ public class Peoplefier extends Classifier {
 				}
 			});
 			
-			for (Entry<Label, Double> lc : labelsScores.entrySet()) {
-				labels[i] = lc.getKey();
-				counts[i] = lc.getValue();
+			for (Entry<Label, Double> e : ls) {
+				labels[i] = e.getKey();
+				counts[i] = e.getValue();
 				
 				i++;
 			}
