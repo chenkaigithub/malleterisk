@@ -26,11 +26,13 @@ public class JavaMailUtils {
 		@SuppressWarnings("unchecked")
 		Enumeration<String> e = msg.getMatchingHeaderLines(new String[] { header });
 		while(e.hasMoreElements()) {
-			String s = e.nextElement().substring(header.length()+1); // "To/Cc/Bcc" + ":"
+			String s = e.nextElement().substring(header.length()+1); // "To/Cc/Bcc/X-To/X-cc/X-bcc" + ":"
 			String[] addrs = s.split(",");
 			
-			for (String address : addrs)
-				addresses.add(address.trim());
+			for (String addr : addrs) {
+				s = addr.trim();
+				if(s.length()>0) addresses.add(s);
+			}
 		}
 		
 		return addresses;
