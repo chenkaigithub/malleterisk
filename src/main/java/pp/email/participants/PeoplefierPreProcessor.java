@@ -7,13 +7,13 @@ import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.Target2Label;
 import data.loader.IDataSetLoader;
 
-public class ParticipantsPreProcessor1 extends PreProcessor {
+public class PeoplefierPreProcessor extends PreProcessor {
 	private static final long serialVersionUID = -3365120647901882307L;
 
-	public ParticipantsPreProcessor1() {
+	public PeoplefierPreProcessor() {
 	}
 
-	public ParticipantsPreProcessor1(IDataSetLoader ds) {
+	public PeoplefierPreProcessor(IDataSetLoader ds) {
 		super(ds);
 	}
 	
@@ -21,11 +21,7 @@ public class ParticipantsPreProcessor1 extends PreProcessor {
 	protected ArrayList<Pipe> getPipes() {
 		ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		
-//		pipes.add(new EmailParticipants2Input());
-//		pipes.add(new ParticipantsExtractorPipe());
-//		pipes.add(new TokenSequence2FeatureSequence());
 		pipes.add(new Target2Label());
-//		pipes.add(new FeatureSequence2FeatureVector());
 		
 		return pipes;
 	}

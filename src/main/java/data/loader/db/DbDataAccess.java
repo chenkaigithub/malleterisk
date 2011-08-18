@@ -194,6 +194,10 @@ public class DbDataAccess {
 			m.getContent().toString()
 		);
 		
+		// TODO: this is bugged; must inspect additional headers (e.g. X-To, X-CC, etc)
+		// TODO: also, avoid adding duplicate addresses (i.e. To/X-To, Cc/X-Cc, etc)
+		// TODO: also, find a way to treat some problems like "group" addresses or non-addresses (client names that were not correctly represented)
+		// TODO: and any additional problems..
 		for (String from : JavaMailUtils.parseAddresses(JavaMailUtils.FROM, m)) storeEmailParticipant(emailId, from, JavaMailUtils.FROM);
 		for (String to : JavaMailUtils.parseAddresses(JavaMailUtils.TO, m)) storeEmailParticipant(emailId, to, JavaMailUtils.TO);
 		for (String cc : JavaMailUtils.parseAddresses(JavaMailUtils.CC, m)) storeEmailParticipant(emailId, cc, JavaMailUtils.CC);

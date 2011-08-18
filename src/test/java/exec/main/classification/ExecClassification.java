@@ -1,4 +1,4 @@
-package main.executions;
+package exec.main.classification;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,12 +21,12 @@ public class ExecClassification {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+bodies"));
-//		files.add(new File("instances+1+2+bodies"));
-//		files.add(new File("instances+1+3+bodies"));
-//		files.add(new File("instances+1+4+bodies"));
-//		files.add(new File("instances+1+5+bodies"));
-//		files.add(new File("instances+1+6+bodies"));
-//		files.add(new File("instances+1+7+bodies"));
+		files.add(new File("instances+1+2+bodies"));
+		files.add(new File("instances+1+3+bodies"));
+		files.add(new File("instances+1+4+bodies"));
+		files.add(new File("instances+1+5+bodies"));
+		files.add(new File("instances+1+6+bodies"));
+		files.add(new File("instances+1+7+bodies"));
 		files.add(new File("instances+2+1+bodies"));
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
@@ -41,7 +41,8 @@ public class ExecClassification {
 		classifiers.add(new MaxEntTrainer());
 		classifiers.add(new DecisionTreeTrainer());
 		classifiers.add(new KBestMiraClassifierTrainer(5));
-		
+		// TODO: need a way to pass arguments to classifiers [trainer.getClass().newInstance()]
+		// TODO: use the other classifiers: KNN, Winnow
 		int step = 10;
 		int folds = 10;
 		

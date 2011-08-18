@@ -8,11 +8,10 @@ import javax.mail.MessagingException;
 
 import data.loader.db.DbDataAccess;
 
-//TODO: organize this
-public class EnronConverter {
+public class EnronFileToDbConverter {
 	private final DbDataAccess dal;
 	
-	public EnronConverter(DbDataAccess dal) {
+	public EnronFileToDbConverter(DbDataAccess dal) {
 		this.dal = dal;
 	}
 

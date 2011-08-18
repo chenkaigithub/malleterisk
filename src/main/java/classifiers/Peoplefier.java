@@ -1,9 +1,7 @@
 package classifiers;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,6 @@ import types.graph.Edge;
 import types.graph.EdgeType;
 import types.graph.Graph;
 import types.graph.Vertex;
-import utils.CollectionsUtils;
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.types.Instance;
@@ -42,38 +39,11 @@ public class Peoplefier extends Classifier {
 			verticesIds.add(String.valueOf(p.getParticipantId()));
 		
 		Map<Label, Double> labelsScores = scores(this.graph, verticesIds);
-		int n = labelsScores.size() > 0 ? labelsScores.size() : targetAlphabet.size();
-		Label[] labels = new Label[n];
-		double[] counts = new double[n];
+		double[] counts = new double[targetAlphabet.size()];
+		for (Entry<Label, Double> e : labelsScores.entrySet())
+			counts[e.getKey().getIndex()] = e.getValue();
 		
-		int i = 0;
-		if(labelsScores.size() > 0) {
-			List<Entry<Label, Double>> ls = CollectionsUtils.asSortedList(labelsScores.entrySet(), new Comparator<Entry<Label, Double>>() {
-				@Override
-				public int compare(Entry<Label, Double> o1, Entry<Label, Double> o2) {
-					Double d1 = o1.getValue();
-					Double d2 = o2.getValue();
-					
-					return d1 == d2 ? 0 : (d1 > d2 ? -1 : 1); // for descending order
-				}
-			});
-			
-			for (Entry<Label, Double> e : ls) {
-				labels[i] = e.getKey();
-				counts[i] = e.getValue();
-				
-				i++;
-			}
-		}
-		else {
-			Iterator<?> it = targetAlphabet.iterator();
-			while(it.hasNext()) {
-				labels[i] = targetAlphabet.lookupLabel(it.next());
-				i++;
-			}
-		}
-		
-		return new Classification(instance, this, new LabelVector(labels, counts));
+		return new Classification(instance, this, new LabelVector(targetAlphabet, counts));
 	}
 	
 	//

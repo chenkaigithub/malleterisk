@@ -1,8 +1,6 @@
 package data.source.enron;
 
-//TODO: organize this
 public class EnronConstants {
-	// folders
 	public static final String ENRON_FOLDER_PATH = "../../data/enron/";
 	
 	public static final String ENRON_TOPICAL_FOLDERS_PATH = "../../data/enron_seamc/topical_folders/";

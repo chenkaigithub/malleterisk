@@ -7,7 +7,6 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.SparseVector;
 
-// TODO: organize etc
 public class CollectionAnalysis {
 	private final InstanceList instances;
 	private final LabeledInstancesList labeledInstances;

@@ -130,10 +130,14 @@ public class ExecutionResult {
 		sb.append("trial");
 		sb.append("+");
 		sb.append(this.name);
-		sb.append("+");
-		sb.append(this.transformer);
-		sb.append("+");
-		sb.append(this.filter);
+		if(this.transformer!=null) {
+			sb.append("+");
+			sb.append(this.transformer);
+		}
+		if(this.filter!=null) {
+			sb.append("+");
+			sb.append(this.filter);
+		}
 		sb.append("+");
 		sb.append(n);
 		sb.append("+");
@@ -155,10 +159,14 @@ public class ExecutionResult {
 		sb.append("accuracies");
 		sb.append("+");
 		sb.append(this.name);
-		sb.append("+");
-		sb.append(this.transformer);
-		sb.append("+");
-		sb.append(this.filter);
+		if(this.transformer!=null) {
+			sb.append("+");
+			sb.append(this.transformer);
+		}
+		if(this.filter!=null) {
+			sb.append("+");
+			sb.append(this.filter);
+		}
 		sb.append("+");
 		sb.append(this.classifier);
 		sb.append("+");

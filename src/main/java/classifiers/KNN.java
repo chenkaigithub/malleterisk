@@ -11,6 +11,7 @@ import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
+import cc.mallet.types.LabelAlphabet;
 import cc.mallet.types.LabelVector;
 import cc.mallet.types.Metric;
 
@@ -44,20 +45,13 @@ public class KNN extends Classifier {
 			labelsCounts.put(l, counts);
 		}
 		
-		Label[] labels = new Label[labelsCounts.size()];
-		double[] counts = new double[labelsCounts.size()];
-		int i = 0;
-		for (Entry<Label, Integer> lc : labelsCounts.entrySet()) {
-			labels[i] = lc.getKey();
-			counts[i] = lc.getValue();
-			
-			i++;
-		}
-		// TODO: make sure labels & counts are ordered!
-		return new Classification(instance, this, new LabelVector(labels, counts));
+		LabelAlphabet targetAlphabet = (LabelAlphabet) instance.getTargetAlphabet();
+		double[] counts = new double[targetAlphabet.size()];
+		for (Entry<Label, Integer> lc : labelsCounts.entrySet())
+			counts[lc.getKey().getIndex()] = lc.getValue();
+		
+		return new Classification(instance, this, new LabelVector(targetAlphabet, counts));
 	}
-	
-	
 	
 	/**
 	 * Returns the "k" nearest instances of the specified instance, when computed

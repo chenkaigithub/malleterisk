@@ -1,10 +1,10 @@
-package main.old.enron.pre;
+package exec.enron;
 import java.util.LinkedList;
 
 import data.source.enron.EnronConstants;
 import data.source.enron.EnronFileCleaning;
 
-public class EnronPrepareCleanNonTopical {
+public class EnronCleanNonTopical {
 	public static void main(String[] args) throws Exception {
 		LinkedList<String> NON_TOPICAL_FOLDERS = new LinkedList<String>();
 		NON_TOPICAL_FOLDERS.add("_sent_mail");
