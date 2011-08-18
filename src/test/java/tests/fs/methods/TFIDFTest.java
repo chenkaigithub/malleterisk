@@ -8,23 +8,23 @@ public class TFIDFTest {
 //	@Before
 //	public void setUp() {
 //		/*	manually generated term occurrences:
-//			/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/10.
+//			/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/10.
 //			duke: 8.0
 //			citru: 6.0
 //			
-//			/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/18.
+//			/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/18.
 //			glatzer: 1.0
 //			
-//			/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/34.
+//			/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/34.
 //
 //			schedul: 6.0
 //			
-//			/Work/msc/code/seamce/../../data/enron_flat/sanders-r/ecogas/10.
+//			/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/ecogas/10.
 //
 //			montauk: 9.0
 //			settlement: 7.0
 //			
-//			/Work/msc/code/seamce/../../data/enron_flat/sanders-r/ecogas/18.
+//			/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/ecogas/18.
 //			ecoga: 4.0
 //			legal: 5.0
 //			expens: 3.0
@@ -108,21 +108,21 @@ public class TFIDFTest {
 ////			
 ////			for (int idx : fv.getIndices()) {
 ////				String t = alphabet.lookupObject(idx).toString();
-////				if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/10.")) {
+////				if(instance.getName().equals("/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/10.")) {
 ////					if(t.equals("duke")) Assert.assertEquals(tfidf(8.0), fv.value(idx));
 ////					else if(t.equals("citru")) Assert.assertEquals(tfidf(6.0), fv.value(idx));
 ////				}
-////				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/18.")) {
+////				else if(instance.getName().equals("/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/18.")) {
 ////					if(t.equals("glatzer")) Assert.assertEquals(tfidf(1.0), fv.value(idx));
 ////				}
-////				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/duke/34.")) {
+////				else if(instance.getName().equals("/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/duke/34.")) {
 ////					if(t.equals("schedul")) Assert.assertEquals(tfidf(6.0), fv.value(idx));
 ////				}
-////				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/ecogas/10.")) {
+////				else if(instance.getName().equals("/Work/msc/code/malleterisk/../../data/enron_flat/ecogas/10.")) {
 ////					if(t.equals("montauk")) Assert.assertEquals(tfidf(9.0), fv.value(idx));
 ////					else if(t.equals("settlement")) Assert.assertEquals(tfidf(7.0), fv.value(idx));
 ////				}
-////				else if(instance.getName().equals("/Work/msc/code/seamce/../../data/enron_flat/sanders-r/ecogas/18.")) {
+////				else if(instance.getName().equals("/Work/msc/code/malleterisk/../../data/enron_flat/sanders-r/ecogas/18.")) {
 ////					if(t.equals("ecoga")) Assert.assertEquals(tfidf(4.0), fv.value(idx));
 ////					else if(t.equals("legal")) Assert.assertEquals(tfidf(5.0), fv.value(idx));
 ////					else if(t.equals("expens")) Assert.assertEquals(tfidf(3.0), fv.value(idx));

@@ -49,5 +49,4 @@ public class EnronFileToDbConverter {
 			System.out.println(collectionId + "|" + userId + "|" + classId + "|" + emailId + "|" + fileName);
 		}
 	}
-
 }

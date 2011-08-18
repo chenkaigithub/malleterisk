@@ -27,7 +27,7 @@ public class ExecPeoplefierPreprocessing {
 	}
 	
 	private static void preprocess(int collectionId, int userId) throws SQLException {
-		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql"));
 		DbDataSetLoader enron = new DbDataSetLoader(dal, collectionId, userId);
 		
 		InstanceList il = new PeoplefierPreProcessor(enron);

@@ -2,6 +2,7 @@ package utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -14,8 +15,12 @@ public class JavaMailUtils {
 	public static final String TO = "To";
 	public static final String CC = "Cc";
 	public static final String BCC = "Bcc"; 
+	public static final String X_FROM = "X-From";
+	public static final String X_TO = "X-To";
+	public static final String X_CC = "X-cc";
+	public static final String X_BCC = "X-bcc"; 
 
-	public static final String[] parseAddresses(String header, MimeMessage msg) throws MessagingException {
+	public static final Collection<String> parseAddresses(String header, MimeMessage msg) throws MessagingException {
 		LinkedList<String> addresses = new LinkedList<String>();
 		
 		@SuppressWarnings("unchecked")
@@ -24,12 +29,11 @@ public class JavaMailUtils {
 			String s = e.nextElement().substring(header.length()+1); // "To/Cc/Bcc" + ":"
 			String[] addrs = s.split(",");
 			
-			for (String address : addrs) {
+			for (String address : addrs)
 				addresses.add(address.trim());
-			}
 		}
 		
-		return addresses.toArray(new String[0]);
+		return addresses;
 	}
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

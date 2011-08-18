@@ -17,25 +17,25 @@ DROP TABLE email_participant;
 DROP TABLE email_participants;
 
 CREATE TABLE email_collection (
-	collection_id SERIAL,
+	collection_id SERIAL UNIQUE,
 	collection_name TEXT UNIQUE
 );
 
 CREATE TABLE email_user (
 	collection_id INTEGER,
-	user_id SERIAL,
+	user_id SERIAL UNIQUE,
 	user_name TEXT UNIQUE
 );
 
 CREATE TABLE email_class (
 	collection_id INTEGER,
 	user_id INTEGER,
-	class_id SERIAL,
+	class_id SERIAL UNIQUE,
 	class_name TEXT UNIQUE
 );
 
 CREATE TABLE email_message (
-	email_id SERIAL,
+	email_id SERIAL UNIQUE,
 	email_name TEXT UNIQUE,
 
 	collection_id INTEGER,
@@ -48,7 +48,7 @@ CREATE TABLE email_message (
 );
 
 CREATE TABLE email_participant (
-	participant_id SERIAL,
+	participant_id SERIAL UNIQUE,
 	participant_address TEXT
 );
 

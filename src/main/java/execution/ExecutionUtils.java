@@ -32,7 +32,7 @@ public class ExecutionUtils {
 	// stores email data from database to preprocessed files
 	/*
 	public static final void db2file() throws SQLException {
-		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/seamce", "postgres", "postgresql"));
+		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
 			for (int userId : dal.getUsers(collectionId)) {
 				// get dataset of specified collection and user

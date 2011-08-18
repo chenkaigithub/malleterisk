@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -193,15 +195,25 @@ public class DbDataAccess {
 			m.getSubject(), 
 			m.getContent().toString()
 		);
+
+		// parse participants; no duplicates for the same field
+		Set<String> froms = new HashSet<String>();
+		froms.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.FROM, m));
+		froms.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_FROM, m));
+		Set<String> tos = new HashSet<String>();
+		tos.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.TO, m));
+		tos.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_TO, m));
+		Set<String> ccs = new HashSet<String>();
+		ccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.CC, m));
+		ccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_CC, m));
+		Set<String> bccs = new HashSet<String>();
+		bccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.BCC, m));
+		bccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_BCC, m));
 		
-		// TODO: this is bugged; must inspect additional headers (e.g. X-To, X-CC, etc)
-		// TODO: also, avoid adding duplicate addresses (i.e. To/X-To, Cc/X-Cc, etc)
-		// TODO: also, find a way to treat some problems like "group" addresses or non-addresses (client names that were not correctly represented)
-		// TODO: and any additional problems..
-		for (String from : JavaMailUtils.parseAddresses(JavaMailUtils.FROM, m)) storeEmailParticipant(emailId, from, JavaMailUtils.FROM);
-		for (String to : JavaMailUtils.parseAddresses(JavaMailUtils.TO, m)) storeEmailParticipant(emailId, to, JavaMailUtils.TO);
-		for (String cc : JavaMailUtils.parseAddresses(JavaMailUtils.CC, m)) storeEmailParticipant(emailId, cc, JavaMailUtils.CC);
-		for (String bcc : JavaMailUtils.parseAddresses(JavaMailUtils.BCC, m)) storeEmailParticipant(emailId, bcc, JavaMailUtils.BCC);
+		for (String from : froms) storeEmailParticipant(emailId, from, JavaMailUtils.FROM);
+		for (String to : tos) storeEmailParticipant(emailId, to, JavaMailUtils.TO);
+		for (String cc : ccs) storeEmailParticipant(emailId, cc, JavaMailUtils.CC);
+		for (String bcc : bccs) storeEmailParticipant(emailId, bcc, JavaMailUtils.BCC);
 		
 		return emailId;
 	}
