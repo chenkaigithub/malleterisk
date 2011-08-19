@@ -5,11 +5,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import struct.classification.KBestMiraClassifierTrainer;
+import cc.mallet.classify.BalancedWinnowTrainer;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.DecisionTreeTrainer;
 import cc.mallet.classify.MaxEntTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
+import cc.mallet.classify.WinnowTrainer;
+import cc.mallet.types.NormalizedDotProductMetric;
+import classifiers.KNNTrainer;
 import classifiers.LibLinearTrainer;
 import execution.ExecutionUtils;
 import ft.selection.IFilter;
@@ -40,9 +44,12 @@ public class ExecClassification {
 		classifiers.add(new LibLinearTrainer());
 		classifiers.add(new MaxEntTrainer());
 		classifiers.add(new DecisionTreeTrainer());
+		classifiers.add(new KNNTrainer(5, new NormalizedDotProductMetric()));
+		classifiers.add(new WinnowTrainer());
+		classifiers.add(new BalancedWinnowTrainer());
 		classifiers.add(new KBestMiraClassifierTrainer(5));
+		
 		// TODO: need a way to pass arguments to classifiers [trainer.getClass().newInstance()]
-		// TODO: use the other classifiers: KNN, Winnow
 		int step = 10;
 		int folds = 10;
 		

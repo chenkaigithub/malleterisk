@@ -198,17 +198,17 @@ public class DbDataAccess {
 
 		// parse participants; no duplicates for the same field
 		Set<String> froms = new HashSet<String>();
-		froms.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.FROM, m));
-		froms.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_FROM, m));
+		froms.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.FROM, m));
+		froms.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.X_FROM, m));
 		Set<String> tos = new HashSet<String>();
-		tos.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.TO, m));
-		tos.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_TO, m));
+		tos.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.TO, m));
+		tos.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.X_TO, m));
 		Set<String> ccs = new HashSet<String>();
-		ccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.CC, m));
-		ccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_CC, m));
+		ccs.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.CC, m));
+		ccs.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.X_CC, m));
 		Set<String> bccs = new HashSet<String>();
-		bccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.BCC, m));
-		bccs.addAll(JavaMailUtils.parseAddresses(JavaMailUtils.X_BCC, m));
+		bccs.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.BCC, m));
+		bccs.addAll(JavaMailUtils.parseParticipants(JavaMailUtils.X_BCC, m));
 		
 		for (String from : froms) storeEmailParticipant(emailId, from, JavaMailUtils.FROM);
 		for (String to : tos) storeEmailParticipant(emailId, to, JavaMailUtils.TO);

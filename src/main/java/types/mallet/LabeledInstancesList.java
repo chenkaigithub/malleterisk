@@ -59,6 +59,10 @@ public class LabeledInstancesList {
 		return i;
 	}
 	
+	public Object getLabel(int labelIdx) {
+		return labels[labelIdx];
+	}
+	
 	public InstanceList getLabelInstances(int labelIdx) {
 		return instancelists[labelIdx];
 	}

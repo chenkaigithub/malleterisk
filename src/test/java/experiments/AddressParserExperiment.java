@@ -36,29 +36,27 @@ public class AddressParserExperiment {
 			try {  
 				MimeMessage m = new MimeMessage(null, new FileInputStream(fileName));
 				int i = 0;
-				for (String from : JavaMailUtils.parseAddresses(JavaMailUtils.FROM, m))
-					i++;
-				for (String to : JavaMailUtils.parseAddresses(JavaMailUtils.TO, m)) 
-					i++;
-				for (String cc : JavaMailUtils.parseAddresses(JavaMailUtils.CC, m)) 
-					i++;
-				for (String bcc : JavaMailUtils.parseAddresses(JavaMailUtils.BCC, m)) 
-					i++;
-				for (String from : JavaMailUtils.parseAddresses("X-From", m)) 
-					i++;
-				for (String to : JavaMailUtils.parseAddresses("X-To", m)) 
-					i++;
-				for (String cc : JavaMailUtils.parseAddresses("X-cc", m)) 
-					i++;
-				for (String bcc : JavaMailUtils.parseAddresses("X-bcc", m)) 
-					i++;
+				for (String s : JavaMailUtils.parseParticipants(JavaMailUtils.FROM, m))
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants(JavaMailUtils.TO, m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants(JavaMailUtils.CC, m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants(JavaMailUtils.BCC, m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants("X-From", m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants("X-To", m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants("X-cc", m)) 
+					i++;// System.out.println(s);
+				for (String s : JavaMailUtils.parseParticipants("X-bcc", m)) 
+					i++;// System.out.println(s);
 				
 				if(i < 2) System.out.println(fileName);
 			} 
 			catch (MessagingException e1) { e1.printStackTrace(); } 
 			catch (IOException e1) { e1.printStackTrace(); } 
-			
 		}
 	}
-
 }
