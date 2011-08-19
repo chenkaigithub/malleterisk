@@ -43,7 +43,6 @@ public class JavaMailUtils {
 				for(String str : s.split(",")) {
 					str = str.trim();
 					if(str.length() > 0) addresses.add(str);
-					System.out.println(str);
 				}
 			}
 		}
