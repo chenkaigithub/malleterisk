@@ -1,4 +1,4 @@
-package pp.mallet.pipes;
+package types.mallet.pipe;
 
 /*
 	Porter stemmer in Java. The original paper is in

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import pp.PreProcessor;
-import pp.mallet.pipes.PorterStemmerSequence;
 import types.mallet.pipe.EmailSubject2Input;
+import types.mallet.pipe.PorterStemmerSequence;
 import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Input2CharSequence;

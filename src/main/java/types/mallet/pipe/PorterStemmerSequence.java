@@ -1,4 +1,4 @@
-package pp.mallet.pipes;
+package types.mallet.pipe;
 
 import java.io.Serializable;
 

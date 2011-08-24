@@ -3,9 +3,13 @@ package data.analysis;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import types.email.IEmailMessage;
+import types.email.IEmailParticipant;
 import types.mallet.LabeledInstancesList;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
@@ -14,13 +18,63 @@ import cc.mallet.types.SparseVector;
 
 public class DataAnalysis {
 	
+	public static void participantsClassesCorrelation(InstanceList pil) {
+		// find a correlation between participants and labels
+		// participants are treated as groups (unique set of participants)
+		
+		Map<Set<Integer>, Set<String>> groupsLabels = new HashMap<Set<Integer>, Set<String>>();
+		
+		// iterate all instances and build the map<groups, labels> that associates
+		// the unique groups to a set of classes
+		for (Instance inst : pil) {
+			IEmailMessage m = (IEmailMessage) inst.getData();
+			
+			// get the group of the message
+			Set<Integer> g = new HashSet<Integer>();
+			for (IEmailParticipant p : m.getParticipants()) // I could/should implement equals/hashcode on
+				g.add(p.getParticipantId());				// EmailParticipant to avoid doing this
+			
+			// create and add if not exists
+			Set<String> l;
+			if((l = groupsLabels.get(g)) == null) {
+				l = new HashSet<String>();
+				groupsLabels.put(g, l);
+			}
+			
+			// associate this class to the group
+			l.add(inst.getTarget().toString());
+		}
+		
+		// print to system.out
+		int i = 1;
+		for (Entry<Set<Integer>, Set<String>> entry : groupsLabels.entrySet()) {
+			System.out.print((i++) + ": [ ");
+			for (Integer p : entry.getKey())
+				System.out.print(p + " ");
+			System.out.print("]");
+
+			System.out.print("\t\t\t");
+			
+			System.out.print("[ ");
+			for (String l : entry.getValue())
+				System.out.print(l + " ");
+			System.out.print("]");
+			
+			System.out.println();
+		}
+		System.out.println();
+		System.out.println();
+		System.out.println("#unique entries: " + groupsLabels.size()); // number of unique groups
+	}
+	
+	
 	// features
 	
-	public static int getNumTerms(InstanceList il) {
+	public static int numTerms(InstanceList il) {
 		return il.getDataAlphabet().size();
 	}
 	
-	public static SparseVector getTermOccurrences(InstanceList il) {
+	public static SparseVector termOccurrences(InstanceList il) {
 		SparseVector sv = new SparseVector(new double[il.getDataAlphabet().size()]);
 
 		for (Instance i : il)
@@ -29,7 +83,7 @@ public class DataAnalysis {
 		return sv;
 	}	
 	
-	public static double getAverageTermsPerDocument(InstanceList il) {
+	public static double averageTermsPerDocument(InstanceList il) {
 		double i = 0;
 		
 		for (Instance instance : il)
@@ -38,7 +92,7 @@ public class DataAnalysis {
 		return i / (double)il.size();
 	}
 	
-	public static int getMinNumTermsInDocuments(InstanceList il) {
+	public static int minNumTermsInDocuments(InstanceList il) {
 		int m = -1;
 		
 		for (Instance instance : il) {
@@ -49,7 +103,7 @@ public class DataAnalysis {
 		return m;
 	}
 	
-	public static int getMaxNumTermsInDocument(InstanceList il) {
+	public static int maxNumTermsInDocument(InstanceList il) {
 		int m = 0;
 		
 		for (Instance instance : il) {
@@ -60,31 +114,31 @@ public class DataAnalysis {
 		return m;
 	}
 	
-	public static void getAverageTermsPerClass(LabeledInstancesList lil) {
+	public static void averageTermsPerClass(LabeledInstancesList lil) {
 		Map<Object, Double> avg = new HashMap<Object, Double>();
 		
 		// average length of messages per class
 		for(int i=0; i<lil.getNumLabels(); ++i)
-			avg.put(lil.getLabel(i), getAverageTermsPerDocument(lil.getLabelInstances(i)));
+			avg.put(lil.getLabel(i), averageTermsPerDocument(lil.getLabelInstances(i)));
 		
 		// TODO: output to a file (.csv)
 	}
 
 	// documents / classes
 	
-	public static int getNumClasses(InstanceList il) {
+	public static int numClasses(InstanceList il) {
 		return il.getTargetAlphabet().size();
 	}
 	
-	public static int getNumDocuments(InstanceList il) {
+	public static int numDocuments(InstanceList il) {
 		return il.size();
 	}
 
-	public static double getAverageDocumentsPerClass(InstanceList il) {
+	public static double averageDocumentsPerClass(InstanceList il) {
 		return (double)il.size()/(double)il.getTargetAlphabet().size();
 	}
 	
-	public static int getMinNumDocumentsInClass(LabeledInstancesList lil) {
+	public static int minNumDocumentsInClass(LabeledInstancesList lil) {
 		int c = -1;
 
 		for (InstanceList instances : lil.getInstances()) {
@@ -95,7 +149,7 @@ public class DataAnalysis {
 		return c;
 	}
 	
-	public static int getMaxNumDocumentsInClass(LabeledInstancesList lil) {
+	public static int maxNumDocumentsInClass(LabeledInstancesList lil) {
 		int c = 0;
 
 		for (InstanceList instances : lil.getInstances()) {
@@ -118,7 +172,7 @@ public class DataAnalysis {
 	
 	// participants
 	
-	public static void totalNumParticipantsInClass(LabeledInstancesList lil) {
+	public static void totalNumParticipantsInClass(LabeledInstancesList lil, File output) {
 		// the instancelist must be of participants
 		Map<Object, Integer> hg = new HashMap<Object, Integer>();
 		
@@ -146,7 +200,7 @@ public class DataAnalysis {
 		
 	// time
 	
-	public static void time(LabeledInstancesList lil) {
+	public static void time(LabeledInstancesList lil, File output) {
 		// instance's data must be of date type
 		
 		// time distribution of messages 

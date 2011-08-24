@@ -32,6 +32,8 @@ public class PeoplefierTrainer extends ClassifierTrainer<Classifier> {
 	@Override
 	public Classifier train(InstanceList trainingSet) {
 		// training means to fill the graph
+		// TODO: isto podia ser feito com o ParticipantsPreProcessor
+		// iterar lista de participantes, getType, etc 
 		for (Instance instance : trainingSet) {
 			IEmailMessage msg = (IEmailMessage)instance.getData();
 			Object label = msg.getClassId();

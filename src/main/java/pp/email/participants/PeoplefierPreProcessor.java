@@ -3,6 +3,7 @@ package pp.email.participants;
 import java.util.ArrayList;
 
 import pp.PreProcessor;
+import types.mallet.pipe.EmailNoOp2Input;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.Target2Label;
 import data.loader.IDataSetLoader;
@@ -21,6 +22,7 @@ public class PeoplefierPreProcessor extends PreProcessor {
 	protected ArrayList<Pipe> getPipes() {
 		ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		
+		pipes.add(new EmailNoOp2Input());
 		pipes.add(new Target2Label());
 		
 		return pipes;

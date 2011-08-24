@@ -3,7 +3,6 @@ package pp.email.participants;
 import java.util.ArrayList;
 
 import pp.PreProcessor;
-import pp.mallet.pipes.ParticipantsExtractorPipe;
 import types.mallet.pipe.EmailParticipants2Input;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Pipe;
@@ -26,7 +25,6 @@ public class ParticipantsPreProcessor extends PreProcessor {
 		ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		
 		pipes.add(new EmailParticipants2Input());
-		pipes.add(new ParticipantsExtractorPipe());
 		pipes.add(new TokenSequence2FeatureSequence());
 		pipes.add(new Target2Label());
 		pipes.add(new FeatureSequence2FeatureVector());

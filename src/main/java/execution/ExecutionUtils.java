@@ -12,7 +12,6 @@ import utils.IteratedExecution;
 import utils.ParametrizedIteratedExecution;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
-import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
 import data.loader.IDataSetLoader;
@@ -28,41 +27,12 @@ public class ExecutionUtils {
 	//
 	// Preprocessing
 	//
-	
-	// stores email data from database to preprocessed files
-	/*
-	public static final void db2file() throws SQLException {
-		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql"));
-		for (int collectionId : dal.getCollections()) {
-			for (int userId : dal.getUsers(collectionId)) {
-				// get dataset of specified collection and user
-				IDataSetLoader ds = new EnronDbDataSet(dal, collectionId, userId);
-				
-				// preprocess data from the dataset into instance lists (aka preprocessors)
-				ArrayList<PreProcessor> preprocessors = new ArrayList<PreProcessor>();
-				preprocessors.add(new SubjectPreProcessor1());
-				preprocessors.add(new BodyPreProcessor1());
-				preprocessors.add(new DatePreProcessor1());
-				preprocessors.add(new ParticipantsPreProcessor1());
-				Collection<PreProcessor> instanceLists = preprocess(ds, preprocessors);
-				
-				// save into files of the following format: instances+collection+user+field+preprocessing
-				for (PreProcessor instanceList : instanceLists)
-					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
-			}
-		}
-	}
-	*/
-	
+		
 	// preprocess the instances of the given dataset through the given preprocessors
 	public static final Collection<PreProcessor> preprocess(IDataSetLoader ds, Collection<PreProcessor> preprocessors) {
-		Instance instance;
-		while(ds.hasNext()) {
-			instance = ds.next();
-			
+		while(ds.hasNext())
 			for (PreProcessor pp : preprocessors)
-				pp.addThruPipe(instance);
-		}
+				pp.addThruPipe(ds.next());
 		
 		return preprocessors;
 	}
