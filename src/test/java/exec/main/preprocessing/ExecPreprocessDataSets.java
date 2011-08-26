@@ -22,7 +22,10 @@ public class ExecPreprocessDataSets {
 		// stores email data from database to preprocessed files
 		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql"));
 		for (int collectionId : dal.getCollections()) {
+			System.out.println("collection: " + collectionId);
 			for (int userId : dal.getUsers(collectionId)) {
+				System.out.println("user: " + userId);
+				
 				// get dataset of specified collection and user
 				IDataSetLoader ds = new DbDataSetLoader(dal, collectionId, userId);
 				
@@ -40,6 +43,5 @@ public class ExecPreprocessDataSets {
 					instanceList.save(new File(String.format("instances+%d+%d+%s", collectionId, userId, instanceList.getDescription())));
 			}
 		}
-
 	}
 }

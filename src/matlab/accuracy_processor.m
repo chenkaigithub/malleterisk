@@ -1,5 +1,5 @@
 clear;
-files = uipickfiles('FilterSpec', '/Work/msc/code/seamce-test/');
+files = uipickfiles('FilterSpec', '/Work/msc/code/malleterisk-test/results');
 num_files = length(files);
 
 plots = zeros(1, num_files);
