@@ -23,7 +23,6 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
 import cc.mallet.pipe.iterator.CsvIterator;
-import cc.mallet.topics.MarginalProbEstimator;
 import cc.mallet.topics.ParallelTopicModel;
 import cc.mallet.topics.TopicInferencer;
 import cc.mallet.types.Alphabet;
@@ -39,12 +38,11 @@ public class TopicModelingExperiment {
 	public static void main(String[] args) throws IOException, SQLException {
 //		Vector2Topics
 //		x();
-		y();
-
-        
+//		y();
+		toTopicsFile();
 	}
 	
-	public static void x() throws IOException {
+	public static void modelAssociatedPress() throws IOException {
 		// Begin by importing documents from text to feature sequences
         ArrayList<Pipe> pipeList = new ArrayList<Pipe>();
         // Pipes: lowercase, tokenize, remove stopwords, map to features
@@ -116,7 +114,7 @@ public class TopicModelingExperiment {
 //        System.out.println("0\t" + testProbabilities[0]);
 	}
 	
-	public static void y() throws IOException, SQLException {
+	private static void toTopicsFile() throws SQLException {
 		DbDataSetLoader loader = new DbDataSetLoader(new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql")), 1, 1);
         ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		pipes.add(new EmailBody2Input());
@@ -129,16 +127,21 @@ public class TopicModelingExperiment {
 		pipes.add(new Target2Label());
         InstanceList instances = new InstanceList (new SerialPipes(pipes));
 		instances.addThruPipe(loader);
+		instances.save(new File("instances+1+1+topics"));
+	}
+	
+	public static void y() throws IOException, SQLException {
+        InstanceList instances = InstanceList.load(new File("instances+1+1+topics"));
 
-		int numTopics = 5;
+		int numTopics = 33;
 		InstanceList[] split = instances.split(new double[] {0.8, 0.2});
 		ParallelTopicModel lda = new ParallelTopicModel(numTopics); 
 		lda.addInstances(split[0]); 
 		lda.estimate();
 		
-		MarginalProbEstimator evaluator = lda.getProbEstimator(); 
-		double logLikelihood = evaluator.evaluateLeftToRight(split[1], 10, false, null);
-		System.out.println("log likelihood: " + logLikelihood);
+//		MarginalProbEstimator evaluator = lda.getProbEstimator(); 
+//		double logLikelihood = evaluator.evaluateLeftToRight(split[1], 10, false, null);
+//		System.out.println("log likelihood: " + logLikelihood);
 		
 //		Formatter out = new Formatter(new StringBuilder(), Locale.US);
 //		for (int position = 0; position < tokens.getLength(); position++)
@@ -160,8 +163,4 @@ public class TopicModelingExperiment {
 			System.out.println();
 		}
 	}
-	
-	
-	
-	
 }
