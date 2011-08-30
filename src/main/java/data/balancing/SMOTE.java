@@ -6,13 +6,15 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.UUID;
 
+import classifiers.KNN;
+
+
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.NormalizedDotProductMetric;
 import cc.mallet.types.SparseVector;
-import classifiers.KNN;
 
 /**
  * Implements the SMOTE algorithm for class imbalance learning.

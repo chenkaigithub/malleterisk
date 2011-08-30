@@ -19,13 +19,13 @@ public class ParticipantsExperiment {
 	public static void main(String[] args) throws SQLException, FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+participants"));
-		files.add(new File("instances+1+2+participants"));
-		files.add(new File("instances+1+3+participants"));
-		files.add(new File("instances+1+4+participants"));
-		files.add(new File("instances+1+5+participants"));
-		files.add(new File("instances+1+6+participants"));
-		files.add(new File("instances+1+7+participants"));
-		files.add(new File("instances+2+1+participants"));
+//		files.add(new File("instances+1+2+participants"));
+//		files.add(new File("instances+1+3+participants"));
+//		files.add(new File("instances+1+4+participants"));
+//		files.add(new File("instances+1+5+participants"));
+//		files.add(new File("instances+1+6+participants"));
+//		files.add(new File("instances+1+7+participants"));
+//		files.add(new File("instances+2+1+participants"));
 		
 		for (File file : files) {
 			InstanceList instances = InstanceList.load(file);

@@ -3,12 +3,14 @@ package experiments;
 import java.io.File;
 import java.util.Random;
 
+import classifiers.LibLinearTrainer;
+
+
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Labeling;
-import classifiers.LibLinearTrainer;
 
 public class LibLinearExperiment {
 	public static void main(String[] args) {

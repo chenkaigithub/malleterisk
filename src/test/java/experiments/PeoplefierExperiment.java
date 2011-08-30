@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import classifiers.PeoplefierTrainer;
+
+
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -13,19 +16,18 @@ import cc.mallet.classify.Trial;
 import cc.mallet.classify.evaluate.ConfusionMatrix;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-import classifiers.PeoplefierTrainer;
 
 public class PeoplefierExperiment {
 	public static void main(String[] args) throws SQLException, FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+peoplefier"));
-		files.add(new File("instances+1+2+peoplefier"));
-		files.add(new File("instances+1+3+peoplefier"));
-		files.add(new File("instances+1+4+peoplefier"));
-		files.add(new File("instances+1+5+peoplefier"));
-		files.add(new File("instances+1+6+peoplefier"));
-		files.add(new File("instances+1+7+peoplefier"));
-		files.add(new File("instances+2+1+peoplefier"));
+//		files.add(new File("instances+1+2+peoplefier"));
+//		files.add(new File("instances+1+3+peoplefier"));
+//		files.add(new File("instances+1+4+peoplefier"));
+//		files.add(new File("instances+1+5+peoplefier"));
+//		files.add(new File("instances+1+6+peoplefier"));
+//		files.add(new File("instances+1+7+peoplefier"));
+//		files.add(new File("instances+2+1+peoplefier"));
 
 		for (File file : files) {
 			InstanceList instances = InstanceList.load(file);

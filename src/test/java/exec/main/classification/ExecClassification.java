@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import classifiers.LibLinearTrainer;
+
+
 import cc.mallet.classify.BalancedWinnowTrainer;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -11,7 +14,6 @@ import cc.mallet.classify.DecisionTreeTrainer;
 import cc.mallet.classify.MaxEntTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.WinnowTrainer;
-import classifiers.LibLinearTrainer;
 import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;

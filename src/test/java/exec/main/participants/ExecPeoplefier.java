@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import classifiers.PeoplefierTrainer;
+
+
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.InstanceList;
-import classifiers.PeoplefierTrainer;
 import execution.ExecutionResult;
 import execution.ExecutionUtils;
 

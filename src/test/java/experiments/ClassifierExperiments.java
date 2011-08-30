@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
+import classifiers.KNNTrainer;
+import classifiers.LibLinearTrainer;
+
 import struct.classification.KBestMiraClassifierTrainer;
 import cc.mallet.classify.BalancedWinnowTrainer;
 import cc.mallet.classify.Classifier;
@@ -15,8 +18,6 @@ import cc.mallet.classify.Trial;
 import cc.mallet.classify.WinnowTrainer;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.NormalizedDotProductMetric;
-import classifiers.KNNTrainer;
-import classifiers.LibLinearTrainer;
 
 public class ClassifierExperiments {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
