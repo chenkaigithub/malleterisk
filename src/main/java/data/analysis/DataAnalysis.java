@@ -141,7 +141,7 @@ public class DataAnalysis {
 	public static int minNumDocumentsInClass(LabeledInstancesList lil) {
 		int c = -1;
 
-		for (InstanceList instances : lil.getInstances()) {
+		for (InstanceList instances : lil.getInstanceLists()) {
 			int i = instances.size();
 			if(c==-1 || c > i) c = i;
 		}
@@ -152,7 +152,7 @@ public class DataAnalysis {
 	public static int maxNumDocumentsInClass(LabeledInstancesList lil) {
 		int c = 0;
 
-		for (InstanceList instances : lil.getInstances()) {
+		for (InstanceList instances : lil.getInstanceLists()) {
 			int i = instances.size();
 			if(i > c) c = i;
 		}

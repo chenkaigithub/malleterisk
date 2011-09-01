@@ -48,7 +48,7 @@ public class LabeledInstancesList {
 		return labels.length;
 	}
 	
-	public InstanceList[] getInstances() {
+	public InstanceList[] getInstanceLists() {
 		return instancelists;
 	}
 	
