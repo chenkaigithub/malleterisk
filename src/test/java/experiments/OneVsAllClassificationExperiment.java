@@ -34,7 +34,7 @@ public class OneVsAllClassificationExperiment {
 			OneVersusAll ova = new OneVersusAll(instancelist);
 			
 			while(ova.hasNext()) {
-				ExecutionResult r = new ExecutionResult(file.getName()+"+"+ova.getCurrentOneClass(), null, null, "");
+				ExecutionResult r = new ExecutionResult(file.getName()+"+"+ova.getCurrentOneClassIndex(), null, null, "");
 				r.trials.put(0, ExecutionUtils.crossValidate(ova.next(), 10, new LibLinearTrainer()));
 
 				r.outputTrials();
@@ -64,8 +64,8 @@ class OneVersusAll implements Iterable<InstanceList>, Iterator<InstanceList> {
 		this.currentOneClassIndex = 0;
 	}
 
-	public Object getCurrentOneClass() {
-		return instances.getTargetAlphabet().lookupObject(currentOneClassIndex-1);
+	public int getCurrentOneClassIndex() {
+		return currentOneClassIndex;
 	}
 
 	@Override
