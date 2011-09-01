@@ -22,17 +22,17 @@ import data.loader.db.DbDataAccess;
 
 public class ExecTopicsPreprocessing {
 	public static void main(String[] args) throws SQLException {
-//		toTopicsFile(1, 1);
-		toTopicsFile(2, 2);
-		toTopicsFile(2, 3);
-		toTopicsFile(2, 4);
-		toTopicsFile(2, 5);
-		toTopicsFile(2, 6);
-		toTopicsFile(2, 7);
-		toTopicsFile(2, 8);
+		topicsPreprocessing(1, 1);
+		topicsPreprocessing(2, 2);
+		topicsPreprocessing(2, 3);
+		topicsPreprocessing(2, 4);
+		topicsPreprocessing(2, 5);
+		topicsPreprocessing(2, 6);
+		topicsPreprocessing(2, 7);
+		topicsPreprocessing(2, 8);
 	}
 	
-	public static void toTopicsFile(int collectionId, int userId) throws SQLException {
+	public static void topicsPreprocessing(int collectionId, int userId) throws SQLException {
 		DbDataSetLoader loader = new DbDataSetLoader(new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql")), collectionId, userId);
         ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 		pipes.add(new EmailBody2Input());

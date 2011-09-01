@@ -11,22 +11,17 @@ import data.loader.db.DbDataAccess;
 
 public class ExecPeoplefierPreprocessing {
 	public static void main(String[] args) throws SQLException {
-		int collectionId = 1;
-		int userId = 1;
-		for (int i = 1; i <= 7; i++) {
-			userId = i;
-			System.out.println("preprocessing collection " + collectionId + ", user " + userId);
-			preprocess(collectionId, userId);
-		}
-		
-		collectionId = 2;
-		userId = 1;
-		System.out.println("preprocessing collection " + collectionId + ", user " + userId);
-		preprocess(collectionId, userId);
-		
+		peoplefierPreprocessing(1, 1);
+		peoplefierPreprocessing(2, 2);
+		peoplefierPreprocessing(2, 3);
+		peoplefierPreprocessing(2, 4);
+		peoplefierPreprocessing(2, 5);
+		peoplefierPreprocessing(2, 6);
+		peoplefierPreprocessing(2, 7);
+		peoplefierPreprocessing(2, 8);
 	}
 	
-	private static void preprocess(int collectionId, int userId) throws SQLException {
+	private static void peoplefierPreprocessing(int collectionId, int userId) throws SQLException {
 		DbDataAccess dal = new DbDataAccess(new DbConnector("jdbc:postgresql://localhost/malleterisk", "postgres", "postgresql"));
 		DbDataSetLoader enron = new DbDataSetLoader(dal, collectionId, userId);
 		

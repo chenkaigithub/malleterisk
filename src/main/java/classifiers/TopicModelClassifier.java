@@ -42,8 +42,6 @@ public class TopicModelClassifier extends Classifier {
 			if(classes!=null)
 				for (Label label : classes)
 					values[label.getIndex()] += topicProbs[topicIdx];
-			else
-				System.out.println(topicIdx);
 			// what happens if topic was not seen in training?
 		}
 		

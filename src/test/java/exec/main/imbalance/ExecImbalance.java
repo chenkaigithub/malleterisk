@@ -22,14 +22,14 @@ import ft.weighting.methods.FeatureWeighting;
 public class ExecImbalance {
 	public static void main(String[] args) throws Exception {
 		ArrayList<File> files = new ArrayList<File>();
-		files.add(new File("instances+1+1+bodies"));
-		files.add(new File("instances+1+2+bodies"));
-		files.add(new File("instances+1+3+bodies"));
-		files.add(new File("instances+1+4+bodies"));
-		files.add(new File("instances+1+5+bodies"));
-		files.add(new File("instances+1+6+bodies"));
-		files.add(new File("instances+1+7+bodies"));
-		files.add(new File("instances+2+1+bodies"));
+		files.add(new File("instances+1+1+body"));
+		files.add(new File("instances+2+2+body"));
+		files.add(new File("instances+2+3+body"));
+		files.add(new File("instances+2+4+body"));
+		files.add(new File("instances+2+5+body"));
+		files.add(new File("instances+2+6+body"));
+		files.add(new File("instances+2+7+body"));
+		files.add(new File("instances+2+8+body"));
 		
 		ArrayList<DataBalancer> balancers = new ArrayList<DataBalancer>();
 		balancers.add(new RandomSampler(1));	//			minimum threshold = 1

@@ -24,13 +24,13 @@ public class ExecClassification {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+body"));
-//		files.add(new File("instances+1+2+body"));
-//		files.add(new File("instances+1+3+body"));
-//		files.add(new File("instances+1+4+body"));
-//		files.add(new File("instances+1+5+body"));
-//		files.add(new File("instances+1+6+body"));
-//		files.add(new File("instances+1+7+body"));
-//		files.add(new File("instances+2+1+body"));
+		files.add(new File("instances+2+2+body"));
+		files.add(new File("instances+2+3+body"));
+		files.add(new File("instances+2+4+body"));
+		files.add(new File("instances+2+5+body"));
+		files.add(new File("instances+2+6+body"));
+		files.add(new File("instances+2+7+body"));
+		files.add(new File("instances+2+8+body"));
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));

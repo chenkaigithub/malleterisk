@@ -10,10 +10,13 @@ import pp.PreProcessor;
 import types.mallet.classify.ExtendedTrial;
 import utils.IteratedExecution;
 import utils.ParametrizedIteratedExecution;
+import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.InstanceList.CrossValidationIterator;
+import cc.mallet.types.Label;
+import cc.mallet.types.Labeling;
 import data.loader.IDataSetLoader;
 import ft.selection.IFilter;
 import ft.weighting.IWeighter;
@@ -40,6 +43,21 @@ public class ExecutionUtils {
 	//
 	// Processing
 	//
+	
+	public static final Collection<Label> getTopLabels(Classification c, int n) {
+		Collection<Label> topLabels = new ArrayList<Label>(n);
+		
+		Labeling l = c.getLabeling();
+		for (int i = 0; i < l.numLocations() && i < n; i++)
+			topLabels.add(l.getLabelAtRank(i));
+
+		return topLabels;
+	}
+	
+	public static final void x(ClassifierTrainer<Classifier> trainer, InstanceList instances) {
+		trainer.train(instances);
+		
+	}
 	
 	// TODO: ARRRRGGGGGGGGHHHHHHHHHHHHHHH
 	
