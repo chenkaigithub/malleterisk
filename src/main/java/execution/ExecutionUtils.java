@@ -54,11 +54,6 @@ public class ExecutionUtils {
 		return topLabels;
 	}
 	
-	public static final void x(ClassifierTrainer<Classifier> trainer, InstanceList instances) {
-		trainer.train(instances);
-		
-	}
-	
 	// TODO: ARRRRGGGGGGGGHHHHHHHHHHHHHHH
 	
 	// iterates over the IWeighters, IFilters and classifiers and issues a single execution order.

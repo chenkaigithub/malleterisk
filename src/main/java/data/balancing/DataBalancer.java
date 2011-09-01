@@ -58,7 +58,7 @@ public abstract class DataBalancer {
 		Noop pipe = new Noop(new Alphabet(), this.labelAlphabet);
 		InstanceList newInstanceList = new InstanceList (pipe);
 		
-		for (InstanceList classInstances : this.labeledInstances.getInstances()) {
+		for (InstanceList classInstances : this.labeledInstances.getInstanceLists()) {
 			// class does not have enough documents to process, ignore
 			if(classInstances.size() < this.minThreshold) continue;
 

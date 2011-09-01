@@ -28,3 +28,5 @@ end
 %horzcat(best_class_indices(:, 1), best_class_indices(:, 3), real_class_indices, real_class_values, real_class_rank)
 
 table = horzcat(best_class_indices(:, 1), real_class_indices, real_class_rank)
+
+sum(table(:, 3) < 5) / length(table)
