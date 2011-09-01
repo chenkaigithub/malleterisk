@@ -29,4 +29,4 @@ end
 
 table = horzcat(best_class_indices(:, 1), real_class_indices, real_class_rank)
 
-sum(table(:, 3) < 5) / length(table)
+sum(table(:, 3) < 5) / size(table, 1)

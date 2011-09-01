@@ -28,14 +28,14 @@ end
 
 % calculate class sizes
 rc = unique([real_class_indices real_class_split], 'rows');
-sizes = zeros(length(order), 2);
-for i=1:length(rc)
+sizes = zeros(size(order, 1), 2);
+for i=1:size(rc, 1)
     idx = find(order == rc(i, 1));
     sizes(idx, :) = rc(i, 2:3);
 end
 p = [sizes(:, 1) sizes(:, 2)]; % training documents size; test documents size
 %p = [sum(cm,2) sum(cm,2)];
-p_x = 1:length(p);
+p_x = 1:size(p, 1);
 
 % normalize values by number of test documents
 for i=p_x
@@ -43,7 +43,7 @@ for i=p_x
 end
 
 % plot horizontal graph bar, horizontal and vertical flip
-h1 = subplot(2,1,1); bar(p_x, p, 'stacked'); set(gca,'xlim',[0.5 (length(p)+0.5)]); 
+h1 = subplot(2,1,1); bar(p_x, p, 'stacked'); set(gca,'xlim',[0.5 (size(p, 1)+0.5)]); 
 % set class labels (indices)
 set(gca, 'XTick', p_x); set(gca, 'XTickLabel', order);
 set(gca,'yscale','log');
