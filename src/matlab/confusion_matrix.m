@@ -21,19 +21,11 @@ function cm = confusion_matrix(file_name)
 
     % compute confusion matrix
     [cm, order] = confusionmat(real_class_indices, best_class_indices);
-
-    % calculate class sizes
-    rc = unique([real_class_indices real_class_split], 'rows');
-    sizes = zeros(size(order, 1), 2);
-    for i=1:size(rc, 1)
-        idx = find(order == rc(i, 1));
-        sizes(idx, :) = rc(i, 2:3);
-    end
-    p = [sizes(:, 1) sizes(:, 2)]; % training documents size; test documents size
-    %p = [sum(cm,2) sum(cm,2)];
-    p_x = 1:size(p, 1);
-
+    
     % normalize values by number of test documents
-    for i=p_x
-        cm(i,:) = cm(i,:) / p(i, 2);
+    for i=1:size(cm, 1)
+        cm(i,:) = cm(i,:) / sum(cm(i,:));
     end
+
+    cm(isnan(cm)) = 0; % replace NaNs with 0s
+
