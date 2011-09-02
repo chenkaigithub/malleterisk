@@ -1,6 +1,9 @@
 package data.analysis;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +21,136 @@ import cc.mallet.types.SparseVector;
 
 public class DataAnalysis {
 	
+	// features
+	
+	public static int numTerms(InstanceList il) {
+		return il.getDataAlphabet().size();
+	}
+	
+	public static SparseVector termOccurrences(InstanceList il) {
+		SparseVector sv = new SparseVector(new double[il.getDataAlphabet().size()]);
+
+		for (Instance i : il)
+			sv.plusEqualsSparse((FeatureVector) i.getData());
+		
+		return sv;
+	}	
+	
+	public static double averageTermsPerDocument(InstanceList il) {
+		double i = 0;
+		
+		for (Instance instance : il)
+			i +=  ((FeatureVector)instance.getData()).getIndices().length;
+		
+		return i / (double)il.size();
+	}
+	
+	public static int minNumTermsInDocuments(InstanceList il) {
+		int m = -1;
+		
+		for (Instance instance : il) {
+			int i = ((FeatureVector) instance.getData()).getIndices().length;
+			if(m == -1 || m > i) m = i;
+		}
+		
+		return m;
+	}
+	
+	public static int maxNumTermsInDocument(InstanceList il) {
+		int m = 0;
+		
+		for (Instance instance : il) {
+			int i = ((FeatureVector) instance.getData()).getIndices().length;
+			if(i > m) m = i;
+		}
+		
+		return m;
+	}
+	
+	public static Map<Object, Double> averageTermsPerClass(LabeledInstancesList lil) {
+		Map<Object, Double> avg = new HashMap<Object, Double>();
+		
+		// average length of messages per class
+		for(int i=0; i<lil.getNumLabels(); ++i)
+			avg.put(lil.getLabel(i), averageTermsPerDocument(lil.getLabelInstances(i)));
+		
+		return avg;
+	}
+
+	// documents / classes
+	
+	public static int numClasses(InstanceList il) {
+		return il.getTargetAlphabet().size();
+	}
+	
+	public static int numDocuments(InstanceList il) {
+		return il.size();
+	}
+
+	public static double averageDocumentsPerClass(InstanceList il) {
+		return (double)il.size()/(double)il.getTargetAlphabet().size();
+	}
+	
+	public static int minNumDocumentsInClass(LabeledInstancesList lil) {
+		int c = -1;
+
+		for (InstanceList instances : lil.getInstanceLists()) {
+			int i = instances.size();
+			if(c==-1 || c > i) c = i;
+		}
+
+		return c;
+	}
+	
+	public static int maxNumDocumentsInClass(LabeledInstancesList lil) {
+		int c = 0;
+
+		for (InstanceList instances : lil.getInstanceLists()) {
+			int i = instances.size();
+			if(i > c) c = i;
+		}
+
+		return c;
+	}
+	
+	public static Map<Object, Integer> docClassDistribution(LabeledInstancesList lil) {
+		Map<Object, Integer> hg = new HashMap<Object, Integer>();
+		
+		// number of documents per class
+		for(int i=0; i<lil.getNumLabels(); ++i)
+			hg.put(lil.getLabel(i), lil.getNumLabelInstances(i));
+		
+		return hg;
+	}
+	
+	// participants
+	
+	public static Map<Object, Integer> totalNumParticipantsInClass(LabeledInstancesList lil) {
+		// the instancelist must be of participants
+		Map<Object, Integer> hg = new HashMap<Object, Integer>();
+		
+		// number of participants per class
+		int numParticipants = 0;
+		for(int i=0; i<lil.getNumLabels(); ++i) {
+			InstanceList il = lil.getLabelInstances(i);
+			for (Instance instance : il) {
+				Object o = instance.getData();
+				if(o instanceof IEmailMessage) {
+					IEmailMessage m = (IEmailMessage) o;
+					numParticipants += m.getParticipants().size();
+				}
+				else if(o instanceof FeatureVector) {
+					FeatureVector fv = (FeatureVector) o;
+					numParticipants += fv.numLocations();
+				}
+			}
+			
+			hg.put(lil.getLabel(i), numParticipants);
+		}
+		
+		return hg;
+	}
+		
 	public static void participantsClassesCorrelation(InstanceList pil) {
 		// find a correlation between participants and labels
 		// participants are treated as groups (unique set of participants)
@@ -67,146 +200,10 @@ public class DataAnalysis {
 		System.out.println("#unique entries: " + groupsLabels.size()); // number of unique groups
 	}
 	
-	
-	// features
-	
-	public static int numTerms(InstanceList il) {
-		return il.getDataAlphabet().size();
-	}
-	
-	public static SparseVector termOccurrences(InstanceList il) {
-		SparseVector sv = new SparseVector(new double[il.getDataAlphabet().size()]);
-
-		for (Instance i : il)
-			sv.plusEqualsSparse((FeatureVector) i.getData());
-		
-		return sv;
-	}	
-	
-	public static double averageTermsPerDocument(InstanceList il) {
-		double i = 0;
-		
-		for (Instance instance : il)
-			i +=  ((FeatureVector)instance.getData()).getIndices().length;
-		
-		return i / (double)il.size();
-	}
-	
-	public static int minNumTermsInDocuments(InstanceList il) {
-		int m = -1;
-		
-		for (Instance instance : il) {
-			int i = ((FeatureVector) instance.getData()).getIndices().length;
-			if(m == -1 || m > i) m = i;
-		}
-		
-		return m;
-	}
-	
-	public static int maxNumTermsInDocument(InstanceList il) {
-		int m = 0;
-		
-		for (Instance instance : il) {
-			int i = ((FeatureVector) instance.getData()).getIndices().length;
-			if(i > m) m = i;
-		}
-		
-		return m;
-	}
-	
-	public static void averageTermsPerClass(LabeledInstancesList lil) {
-		Map<Object, Double> avg = new HashMap<Object, Double>();
-		
-		// average length of messages per class
-		for(int i=0; i<lil.getNumLabels(); ++i)
-			avg.put(lil.getLabel(i), averageTermsPerDocument(lil.getLabelInstances(i)));
-		
-		// TODO: output to a file (.csv)
-	}
-
-	// documents / classes
-	
-	public static int numClasses(InstanceList il) {
-		return il.getTargetAlphabet().size();
-	}
-	
-	public static int numDocuments(InstanceList il) {
-		return il.size();
-	}
-
-	public static double averageDocumentsPerClass(InstanceList il) {
-		return (double)il.size()/(double)il.getTargetAlphabet().size();
-	}
-	
-	public static int minNumDocumentsInClass(LabeledInstancesList lil) {
-		int c = -1;
-
-		for (InstanceList instances : lil.getInstanceLists()) {
-			int i = instances.size();
-			if(c==-1 || c > i) c = i;
-		}
-
-		return c;
-	}
-	
-	public static int maxNumDocumentsInClass(LabeledInstancesList lil) {
-		int c = 0;
-
-		for (InstanceList instances : lil.getInstanceLists()) {
-			int i = instances.size();
-			if(i > c) c = i;
-		}
-
-		return c;
-	}
-	
-	public static void docClassDistribution(LabeledInstancesList lil, File output) {
-		Map<Object, Integer> hg = new HashMap<Object, Integer>();
-		
-		// number of documents per class
-		for(int i=0; i<lil.getNumLabels(); ++i)
-			hg.put(lil.getLabel(i), lil.getNumLabelInstances(i));
-		
-		// TODO: output to a file (.csv)
-	}
-	
-	// participants
-	
-	public static void totalNumParticipantsInClass(LabeledInstancesList lil, File output) {
-		// the instancelist must be of participants
-		Map<Object, Integer> hg = new HashMap<Object, Integer>();
-		
-		// number of participants per class
-		int numParticipants = 0;
-		for(int i=0; i<lil.getNumLabels(); ++i) {
-			InstanceList il = lil.getLabelInstances(i);
-			for (Instance instance : il) {
-				Object o = instance.getData();
-				if(o instanceof IEmailMessage) {
-					IEmailMessage m = (IEmailMessage) o;
-					numParticipants += m.getParticipants().size();
-				}
-				else if(o instanceof FeatureVector) {
-					FeatureVector fv = (FeatureVector) o;
-					numParticipants += fv.numLocations();
-				}
-			}
-			
-			hg.put(lil.getLabel(i), numParticipants);
-		}
-		
-		// TODO: output to a file (.csv)
-	}
-		
 	// time
 	
-	public static void time(LabeledInstancesList lil, File output) {
+	public static Map<Object, TimeInterval> time(LabeledInstancesList lil) {
 		// instance's data must be of date type
-		
-		// time distribution of messages 
-		// ?? como fazer? interessa (depois de ter a distribuiçao temporal das classes)?
-		// m1: 
-		// m2:
 		
 		// time period for classes
 		Map<Object, TimeInterval> hg = new HashMap<Object, TimeInterval>();
@@ -227,16 +224,45 @@ public class DataAnalysis {
 			hg.put(lil.getLabel(i), new TimeInterval(earliest, latest));
 		}
 		
-		// TODO: output to a file (.csv)
+		return hg;
+	}
+
+	// utils
+	
+	public static void toCSV(String filename, Map<?, ?> data) throws FileNotFoundException {
+		FileOutputStream out = new FileOutputStream(filename);
+		PrintWriter pw = new PrintWriter(out);
+		
+		for (Entry<?, ?> entry : data.entrySet()) {
+			pw.write(entry.getKey().toString());
+			pw.write(", ");
+			pw.write(entry.getValue().toString());
+			pw.write('\n');
+		}
+
+		pw.flush();
+		pw.close();
 	}
 }
 
 class TimeInterval {
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+	
 	public final Date startDate;
 	public final Date endDate;
 	
 	public TimeInterval(Date sd, Date ed) {
 		this.startDate = sd;
 		this.endDate = ed;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(SDF.format(startDate));
+		sb.append(", ");
+		sb.append(SDF.format(endDate));
+		
+		return sb.toString();
 	}
 }
