@@ -17,16 +17,16 @@ public class ExecPeoplefier {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+peoplefier"));
-//		files.add(new File("instances+2+2+peoplefier"));
-//		files.add(new File("instances+2+3+peoplefier"));
-//		files.add(new File("instances+2+4+peoplefier"));
-//		files.add(new File("instances+2+5+peoplefier"));
-//		files.add(new File("instances+2+6+peoplefier"));
-//		files.add(new File("instances+2+7+peoplefier"));
-//		files.add(new File("instances+2+8+peoplefier"));
+		files.add(new File("instances+2+2+peoplefier"));
+		files.add(new File("instances+2+3+peoplefier"));
+		files.add(new File("instances+2+4+peoplefier"));
+		files.add(new File("instances+2+5+peoplefier"));
+		files.add(new File("instances+2+6+peoplefier"));
+		files.add(new File("instances+2+7+peoplefier"));
+		files.add(new File("instances+2+8+peoplefier"));
 
 		for (File file : files)
-			run("peoplefier", InstanceList.load(file), new PeoplefierTrainer(), 10);
+			run(file.getName(), InstanceList.load(file), new PeoplefierTrainer(), 10);
 	}
 
 	public static final void run(

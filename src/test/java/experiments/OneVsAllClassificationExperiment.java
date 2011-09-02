@@ -13,7 +13,7 @@ import execution.ExecutionUtils;
 public class OneVsAllClassificationExperiment {
 	public static void main(String[] args) throws FileNotFoundException {
 		ArrayList<File> files = new ArrayList<File>();
-		files.add(new File("instances+1+1+body"));
+//		files.add(new File("instances+1+1+body"));
 //		files.add(new File("instances+2+2+body"));
 //		files.add(new File("instances+2+3+body"));
 //		files.add(new File("instances+2+4+body"));

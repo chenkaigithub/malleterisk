@@ -24,7 +24,7 @@ public class ExecParticipantClassifier {
 		files.add(new File("instances+2+8+participants"));
 
 		for (File file : files)
-			run("participants", InstanceList.load(file), new NaiveBayesTrainer(), 10);
+			run(file.getName(), InstanceList.load(file), new NaiveBayesTrainer(), 10);
 	}
 
 	public static final void run(
