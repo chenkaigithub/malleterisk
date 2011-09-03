@@ -192,12 +192,14 @@ public class LibLinearTrainer extends ClassifierTrainer<Classifier> {
         
         // fill array
         FeatureNode[] nodes = new FeatureNode[count];
-        int[] indices = fv.getIndices();
+        
+        int numLoc = fv.numLocations();
         int idx = 0;
-        for (int i = 0; i < indices.length; i++) {
-        	idx = indices[i];
-            nodes[i] = new FeatureNode(idx + 1, fv.value(idx)); // feature index must start from 1 (and not from 0)
-        }
+        for (int i = 0; i < numLoc; i++) {
+        	int currentIndex = fv.indexAtLocation(i);
+        	idx = Math.max(idx, currentIndex); // ATTN: idx should always be the highest
+			nodes[i] = new FeatureNode(currentIndex+1, fv.valueAtLocation(i)); // feature index must start from 1 (and not from 0)
+		}
 
         // add bias term
         if (bias > 0) nodes[count-1] = new FeatureNode(idx + 2, bias);

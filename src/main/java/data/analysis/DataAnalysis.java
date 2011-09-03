@@ -14,6 +14,7 @@ import java.util.Set;
 import types.email.IEmailMessage;
 import types.email.IEmailParticipant;
 import types.mallet.LabeledInstancesList;
+import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
@@ -27,13 +28,20 @@ public class DataAnalysis {
 		return il.getDataAlphabet().size();
 	}
 	
-	public static SparseVector termOccurrences(InstanceList il) {
-		SparseVector sv = new SparseVector(new double[il.getDataAlphabet().size()]);
+	public static Map<Object, Double> termOccurrences(InstanceList il) {
+		Alphabet dataAlphabet = il.getDataAlphabet();
+		SparseVector sv = new SparseVector(new double[dataAlphabet.size()]);
 
 		for (Instance i : il)
 			sv.plusEqualsSparse((FeatureVector) i.getData());
 		
-		return sv;
+		Map<Object, Double> counts = new HashMap<Object, Double>();
+
+		int[] indices = sv.getIndices();
+		for (int idx : indices)
+			counts.put(dataAlphabet.lookupObject(idx), sv.value(idx));
+		
+		return counts;
 	}	
 	
 	public static double averageTermsPerDocument(InstanceList il) {
@@ -75,6 +83,24 @@ public class DataAnalysis {
 			avg.put(lil.getLabel(i), averageTermsPerDocument(lil.getLabelInstances(i)));
 		
 		return avg;
+	}
+	
+	public static Map<Object, SparseVector> termClassFrequencies(LabeledInstancesList lil) {
+		Map<Object, SparseVector> tcf = new HashMap<Object, SparseVector>();
+		
+		InstanceList[] instancelists = lil.getInstanceLists();
+		InstanceList il = null;
+		for(int i=0; i<lil.getNumLabels(); ++i) {
+			il = instancelists[i];
+			
+			SparseVector sv = new SparseVector(new double[il.getDataAlphabet().size()]);
+			for (Instance inst : il)
+				sv.plusEqualsSparse((FeatureVector) inst.getData());
+			
+			tcf.put(lil.getLabel(i), sv);
+		}
+		
+		return tcf;
 	}
 
 	// documents / classes
@@ -202,7 +228,7 @@ public class DataAnalysis {
 	
 	// time
 	
-	public static Map<Object, TimeInterval> time(LabeledInstancesList lil) {
+	public static Map<Object, TimeInterval> timeClassIntervals(LabeledInstancesList lil) {
 		// instance's data must be of date type
 		
 		// time period for classes
@@ -226,7 +252,35 @@ public class DataAnalysis {
 		
 		return hg;
 	}
+	
+	public static Map<Month, Map<Object, Integer>> timeClassFrequencies(LabeledInstancesList lil) {
+		Map<Month, Map<Object, Integer>> hg = new HashMap<Month, Map<Object, Integer>>();
 
+		final SimpleDateFormat MONTH_SDF = new SimpleDateFormat("MM");
+		final SimpleDateFormat YEAR_SDF = new SimpleDateFormat("yyyy");
+		
+		for(int i=0; i<lil.getNumLabels(); ++i) {
+			InstanceList il = lil.getLabelInstances(i);
+			
+			for (Instance instance : il) {
+				Date d = (Date) instance.getData();
+				Month m = new Month(MONTH_SDF.format(d), YEAR_SDF.format(d));
+				
+				Map<Object, Integer> counts = hg.get(m);
+				if(counts == null) {
+					counts = new HashMap<Object, Integer>();
+					hg.put(m, counts);
+				}
+				
+				Object lbl = instance.getTarget();
+				Integer cnt = counts.containsKey(lbl) ? counts.get(lbl) : 0;
+				counts.put(lbl, cnt+1);
+			}
+		}
+		
+		return hg;
+	}
+	
 	// utils
 	
 	public static void toCSV(String filename, Map<?, ?> data) throws FileNotFoundException {
@@ -266,3 +320,4 @@ class TimeInterval {
 		return sb.toString();
 	}
 }
+

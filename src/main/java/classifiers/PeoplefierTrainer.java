@@ -36,7 +36,7 @@ public class PeoplefierTrainer extends ClassifierTrainer<Classifier> {
 		// iterar lista de participantes, getType, etc 
 		for (Instance instance : trainingSet) {
 			IEmailMessage msg = (IEmailMessage)instance.getData();
-			Object label = msg.getClassId();
+			Object label = instance.getTarget();
 			
 			for (IEmailParticipant f : msg.getFrom()) {
 				int srcId = f.getParticipantId();
@@ -73,5 +73,9 @@ public class PeoplefierTrainer extends ClassifierTrainer<Classifier> {
 		}
 		
 		return null;
+	}
+
+	public Graph getGraph() {
+		return this.graph;
 	}
 }

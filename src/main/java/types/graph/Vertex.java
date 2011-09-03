@@ -38,6 +38,14 @@ public class Vertex {
 		return this.labelEdges.get(label);
 	}
 	
+	public Set<Object> getLabels() {
+		return this.labelEdges.keySet();
+	}
+	
+	public Map<Object, Set<Edge>> getLabelEdges() {
+		return this.labelEdges;
+	}
+	
 	//
 	// Equality
 	//

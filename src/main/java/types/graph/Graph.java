@@ -1,5 +1,6 @@
 package types.graph;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -76,5 +77,15 @@ public class Graph {
 	
 	public Set<Object> getLabels(Vertex v) {
 		return this.vertexLabels.get(v);
+	}
+
+	// retrieval
+	
+	public Collection<Edge> getEdges() {
+		return edges;
+	}
+	
+	public Collection<Vertex> getVertices() {
+		return vertices.values();
 	}
 }
