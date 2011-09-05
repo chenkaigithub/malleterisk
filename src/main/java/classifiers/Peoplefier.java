@@ -64,7 +64,7 @@ public class Peoplefier extends Classifier {
 		Set<Object> labels = g.getLabels(v);
 		if(labels!=null) {
 			for (Object label : labels) {
-				Label l = this.targetAlphabet.lookupLabel(label);
+				Label l = (Label) label;//this.targetAlphabet.lookupLabel(label);
 				double s = scores.containsKey(l) ? scores.get(l) : 0;
 				s += this.partialScore(v, label);
 				

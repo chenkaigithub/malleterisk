@@ -46,7 +46,7 @@ public class ExecAnalysis {
 			
 			
 			// DATE
-			System.out.println("----------------------------------------------------");
+//			System.out.println("----------------------------------------------------");
 //			Map<?, ?> timeClass = DataAnalysis.timeClassIntervals(lil);
 //			for (Entry<?, ?> e : timeClass.entrySet())
 //				System.out.println(e.getKey() + ": " + e.getValue());
