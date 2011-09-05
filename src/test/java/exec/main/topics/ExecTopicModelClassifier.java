@@ -50,7 +50,7 @@ public class ExecTopicModelClassifier {
 		
 		for (File file : files) {
 			InstanceList instances = InstanceList.load(file);
-			ExecutionResult r = new ExecutionResult(file.getName(), null, null, "TopicModelTrainer");
+			ExecutionResult r = new ExecutionResult(file.getName(), null, null, "TopicModelClassifier");
 			r.trials.put(0, ExecutionUtils.crossValidate(instances, 10, new TopicModelTrainer(instances.getTargetAlphabet().size())));
 			r.outputTrials();
 			r.outputAccuracies();
