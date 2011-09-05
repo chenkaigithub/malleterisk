@@ -1,7 +1,7 @@
 package classifiers;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
@@ -14,37 +14,59 @@ import cc.mallet.types.LabelVector;
 
 public class TopicModelClassifierV2 extends Classifier {
 	private static final long serialVersionUID = 1L;
-	private final ParallelTopicModel model;
-	private final Map<Integer, Set<Label>> classTopics;
 	
-	public TopicModelClassifierV2(ParallelTopicModel m, Map<Integer, Set<Label>> cts) {
+	private final ParallelTopicModel model;
+	private final Map<Label, float[]> classTopicsProbabilities;
+	
+	public TopicModelClassifierV2(ParallelTopicModel m, Map<Label, float[]> ctp) {
 		this.model = m;
-		this.classTopics = cts;
+		this.classTopicsProbabilities = ctp;
 	}
 
 	@Override
 	public Classification classify(Instance instance) {
-		// classification is done in the following way:
-		// 1. infer topic probabilities for given instance
-		// 2. iterate topics:
-		// a. retrieve previously associated classes
-		// b. iterate classes, and add to it's value the topic probability
-		
-        TopicInferencer inferencer = model.getInferencer(); 
-		double[] topicProbs = inferencer.getSampledDistribution(instance, 100, 10, 10);
+		TopicInferencer inferencer = model.getInferencer(); 
+		double[] instanceTopicsProbabilities = inferencer.getSampledDistribution(instance, 100, 10, 10);
 		
 		LabelAlphabet ta = (LabelAlphabet)instance.getTargetAlphabet();
 		double[] values = new double[ta.size()];
 		
-		for (int topicIdx = 0; topicIdx < topicProbs.length; topicIdx++) {
-			Set<Label> classes = classTopics.get(topicIdx);
-			
-			if(classes!=null)
-				for (Label label : classes)
-					values[label.getIndex()] += topicProbs[topicIdx];
-			// what happens if topic was not seen in training?
-		}
+		for (Entry<Label, float[]> e : classTopicsProbabilities.entrySet())
+			values[e.getKey().getIndex()] = cosineSimilarity(instanceTopicsProbabilities, e.getValue());
+			//dotProduct(instanceTopicsProbabilities, e.getValue());
 		
 		return new Classification(instance, this, new LabelVector(ta, values));
+	}
+	
+	private static double cosineSimilarity(double[] instanceTopicsProbabilities, float[] classTopicsProbabilities) {
+		return (double) dotProduct(instanceTopicsProbabilities, classTopicsProbabilities) / 
+			(magnitude(instanceTopicsProbabilities) * magnitude(classTopicsProbabilities));
+	}
+	
+	private static double dotProduct(double[] instanceTopicsProbabilities, float[] classTopicsProbabilities) {
+		double d = 0;
+		
+		for (int i = 0; i < classTopicsProbabilities.length; i++)
+			d += instanceTopicsProbabilities[i] * classTopicsProbabilities[i];
+		
+		return d;
+	}
+	
+	private static double magnitude(double[] vals) {
+		double d = 0;
+		
+		for (double v : vals)
+			d += v*v;
+		
+		return Math.sqrt(d);
+	}
+	
+	private static double magnitude(float[] vals) {
+		double d = 0;
+		
+		for (float v : vals)
+			d += v*v;
+		
+		return Math.sqrt(d);
 	}
 }

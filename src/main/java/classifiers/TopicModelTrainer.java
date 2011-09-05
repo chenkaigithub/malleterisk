@@ -47,17 +47,23 @@ public class TopicModelTrainer extends ClassifierTrainer<Classifier> {
 		Map<Integer, Set<Label>> topicClassesAssociation = new HashMap<Integer, Set<Label>>();
 		
 		int[] topicCounts = new int[numTopics];
+		
+		// iterate instances
 		for (TopicAssignment ta : model.getData()) {
 			// retrieve topics that occur in this instance
-			int[] topics = ta.topicSequence.getFeatures();
+			int[] instanceTopics = ta.topicSequence.getFeatures();
 			
 			// determine the topic with highest frequency in this instance
-			for (int token=0; token < topics.length; token++)
-				topicCounts[ topics[token] ]++;
 			
+			// (count the occurrences of the topics)
+			for (int token=0; token < instanceTopics.length; token++)
+				topicCounts[ instanceTopics[token] ]++;
+
+			// (find topic with most occurrences) 
 			int topicIndex = Ints.indexOf(topicCounts, Ints.max(topicCounts));
 			Arrays.fill(topicCounts, 0); // clean for reuse
 			
+			// associate topic & class
 			Set<Label> classes = topicClassesAssociation.get(topicIndex);
 			
 			if(classes==null) {

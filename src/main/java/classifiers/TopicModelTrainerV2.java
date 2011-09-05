@@ -1,11 +1,8 @@
 package classifiers;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -13,8 +10,6 @@ import cc.mallet.topics.ParallelTopicModel;
 import cc.mallet.topics.TopicAssignment;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
-
-import com.google.common.primitives.Ints;
 
 public class TopicModelTrainerV2 extends ClassifierTrainer<Classifier> {
 	private Classifier classifier;
@@ -34,40 +29,55 @@ public class TopicModelTrainerV2 extends ClassifierTrainer<Classifier> {
 
 	@Override
 	public Classifier train(InstanceList trainingSet) {
-		ParallelTopicModel lda = new ParallelTopicModel(numTopics);
-		lda.addInstances(trainingSet);
-		try { lda.estimate(); }
+		// topic model estimation
+		ParallelTopicModel model = new ParallelTopicModel(numTopics);
+		model.addInstances(trainingSet);
+		try { model.estimate(); }
 		catch (IOException e) { e.printStackTrace(); }
-		Map<Integer, Set<Label>> ct = associateTopicClasses(lda);
 		
-		return (classifier = new TopicModelClassifier(lda, ct));
+		// aggregate probabilities
+		Map<Label, float[]> ctp = computeClassTopicsProbabilities(model);
+		
+		return (classifier = new TopicModelClassifierV2(model, ctp));
 	}
 	
-	public Map<Integer, Set<Label>> associateTopicClasses(ParallelTopicModel model) {
-		Map<Integer, Set<Label>> topicClassesAssociation = new HashMap<Integer, Set<Label>>();
+	private Map<Label, float[]> computeClassTopicsProbabilities(ParallelTopicModel model) {
+		Map<Label, float[]> classTopicsProbabilities = new HashMap<Label, float[]>();
 		
 		int[] topicCounts = new int[numTopics];
+		
+		// iterate instances
 		for (TopicAssignment ta : model.getData()) {
+			// calculate topics probabilities for instance
+			
 			// retrieve topics that occur in this instance
-			int[] topics = ta.topicSequence.getFeatures();
+			int[] instanceTopics = ta.topicSequence.getFeatures();
 			
-			// determine the topic with highest frequency in this instance
-			for (int token=0; token < topics.length; token++)
-				topicCounts[ topics[token] ]++;
+			// (count the occurrences of the topics)
+			for (int token=0; token < instanceTopics.length; token++)
+				topicCounts[ instanceTopics[token] ]++;
 			
-			int topicIndex = Ints.indexOf(topicCounts, Ints.max(topicCounts));
-			Arrays.fill(topicCounts, 0); // clean for reuse
+			float[] topicProbs = new float[numTopics];
 			
-			Set<Label> classes = topicClassesAssociation.get(topicIndex);
+			// normalize with the occurrences of the topics (turning this into a dirichlet)
+			int n = 0;
+			for (int i : topicCounts) n += i;
+			for (int topic = 0; topic < numTopics; topic++)
+				topicProbs[topic] = (float) topicCounts[topic] / n; 
 			
-			if(classes==null) {
-				classes = new HashSet<Label>();
-				topicClassesAssociation.put(topicIndex, classes);
+			// add to labels' topics probabilities
+			float[] classProbs = classTopicsProbabilities.get(ta.instance.getTarget());
+			if(classProbs == null) {
+				classProbs = topicProbs;
+				classTopicsProbabilities.put((Label)ta.instance.getTarget(), classProbs);
 			}
-			
-			classes.add((Label)ta.instance.getTarget());
+			else {
+				for (int i = 0; i < numTopics; i++) {
+					classProbs[i] = (classProbs[i] + topicProbs[i]) / 2;
+				}
+			}
 		}
 		
-		return topicClassesAssociation;
+		return classTopicsProbabilities;
 	}
 }

@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import cc.mallet.types.InstanceList;
-import classifiers.TopicModelTrainer;
+import classifiers.TopicModelTrainerV2;
 import execution.ExecutionResult;
 import execution.ExecutionUtils;
 
-public class ExecTopicModelClassifier {
+public class ExecTopicModelClassifierV2 {
 	public static void main(String[] args) throws FileNotFoundException {
 //		//
 //		// Single Run Test
@@ -40,18 +40,18 @@ public class ExecTopicModelClassifier {
 		
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+topics"));
-		files.add(new File("instances+2+2+topics"));
-		files.add(new File("instances+2+3+topics"));
-		files.add(new File("instances+2+4+topics"));
-		files.add(new File("instances+2+5+topics"));
-		files.add(new File("instances+2+6+topics"));
-		files.add(new File("instances+2+7+topics"));
-		files.add(new File("instances+2+8+topics"));
+//		files.add(new File("instances+2+2+topics"));
+//		files.add(new File("instances+2+3+topics"));
+//		files.add(new File("instances+2+4+topics"));
+//		files.add(new File("instances+2+5+topics"));
+//		files.add(new File("instances+2+6+topics"));
+//		files.add(new File("instances+2+7+topics"));
+//		files.add(new File("instances+2+8+topics"));
 		
 		for (File file : files) {
 			InstanceList instances = InstanceList.load(file);
-			ExecutionResult r = new ExecutionResult(file.getName(), null, null, "TopicModelTrainer");
-			r.trials.put(0, ExecutionUtils.crossValidate(instances, 10, new TopicModelTrainer(instances.getTargetAlphabet().size())));
+			ExecutionResult r = new ExecutionResult(file.getName(), null, null, "TopicModelClassifierV2");
+			r.trials.put(0, ExecutionUtils.crossValidate(instances, 10, new TopicModelTrainerV2(instances.getTargetAlphabet().size())));
 			r.outputTrials();
 			r.outputAccuracies();
 		}
