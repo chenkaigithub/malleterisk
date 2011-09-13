@@ -18,6 +18,7 @@ public class CombinationUtils {
 		int n = instancelists.length;
 		
 		// do the cross validation split on the first instancelist
+		// this cross validation will be applied to all of the other instancelists
 		InstanceList instances = instancelists[0];
 		CrossValidationIterator cvi = instances.crossValidationIterator(numFolds);
 		
@@ -26,18 +27,10 @@ public class CombinationUtils {
 		while(cvi.hasNext()) {
 			split = cvi.next();
 			
-//			@SuppressWarnings("unchecked")
-//			ArrayList<Classification>[] results = new ArrayList[n];
-//			for (int i = 0; i < n; i++) {
-//				InstanceList[] newSplit = mapSplit(instancelists[i], split);
-//				
-//				ClassifierTrainer<Classifier> trainer = classifiers[i];
-//				Classifier tester = trainer.train(newSplit[0]);
-//				results[i] = tester.classify(newSplit[1]);
-//			}
-//			
-//			trials.add(combineResults(results, split, foldCounter++));
-			
+			// this will do the following:
+			// - apply the previous split to all of the other instancelists
+			// - pass the splits and the respective classifiers into a meta-classifier
+			// - add results into the trials
 			trials.add(new ExtendedTrial(
 				new MajorityVotingClassifier(
 					split(n, instancelists, split), 

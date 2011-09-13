@@ -283,7 +283,7 @@ public class DataAnalysis {
 	
 	// utils
 	
-	public static void toCSV(String filename, Map<?, ?> data) throws FileNotFoundException {
+	public static void mapToCSV(String filename, Map<?, ?> data) throws FileNotFoundException {
 		FileOutputStream out = new FileOutputStream(filename);
 		PrintWriter pw = new PrintWriter(out);
 		
@@ -292,6 +292,27 @@ public class DataAnalysis {
 			pw.write(", ");
 			pw.write(entry.getValue().toString());
 			pw.write('\n');
+		}
+
+		pw.flush();
+		pw.close();
+	}
+	
+	// for dates
+	public static void mapMapToCSV(String filename, Map<Month, Map<Object, Integer>> map) throws FileNotFoundException {
+		FileOutputStream out = new FileOutputStream(filename);
+		PrintWriter pw = new PrintWriter(out);
+		
+		for (Entry<Month, Map<Object, Integer>> entry : map.entrySet()) {
+			Map<Object, Integer> values = entry.getValue();
+			for (Entry<Object, Integer> cf : values.entrySet()) {
+				pw.write(entry.getKey().toString());
+				pw.write(", ");
+				pw.write(cf.getKey().toString());
+				pw.write(", ");
+				pw.write(cf.getValue().toString());
+				pw.write('\n');
+			}
 		}
 
 		pw.flush();
@@ -320,4 +341,3 @@ class TimeInterval {
 		return sb.toString();
 	}
 }
-

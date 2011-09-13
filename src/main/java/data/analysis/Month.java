@@ -25,6 +25,6 @@ public class Month {
 	}
 	
 	public String toString() {
-		return month+"/"+year;
+		return year+", "+Integer.valueOf(month);
 	}
 }

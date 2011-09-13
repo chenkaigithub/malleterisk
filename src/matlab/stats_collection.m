@@ -6,20 +6,22 @@ data = importdata([path_name file_name], ',');
 
 % # instances / class
 classes = data(:, 1);
-num_instances = data(:, 2);
-bar(classes, num_instances);
+num_instances_per_class = data(:, 2);
+bar(classes, num_instances_per_class);
 
-ann_obj = annotation('textbox', [.0, .7, .3, .3], 'String', 'Hello World!');
+n_insts = sum(num_instances_per_class);
+n_class = length(classes);
+min_n_inst = min(num_instances_per_class);
+max_n_inst = max(num_instances_per_class);
+avg_n_inst_n_class = sum(num_instances_per_class) / length(classes);
 
-
-min(num_instances)
-max(num_instances)
-
-% instances
-% classes
-% avg instances/class
-% largest class
-% smallest class
-
-% time period for classes
-% participants in classes
+ann_obj = annotation('textbox', [.135, .77, .23, .15] , 'String', ...
+    strcat('Statistics:', ...
+    '\newlineNumber of classes: ', num2str(n_class), ...
+    '\newlineNumber of instances: ', num2str(n_insts), ...
+    '\newlineSmallest class: ', num2str(min_n_inst), ...
+    '\newlineLargest class: ', num2str(max_n_inst), ...
+    '\newlineAverage number of instances per class: ', num2str(avg_n_inst_n_class)), ...
+    'FontSize', 8);
+xlabel('Labels')
+ylabel('Number of messages')
