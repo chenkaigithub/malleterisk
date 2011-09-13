@@ -52,4 +52,17 @@ public class EmailParticipant implements IEmailParticipant {
 	public String toString() {
 		return String.valueOf(participantId);
 	}
+	
+	public boolean equals(Object o) {
+		if(o instanceof EmailParticipant) {
+			EmailParticipant other = (EmailParticipant) o;
+			return other.participantId == this.participantId;
+		}
+		
+		return false;
+	}
+	
+	public int hashCode() {
+		return new Integer(participantId).hashCode();
+	}
 }

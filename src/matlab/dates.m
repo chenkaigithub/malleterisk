@@ -33,7 +33,9 @@ imagesc(m)
 %colormap(lines)
 colorbar
 
-set(gca, 'XTick', 1:size(s, 2)); set(gca, 'XTickLabel', s);
+set(gca, 'XTick', 1:size(s, 2)); 
+set(gca, 'XTickLabel', s);
+xticklabel_rotate();
 %set(gca, 'YTick', 1:(size(Iy, 1)-1));
 
 xlabel('Time');
