@@ -9,6 +9,8 @@ minYer=y(1,1);
 maxYer=y(end,1);
 %maxMon=y(end,2);
 
+columns = unique(y(:, 3));
+
 m=[];
 count=0;
 for i=minYer:maxYer
@@ -18,7 +20,11 @@ for i=minYer:maxYer
         if ~isempty(Im)
             count=count+1;
             s{count}=[num2str(j) '/' num2str(i)];
-            m(y(Iy(Im),3),count)=y(Iy(Im),4);
+            classes = y(Iy(Im), 3);
+            values = y(Iy(Im),4);
+            for k=1:length(classes)
+                m(find(columns == classes(k)), count)=values(k);
+            end
         end
     end
 end
@@ -29,3 +35,6 @@ colorbar
 
 set(gca, 'XTick', 1:size(s, 2)); set(gca, 'XTickLabel', s);
 %set(gca, 'YTick', 1:(size(Iy, 1)-1));
+
+xlabel('Time');
+ylabel('Class');
