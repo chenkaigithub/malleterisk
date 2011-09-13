@@ -45,7 +45,7 @@ public class CombinationUtils {
 				), 
 				split[0], 
 				split[1], 
-				foldCounter
+				foldCounter++
 			));
 		}
 		
