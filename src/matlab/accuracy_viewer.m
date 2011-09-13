@@ -46,8 +46,23 @@ for i = 1:num_files
 end
 if plots(1,1) == 0
     plots = plots(1,2:end);
-    names = names(1,2:end);
+    %names = names(1,2:end);
 end
-legend(plots(1,1:end), names{1,1:end});
 
+names = {
+    'TF-IDF/No Balancing', 
+    'TF-Log/No Balancing',
+'TF-IDF/RS 166 instances',
+'TF-Log/RS 166 instances',
+'TF-IDF/RS 33 instances',
+'TF-Log/RS 33 instances',
+'TF-IDF/SMOTE 166 instances',
+'TF-Log/SMOTE 166 instances',
+'TF-IDF/SMOTE 33 instances',
+'TF-Log/SMOTE 33 instances'
+}';
+
+legend(plots(1,1:end), names{1,1:end});
+xlabel('Number of features');
+ylabel('Classifier accuracy (%)');
 
