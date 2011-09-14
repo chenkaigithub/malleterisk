@@ -28,7 +28,7 @@
 % 
 % bar([beck_s, farmer_d, kaminski_v, kitchen_l, lokay_m, sanders_r, williams_w3]);
 % xlabel('User');
-% ylabel('Ratio of Group of Participants with only 1 Folder and Total Number of Groups');
+% ylabel('Ratio between Groups of Participants with only 1 Folder and Total Number of Groups');
 % 
 % users = [{'beck-s'}, {'farmer_d'}, {'kaminski_v'}, {'kitchen_l'}, {'lokay_m'}, {'sanders_r'}, {'williams_w3'}];
 % set(gca, 'XTickLabel', users);
