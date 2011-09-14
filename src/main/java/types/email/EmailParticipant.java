@@ -63,6 +63,6 @@ public class EmailParticipant implements IEmailParticipant {
 	}
 	
 	public int hashCode() {
-		return new Integer(participantId).hashCode();
+		return participantId;
 	}
 }

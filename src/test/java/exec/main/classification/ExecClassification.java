@@ -42,7 +42,6 @@ public class ExecClassification {
 //		classifiers.add(new KNNTrainer(5, new NormalizedDotProductMetric()));
 //		classifiers.add(new WinnowTrainer());
 //		classifiers.add(new BalancedWinnowTrainer());
-//		classifiers.add(new KBestMiraClassifierTrainer(5));
 		
 		// TODO: need a way to pass arguments to classifiers [trainer.getClass().newInstance()]
 		int step = 10;

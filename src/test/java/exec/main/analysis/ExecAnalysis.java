@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
+import types.email.IEmailParticipant;
 import types.mallet.LabeledInstancesList;
 import cc.mallet.types.InstanceList;
 import data.analysis.DataAnalysis;
@@ -15,13 +17,13 @@ public class ExecAnalysis {
 		ArrayList<File> files = new ArrayList<File>();
 		
 		files.add(new File("instances+1+1+peoplefier"));
-		files.add(new File("instances+2+2+peoplefier"));
-		files.add(new File("instances+2+3+peoplefier"));
-		files.add(new File("instances+2+4+peoplefier"));
-		files.add(new File("instances+2+5+peoplefier"));
-		files.add(new File("instances+2+6+peoplefier"));
-		files.add(new File("instances+2+7+peoplefier"));
-		files.add(new File("instances+2+8+peoplefier"));
+//		files.add(new File("instances+2+2+peoplefier"));
+//		files.add(new File("instances+2+3+peoplefier"));
+//		files.add(new File("instances+2+4+peoplefier"));
+//		files.add(new File("instances+2+5+peoplefier"));
+//		files.add(new File("instances+2+6+peoplefier"));
+//		files.add(new File("instances+2+7+peoplefier"));
+//		files.add(new File("instances+2+8+peoplefier"));
 		
 //		files.add(new File("instances+1+1+body"));
 //		files.add(new File("instances+2+2+body"));
@@ -57,7 +59,6 @@ public class ExecAnalysis {
 			
 			// PARTICIPANTS
 			analyzeParticipants(filename, instances, lil);
-			break;
 		}
 	}
 	
@@ -79,8 +80,10 @@ public class ExecAnalysis {
 	}
 	
 	public static void analyzeParticipants(String filename, InstanceList instances, LabeledInstancesList lil) throws FileNotFoundException {
-//		System.out.println(filename + ": " + DataAnalysis.participantsClassesRatio(DataAnalysis.participantsClassesCorrelation(instances)));
-		DataAnalysis.mapToCSV("stats-participants"+filename, DataAnalysis.totalNumParticipantsInClass(lil));
-		DataAnalysis.printParticipantsClassesRatio(DataAnalysis.participantsClassesCorrelation(instances));
+		System.out.println(filename + ": " + DataAnalysis.participantsClassesRatio(DataAnalysis.participantsClassesCorrelation(instances)));
+//		DataAnalysis.printParticipantsClassesRatio(DataAnalysis.participantsClassesCorrelation(instances));
+//		System.out.println(DataAnalysis.totalUniqueParticipants(DataAnalysis.labelsUniqueParticipants(lil)));
+//		
+//		DataAnalysis.mapToCSV("stats-participants"+filename, DataAnalysis.labelsNumParticipants(DataAnalysis.labelsUniqueParticipants(lil)));
 	}
 }

@@ -155,19 +155,17 @@ public class DataAnalysis {
 	
 	// participants
 	
-	public static Map<Object, Integer> totalNumParticipantsInClass(LabeledInstancesList lil) {
-		// the instancelist must be of participants
-		Map<Object, Integer> hg = new HashMap<Object, Integer>();
+	public static Map<Object, Set<IEmailParticipant>> labelsUniqueParticipants(LabeledInstancesList lil) {
+		// label - {unique participants}
+		Map<Object, Set<IEmailParticipant>> lp = new HashMap<Object, Set<IEmailParticipant>>();
 		
-		Map<Object, Set<IEmailParticipant>> hg2 = new HashMap<Object, Set<IEmailParticipant>>();
-		// number of participants per class
 		for(int i=0; i<lil.getNumLabels(); ++i) {
 			// retrieve participants
 			Object lbl = lil.getLabel(i);
-			Set<IEmailParticipant> participants = hg2.get(lbl);
+			Set<IEmailParticipant> participants = lp.get(lbl);
 			if(participants==null) {
 				participants = new HashSet<IEmailParticipant>();
-				hg2.put(lbl, participants);
+				lp.put(lbl, participants);
 			}
 			
 			// add unique participants
@@ -179,9 +177,25 @@ public class DataAnalysis {
 			}
 		}
 		
-		for (Entry<Object, Set<IEmailParticipant>> entry : hg2.entrySet()) {
+		return lp;
+	}
+	
+	public static int totalUniqueParticipants(Map<Object, Set<IEmailParticipant>> lp) {
+		// total unique participants in set
+		Set<IEmailParticipant> p = new HashSet<IEmailParticipant>();
+		
+		for (Entry<Object, Set<IEmailParticipant>> entry : lp.entrySet())
+			p.addAll(entry.getValue());
+		
+		return p.size();
+	}
+	
+	public static Map<Object, Integer> labelsNumParticipants(Map<Object, Set<IEmailParticipant>> lp) {
+		// just aggregates labelsUniqueParticipants
+		Map<Object, Integer> hg = new HashMap<Object, Integer>();
+				
+		for (Entry<Object, Set<IEmailParticipant>> entry : lp.entrySet())
 			hg.put(entry.getKey(), entry.getValue().size());
-		}
 		
 		return hg;
 	}
@@ -217,19 +231,18 @@ public class DataAnalysis {
 	}
 	
 	public static void printParticipantsClassesRatio(Map<Set<Integer>, Set<String>> groupsLabels) {
-//		int i = 1;
+		int i = 1;
 		for (Entry<Set<Integer>, Set<String>> entry : groupsLabels.entrySet()) {
-//			System.out.print((i++) + ": [ ");
-			System.out.print("[ ");
+			System.out.print((i++) + ": [ ");
 			for (Integer p : entry.getKey())
-				System.out.print(p + ", ");
+				System.out.print(p + " ");
 			System.out.print("]");
 
 			System.out.print("\t\t\t");
 			
 			System.out.print("[ ");
 			for (String l : entry.getValue())
-				System.out.print(l + ", ");
+				System.out.print(l + " ");
 			System.out.print("]");
 			
 			System.out.println();
@@ -239,19 +252,19 @@ public class DataAnalysis {
 		System.out.println("#unique entries: " + groupsLabels.size()); // number of unique groups
 	}
 	
-	public static double participantsClassesRatio(Map<Set<Integer>, Set<String>> groupsClasses) {
+	public static double participantsClassesRatio(Map<Set<Integer>, Set<String>> groupsLabels) {
 		double count = 0;
-		for (Entry<Set<Integer>, Set<String>> entry : groupsClasses.entrySet()) 
+		for (Entry<Set<Integer>, Set<String>> entry : groupsLabels.entrySet()) 
 			if(entry.getValue().size() == 1)
 				count++;
 		
 //		System.out.println(count);
 //		System.out.println(groupsClasses.entrySet().size());
 		
-		return count / (double) groupsClasses.entrySet().size();
+		return count / (double) groupsLabels.entrySet().size();
 	}
 	
-	// time
+	// date
 	
 	public static Map<Object, TimeInterval> timeClassIntervals(LabeledInstancesList lil) {
 		// instance's data must be of date type
@@ -323,9 +336,8 @@ public class DataAnalysis {
 		pw.close();
 	}
 	
-	// for dates
-	
 	public static void mapMapToCSV(String filename, Map<Month, Map<Object, Integer>> map) throws FileNotFoundException {
+		// for dates
 		FileOutputStream out = new FileOutputStream(filename);
 		PrintWriter pw = new PrintWriter(out);
 		
