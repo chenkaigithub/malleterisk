@@ -25,22 +25,23 @@ public class CombinationExperiment {
 			new InstanceList[] { InstanceList.load(new File("instances+2+8+body")),	InstanceList.load(new File("instances+2+8+subject")), InstanceList.load(new File("instances+2+8+topics-body")), InstanceList.load(new File("instances+2+8+topics-subject")), InstanceList.load(new File("instances+2+8+peoplefier")) }
 		};
 		
-		@SuppressWarnings("rawtypes")
-		ClassifierTrainer[] classifiers = new ClassifierTrainer[] {
-			new MaxEntTrainer(),
-			new MaxEntTrainer(),
-			new TopicModelTrainer(),
-			new TopicModelTrainer(),
-			new PeoplefierTrainer()
-		};
-		
-		for (int i = 0; i < instancelists.length; i++)
-			x(instancelists[i], classifiers);
+		for (int i = 0; i < instancelists.length; i++) {
+			@SuppressWarnings("rawtypes")
+			ClassifierTrainer[] classifiers = new ClassifierTrainer[] {
+				new MaxEntTrainer(),
+				new MaxEntTrainer(),
+				new TopicModelTrainer(),
+				new TopicModelTrainer(),
+				new PeoplefierTrainer()
+			};
+			
+			x(i, i, instancelists[i], classifiers);
+		}
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void x(InstanceList[] instancelists, ClassifierTrainer[] classifiers) throws FileNotFoundException {
-		ExecutionResult r = new ExecutionResult("instances+1+1", null, null, MajorityVotingClassifier.class.getSimpleName());
+	public static void x(int i, int j, InstanceList[] instancelists, ClassifierTrainer[] classifiers) throws FileNotFoundException {
+		ExecutionResult r = new ExecutionResult("instances+"+i+"+"+j, null, null, MajorityVotingClassifier.class.getSimpleName());
 		r.trials.put(0, CombinationUtils.xvClassify(instancelists, classifiers, 10));
 		r.outputTrials();
 		r.outputAccuracies();

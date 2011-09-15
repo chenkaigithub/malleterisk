@@ -39,7 +39,7 @@ public class TopicModelTrainer extends ClassifierTrainer<Classifier> {
 	@Override
 	public Classifier train(InstanceList trainingSet) {
 		if(numTopics == 0)
-			numTopics = trainingSet.getTargetAlphabet().size()*2;
+			numTopics = trainingSet.getTargetAlphabet().size();
 		
 		ParallelTopicModel lda = new ParallelTopicModel(numTopics);
 		lda.addInstances(trainingSet);
