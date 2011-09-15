@@ -9,6 +9,7 @@ num_markers = length(markers);
 colors = [0.6 0.6 0.6; 0.3 0.3 0.3; 0 0.6 0.6; 0.8 0.6 0.2; 0 0 1; 0 1 0; 1 0 0; 1 0 1; 0.8 0.8 0; 0 1 1; 0 0 0];
 num_colors = length(colors);
 figure
+m_sum = zeros(num_files, 2);
 for i = 1:num_files
     indices = find(files{i} == '/');
     file_name = files{i}(indices(length(indices))+1:end);
@@ -24,7 +25,9 @@ for i = 1:num_files
         m(j,1) = mean(r);
         m(j,2) = (max(r) - min(r))/2;
     end
-
+    m_sum(i, 1) = sum(m(:, 1)) / size(m, 1);
+    m_sum(i, 2) = sum(m(:, 2)) / size(m, 1);
+    
     % create new [feature, runs-mean] matrix
     M = [ R(:,1), m ]';
     M = sortrows(M.',1).';
@@ -48,8 +51,8 @@ if plots(1,1) == 0
     plots = plots(1,2:end);
     %names = names(1,2:end);
 end
-
-names = {'','','','','','','','',''};
+m_sum
+%names = {'','','','','','','','',''};
 legend(plots(1,1:end), names{1,1:end});
 xlabel('Number of features');
 ylabel('Classifier accuracy (%)');
