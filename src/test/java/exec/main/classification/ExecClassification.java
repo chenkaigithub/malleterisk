@@ -15,7 +15,6 @@ import classifiers.LibLinearTrainer;
 import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
-import ft.selection.methods.FilterByRankedVariance;
 import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
 
@@ -36,7 +35,7 @@ public class ExecClassification {
 
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
 		filters.add(new FilterByRankedIG());
-		filters.add(new FilterByRankedVariance());
+//		filters.add(new FilterByRankedVariance());
 		
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());

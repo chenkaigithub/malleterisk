@@ -18,7 +18,11 @@ import com.google.common.primitives.Ints;
 
 public class TopicModelTrainer extends ClassifierTrainer<Classifier> {
 	private Classifier classifier;
-	private final int numTopics;
+	private int numTopics;
+	
+	public TopicModelTrainer() {
+		numTopics = 0;
+	}
 	
 	public TopicModelTrainer(int n) {
 		this.numTopics = n;
@@ -34,6 +38,9 @@ public class TopicModelTrainer extends ClassifierTrainer<Classifier> {
 
 	@Override
 	public Classifier train(InstanceList trainingSet) {
+		if(numTopics == 0)
+			numTopics = trainingSet.getTargetAlphabet().size()*2;
+		
 		ParallelTopicModel lda = new ParallelTopicModel(numTopics);
 		lda.addInstances(trainingSet);
 		try { lda.estimate(); }
