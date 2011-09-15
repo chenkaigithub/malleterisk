@@ -10,6 +10,7 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import classifiers.LibLinearTrainer;
 import classifiers.PeoplefierTrainerV2;
 import execution.ExecutionResult;
 import execution.ExecutionUtils;
@@ -18,13 +19,13 @@ public class ExecPeoplefierV2 {
 	public static void main(String[] args) throws FileNotFoundException, InstantiationException, IllegalAccessException {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(new File("instances+1+1+peoplefier"));
-//		files.add(new File("instances+2+2+peoplefier"));
-//		files.add(new File("instances+2+3+peoplefier"));
-//		files.add(new File("instances+2+4+peoplefier"));
-//		files.add(new File("instances+2+5+peoplefier"));
-//		files.add(new File("instances+2+6+peoplefier"));
-//		files.add(new File("instances+2+7+peoplefier"));
-//		files.add(new File("instances+2+8+peoplefier"));
+		files.add(new File("instances+2+2+peoplefier"));
+		files.add(new File("instances+2+3+peoplefier"));
+		files.add(new File("instances+2+4+peoplefier"));
+		files.add(new File("instances+2+5+peoplefier"));
+		files.add(new File("instances+2+6+peoplefier"));
+		files.add(new File("instances+2+7+peoplefier"));
+		files.add(new File("instances+2+8+peoplefier"));
 
 		for (File file : files) {
 			InstanceList il = PeoplefierTrainerV2.peoplefyInstances(InstanceList.load(file));
@@ -38,7 +39,7 @@ public class ExecPeoplefierV2 {
 					System.out.println(da.lookupObject(fv.indexAtLocation(i)) + ": " + fv.valueAtLocation(i));
 			}
 			
-//			run(file.getName(), il, new LibLinearTrainer(), 10);
+			run(file.getName(), il, new LibLinearTrainer(), 10);
 		}
 	}
 
