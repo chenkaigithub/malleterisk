@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
-import types.email.IEmailParticipant;
 import types.mallet.LabeledInstancesList;
 import cc.mallet.types.InstanceList;
 import data.analysis.DataAnalysis;

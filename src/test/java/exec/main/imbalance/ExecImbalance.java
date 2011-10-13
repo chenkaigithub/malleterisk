@@ -7,6 +7,7 @@ import java.util.Arrays;
 import utils.ParametrizedIteratedExecution;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
+import cc.mallet.classify.MaxEntTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
 import data.balancing.DataBalancer;
@@ -15,7 +16,6 @@ import data.balancing.SMOTE;
 import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
-import ft.selection.methods.FilterByRankedVariance;
 import ft.weighting.IWeighter;
 import ft.weighting.methods.FeatureWeighting;
 
@@ -36,15 +36,14 @@ public class ExecImbalance {
 		balancers.add(new SMOTE(5, 1));			// knn = 5,	minimum threshold = 1
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
-		transformers.add(new FeatureWeighting(FeatureWeighting.TF_LOG, FeatureWeighting.IDF_NONE, FeatureWeighting.NORMALIZATION_NONE));
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
 
 		ArrayList<IFilter> filters = new ArrayList<IFilter>();
 		filters.add(new FilterByRankedIG());
-		filters.add(new FilterByRankedVariance());
 		
 		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers = new ArrayList<ClassifierTrainer<? extends Classifier>>();
 		classifiers.add(new NaiveBayesTrainer());
+		classifiers.add(new MaxEntTrainer());
 		
 		int folds = 10;
 		
