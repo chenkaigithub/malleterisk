@@ -2,7 +2,6 @@ package exec.main.imbalance;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import utils.ParametrizedIteratedExecution;
 import cc.mallet.classify.Classifier;
@@ -12,7 +11,6 @@ import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.types.InstanceList;
 import data.balancing.DataBalancer;
 import data.balancing.RandomSampler;
-import data.balancing.SMOTE;
 import execution.ExecutionUtils;
 import ft.selection.IFilter;
 import ft.selection.methods.FilterByRankedIG;
@@ -33,7 +31,7 @@ public class ExecImbalance {
 		
 		ArrayList<DataBalancer> balancers = new ArrayList<DataBalancer>();
 		balancers.add(new RandomSampler(1));	//			minimum threshold = 1
-		balancers.add(new SMOTE(5, 1));			// knn = 5,	minimum threshold = 1
+//		balancers.add(new SMOTE(5, 1));			// knn = 5,	minimum threshold = 1
 		
 		ArrayList<IWeighter> transformers = new ArrayList<IWeighter>();
 		transformers.add(new FeatureWeighting(FeatureWeighting.TF_NONE, FeatureWeighting.IDF_IDF, FeatureWeighting.NORMALIZATION_NONE));
@@ -67,7 +65,8 @@ public class ExecImbalance {
 
 				// setup number of features to be used in feature selection
 				int[] featurePcts = ParametrizedIteratedExecution.generatePercentages(10);
-				featurePcts = Arrays.copyOfRange(featurePcts, 0, 3); // 10%, 20%, 30%
+				featurePcts = new int[] { featurePcts[1] }; // 20%
+//				featurePcts = Arrays.copyOfRange(featurePcts, 0, 3); // 10%, 20%, 30%
 				for (int fp : featurePcts) System.out.println("feature %: " + fp);
 				
 				for (int ns : new ParametrizedIteratedExecution(balancer.labeledInstances.getMaxNumInstances(), samplePcts)) {
@@ -75,7 +74,7 @@ public class ExecImbalance {
 					
 					ExecutionUtils.runWeightersFiltersWithCustomStepClassifiers(
 						name2 + "+" + ns, 
-						balancer.balance(ns), 
+						balancer.balance(ns),
 						transformers, 
 						filters, 
 						classifiers,

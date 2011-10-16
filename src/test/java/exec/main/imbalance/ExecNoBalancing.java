@@ -38,7 +38,7 @@ public class ExecNoBalancing {
 		int step = 20;
 		int folds = 10;
 		
-		ExecutionUtils.runWeightersFiltersClassifiers(files, transformers, filters, classifiers, step, folds);
+		ExecutionUtils.runWeightersFiltersFixedStepClassifiers(files, transformers, filters, classifiers, step, folds);
 	}
 
 }

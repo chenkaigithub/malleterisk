@@ -81,6 +81,43 @@ public class ExecutionUtils {
 		}
 	}
 	
+	// iterates over the IWeighters, IFilters and classifiers and issues a single execution order.
+	public static final void runWeightersFiltersFixedStepClassifiers(
+		ArrayList<File> files, 
+		ArrayList<IWeighter> transformers, 
+		ArrayList<IFilter> filters, 
+		ArrayList<ClassifierTrainer<? extends Classifier>> classifiers, 
+		int step, 
+		int folds
+	) throws FileNotFoundException, InstantiationException, IllegalAccessException {
+		for (File file : files) {
+			String filename = file.getName();
+			System.out.println("+ processing " + filename);
+			InstanceList instances = InstanceList.load(file);
+			for (IWeighter transformer : transformers) {
+				System.out.println("- transformer: " + transformer.getDescription());
+				for (IFilter filter : filters) {
+					System.out.println("- filter: " + filter.getDescription());
+					for (ClassifierTrainer<? extends Classifier> trainer : classifiers) {
+						ExecutionResult r = new ExecutionResult(filename, transformer.getDescription(), filter.getDescription(), ExecutionUtils.getClassifierDescription(trainer));
+						
+						InstanceList transformedInstances = transformer.calculate(instances);
+						int numFeatures = transformedInstances.getDataAlphabet().size() * step / 100;
+						InstanceList filteredInstances = filter.filter(numFeatures, transformedInstances);
+						
+						// classifier trainer must be a new instance since it might accumulate the previous alphabet
+						// associate the trials to the run with 'n' features
+						r.trials.put(numFeatures, ExecutionUtils.crossValidate(filteredInstances, folds, trainer.getClass().newInstance()));
+						
+						// write results
+						r.outputTrials();
+						r.outputAccuracies();
+					}
+				}
+			}
+		}
+	}
+
 	// uses custom steps in filtering
 	public static final void runWeightersFiltersWithCustomStepClassifiers(
 		String runName,
