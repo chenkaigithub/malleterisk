@@ -6,7 +6,7 @@
 % the set of N graphs is averaged into one single ROC curve
 
 clear;
-files = uipickfiles('FilterSpec', '/Work/msc/code/seamce-test/tests-subset');
+files = uipickfiles('FilterSpec', '/Work/msc/code/malleterisk-test/results');
 
 num_samples = 20;
 step = 1/num_samples;

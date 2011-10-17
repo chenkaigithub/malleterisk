@@ -55,5 +55,5 @@ m_sum
 %names = {'','','','','','','','',''};
 legend(plots(1,1:end), names{1,1:end});
 xlabel('Number of features');
-ylabel('Classifier accuracy (%)');
+ylabel('Classifier accuracy');
 

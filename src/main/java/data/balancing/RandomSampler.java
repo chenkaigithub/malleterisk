@@ -57,7 +57,7 @@ public class RandomSampler extends DataBalancer {
 		
 		for (int i = 0; i < n; i++) {
 			// grab a random sample
-			Instance instance =instances.get(r.nextInt(k));
+			Instance instance = instances.get(r.nextInt(k));
 			
 			// when sampling with no reposition, verify if it is repeated
 			// in such case, re-sample until a new one is found; finally add it

@@ -1,5 +1,6 @@
 package data.balancing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -31,10 +32,12 @@ import cc.mallet.types.SparseVector;
 public class SMOTE extends DataBalancer {
 	private static final Random random = new Random();
 	private final int k; // number of nearest neighbours to be used
+	private final Random r;
 	
 	public SMOTE(int k, int t) {
 		super(t);
 		this.k = k;
+		this.r = new Random();
 	}
 	
 //	public SMOTE(InstanceList instances, int k, int t) {
@@ -44,9 +47,24 @@ public class SMOTE extends DataBalancer {
 	
 	@Override
 	protected Collection<Instance> balanceHook(InstanceList classInstances, int n) {
-		// SMOTE only performs oversamping
-		if(n > classInstances.size()) return classInstances;
+		// SMOTE + undersampling
+		if(n > classInstances.size()) return undersample(classInstances, n);
 		else return smote(classInstances, n, k);
+	}
+	
+	public Collection<Instance> undersample(InstanceList instances, int n) {
+		int s = instances.size();
+		Collection<Instance> sampledInstances = new ArrayList<Instance>(n);
+		
+		for (int i=0; i<n; ++i) {
+			Instance instance = instances.get(r.nextInt(s));
+			
+			// don't sample with reposition when undersampling
+			if(sampledInstances.contains(instance)) i--; 
+			else sampledInstances.add(instance);
+		}
+		
+		return sampledInstances;
 	}
 	
 	// applies the SMOTE algorithm to the given instances
