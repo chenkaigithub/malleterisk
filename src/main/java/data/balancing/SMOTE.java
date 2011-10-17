@@ -48,8 +48,8 @@ public class SMOTE extends DataBalancer {
 	@Override
 	protected Collection<Instance> balanceHook(InstanceList classInstances, int n) {
 		// SMOTE + undersampling
-		if(n > classInstances.size()) return undersample(classInstances, n);
-		else return smote(classInstances, n, k);
+		if(n > classInstances.size()) return smote(classInstances, n, k);
+		else return undersample(classInstances, n);
 	}
 	
 	public Collection<Instance> undersample(InstanceList instances, int n) {

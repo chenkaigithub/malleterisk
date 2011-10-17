@@ -1,5 +1,6 @@
 package classifiers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,12 +98,14 @@ class KInstanceCollection {
 	// this only stores K items
 	// as long as K is smallish, it's hardly worth it to optimize this
 	// (e.g. by keeping the arrays sorted)
+	private final int maxN;
 	private final double[] costs;
-	private final Instance[] items;
+	private final ArrayList<Instance> items;
 
 	public KInstanceCollection(int maxN) {
+		this.maxN = maxN;
 		this.costs = new double[maxN];
-		this.items = new Instance[maxN];
+		this.items = new ArrayList<Instance>(maxN);
 		Arrays.fill(costs, Double.NaN);
 	}
 
@@ -110,7 +113,10 @@ class KInstanceCollection {
 		int idx = isLesserCost(cost, costs);
 		if(idx!=-1) {
 			costs[idx] = cost;
-			items[idx] = item;
+			items.add(idx, item);
+			
+			int s = items.size();
+			if(s > maxN) items.remove(s-1);
 		}
 	}
 
@@ -128,6 +134,6 @@ class KInstanceCollection {
 	}
 	
 	public Instance[] getValues() {
-		return items;
+		return items.toArray(new Instance[0]);
 	}
 }
