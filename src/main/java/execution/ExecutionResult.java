@@ -12,7 +12,6 @@ import java.util.Map;
 import types.mallet.LabeledInstancesList;
 import types.mallet.classify.ExtendedTrial;
 import cc.mallet.classify.Classification;
-import cc.mallet.classify.Trial;
 import cc.mallet.types.Instance;
 import cc.mallet.types.Labeling;
 
@@ -114,7 +113,7 @@ public class ExecutionResult {
 			Collection<ExtendedTrial> trialsN = this.trials.get(n);
 			int i = 0;
 			int ts = trialsN.size();
-			for (Trial trial : trialsN) {
+			for (ExtendedTrial trial : trialsN) {
 				pw.write(String.valueOf(trial.getAccuracy()));
 				if(++i < ts) pw.write(", ");
 			}

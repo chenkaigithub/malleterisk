@@ -30,7 +30,7 @@ public class PeoplefierTrainerV2  {
 				}
 				
 				// random string for name for a consistent file output
-				il.add(new Instance(afv, label, "/Work/msc/code/malleterisk/"+v.getId()+"+"+label, null));
+				il.add(new Instance(afv, label, "/Work/msc/code/malleterisk/"+v.getId()+"+"+label, null)); // TODO: xxxx
 			}
 		}
 		
